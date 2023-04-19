@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".page3">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/name1"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Name of person here"
+        android:layout_centerVertical="true"
+        android:textColor="#FFC107"
+        android:textSize="34sp" />
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Rol"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/txtthe"
+        android:inputType="textEmailAddress"
+        android:padding="13dp"
+        android:text="@string/g_mail_here"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt"
+        android:layout_width="147dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pno"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+
+        android:background="@drawable/round"
+
+
+        android:text="@string/sign_out"
+        android:textAlignment="center"
+        android:textColor="#FA000000"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt1"
+        android:layout_width="147dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pno"
+        android:layout_alignParentEnd="true"
+
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/round"
+        android:backgroundTint="#000000"
+        android:backgroundTintMode="add"
+        android:text="login"
+        android:textAlignment="center"
+        android:textColor="#FA000000"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/txtthe"
+        android:hint="Enter Your Name"
+        android:inputType="textAutoCorrect|textCapSentences"
+        android:padding="13dp"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/Rol"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/txtthe"
+        android:hint="Enter your roll no."
+        android:inputType="textAutoCorrect|textCapSentences"
+        android:padding="13dp"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/pno"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_below="@id/email"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/txtthe"
+        android:padding="13dp"
+        android:hint="Enter Your Phone no."
+        android:inputType="textAutoCorrect|textCapSentences"
+        android:textSize="20sp" />
+
+</RelativeLayout>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "175189820747",
+    "project_id": "edunexus-1ba36",
+    "storage_bucket": "edunexus-1ba36.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175189820747:android:0b619dfc78cd4117f954ce",
+        "android_client_info": {
+          "package_name": "com.example.test3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175189820747-7hbq84ojuhbqq1gabdjcmmhq3ls2nmbd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhl5iHgZMwabs0Pcjd0T8Q_HP6cpu1-vs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175189820747-7hbq84ojuhbqq1gabdjcmmhq3ls2nmbd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
