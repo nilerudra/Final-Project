@@ -17,7 +17,7 @@ public class page3 extends AppCompatActivity {
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
-    TextView t1,t2;
+    TextView t1,t2,bt2;
     AppCompatButton bt;
 
 
@@ -29,7 +29,7 @@ public class page3 extends AppCompatActivity {
         t1 = findViewById(R.id.name);
         t2 = findViewById(R.id.email);
         bt = findViewById(R.id.bt);
-
+        bt2 = findViewById(R.id.bt1);
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(this,gso);
 
@@ -45,14 +45,18 @@ public class page3 extends AppCompatActivity {
 
 
 
-
+        bt2.setOnClickListener(view -> nextpg());
         bt.setOnClickListener(view -> signOut());
 
 
     }
 
 
-
+    public void nextpg()
+    {
+        startActivity(new Intent(page3.this,mngtchclass.class));
+        finish();
+    }
     void signOut()
     {
         gsc.signOut().addOnCompleteListener(task -> {

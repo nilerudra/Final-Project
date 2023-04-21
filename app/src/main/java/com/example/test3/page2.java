@@ -106,38 +106,36 @@ public class page2 extends AppCompatActivity {
         }
     }
 
-    void navigateToSecondActivity()
-    {
+    void navigateToSecondActivity() {
         String myString = sharedPreferences.getString("myStringKey", "not found");
 
 
-        if(myString.equals("Teacher"))
-        {
-            GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        if (myString.equals("Teacher")) {
+           /* GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
             ref.orderByChild("id").equalTo(acct.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                    if (dataSnapshot.exists()) {
                     Toast.makeText(page2.this, "Welcome", Toast.LENGTH_SHORT).show();
-                    } else {
-                        finish();
-                        Intent in = new Intent(page2.this, teacherlogin.class);
-                        in.putExtra("id", acct.getId());
-                        startActivity(in);
+                    } else {*/
 
-                    }
-                }
+            Intent in = new Intent(page2.this, teacherlogin.class);
+//            in.putExtra("id", acct.getId());
+//            finish();
+            startActivity(in);
+//            }
+//            finish();
+        }
 
-                @Override
+               /* @Override
                 public void onCancelled(DatabaseError error) {
                     Log.w("Firebase", "Failed to read value.", error.toException());
                 }
-            });
-        }
-        else if(myString.equals("Student"))
-        {
+            });*/
+
+        else if (myString.equals("Student")) {
             finish();
-            Intent in = new Intent(page2.this,page3.class);
+            Intent in = new Intent(page2.this, page3.class);
             startActivity(in);
         }
     }

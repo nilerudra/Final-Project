@@ -30,5 +30,10 @@
         <item>Student</item>
     </string-array>
     <string name="title_activity_teachui">teachui</string>
+    <string name="createclass">CreateClass</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="Attendance">Attendance</string>
+    <string name="Tasks">Tasks</string>
+    <string name="People">People</string>
 
 </resources>

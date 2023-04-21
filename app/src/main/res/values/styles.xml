@@ -8,7 +8,7 @@
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
     </style>
 
     <!-- <style name="SpinnerTheme" parent="Theme.AppCompat.DayNight">

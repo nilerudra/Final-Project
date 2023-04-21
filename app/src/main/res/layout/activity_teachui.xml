@@ -23,7 +23,8 @@
         android:layout_marginEnd="16dp"
         android:elevation="50dp"
         android:layout_gravity="end"
-        android:background="@drawable/spin"/>
+        android:background="@drawable/spin"
+        android:contentDescription="@string/todo" />
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
@@ -35,7 +36,7 @@
         <LinearLayout
                 android:id="@+id/cc"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="70dp"
                 android:orientation="vertical"
                 android:paddingBottom="90dp">
@@ -47,17 +48,18 @@
         android:id="@+id/bt1"
         android:layout_width="129dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/btns"
         android:backgroundTint="#000000"
         android:backgroundTintMode="add"
-        android:text="CreateClass"
+        android:text="@string/createclass"
         android:textAlignment="center"
         android:textColor="#FA000000"
         android:textSize="14sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        tools:ignore="TextSizeCheck" />
 
 </RelativeLayout>
