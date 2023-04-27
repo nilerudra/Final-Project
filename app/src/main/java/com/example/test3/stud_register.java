@@ -13,7 +13,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 public class stud_register extends AppCompatActivity {
-
     GoogleSignInOptions gso1;
     GoogleSignInClient gsc1;
     TextView tt1,tt2;

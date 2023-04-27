@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -23,6 +26,9 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
     Toolbar t;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
+    String myString;
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +42,7 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
                 .setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.task);
 
+        sharedPreferences = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
                 .requestProfile()
@@ -52,11 +59,16 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
                 .error(R.drawable.baseline_person_24)
                 .circleCrop()
                 .into(imageView);
+
+        myString = sharedPreferences.getString("myStringKey", "not found");
+
     }
 
     Attendance at = new Attendance();
     Tasks ta = new Tasks();
     People pe = new People();
+
+    Scan_QRCode sc = new Scan_QRCode();
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
@@ -73,14 +85,27 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
                         .commit();
                 return true;
 
+
             case R.id.attendance:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flFragment, at)
-                        .commit();
+                if(myString.equals("Teacher"))
+                {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.flFragment, at)
+                            .commit();
+                }
+                else if (myString.equals("Student"))
+                {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.flFragment, sc)
+                            .commit();
+                }
+
                 return true;
 
             case R.id.people:
+
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.flFragment, pe)
