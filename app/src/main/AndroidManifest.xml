@@ -30,6 +30,9 @@
             android:name=".stud_register"
             android:exported="false" />
         <activity
+            android:name=".lecprac"
+            android:exported="false" />
+        <activity
             android:name=".mngtchclass"
             android:exported="false" />
         <activity
