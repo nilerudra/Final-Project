@@ -53,7 +53,6 @@ public class teacherlogin extends AppCompatActivity {
         if(acct!=null)
         {
             String s1 = acct.getEmail();
-
             t2.setText(s1);
         }
 
@@ -82,20 +81,22 @@ public class teacherlogin extends AppCompatActivity {
         String s3 = t2.getText().toString().trim();
 
         if(!s1.isEmpty() && !s2.isEmpty() && isValidMobileNumber(s1)) {
-            /*Intent intent = getIntent();
+            Intent intent = getIntent();
             String id = intent.getStringExtra("id").toString();
-            UserInfo u = new UserInfo(id,s2,s1,s3,"",1);
+            UserInfo u = new UserInfo(id,s2,s1,s3,"",id +"_1");
 
             String[] key = {"id", "name", "phone", "email", "gender", "identity"};
-            String s = String.valueOf(u.getIdentity());
+            String s = u.getIdentity();
             String[] value = {u.getId(), u.getName(), u.getPhone(), u.getEmail(), u.getGender(), s};
 
             for(int i = 0; i < 6; i++){
                 databaseReference.child("Users").child(id).child(key[i]).setValue(value[i]);
-            }*/
+            }
 
             Intent i = new Intent(teacherlogin.this, teachui.class);
+            i.putExtra("id",u.getId());
             startActivity(i);
+            finish();
 
         } else if (!isValidMobileNumber(s1)) {
             e1.setError("Please enter a valid phone number");

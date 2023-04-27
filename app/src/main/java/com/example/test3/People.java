@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import com.example.test3.R;
 
 public class People extends Fragment {
-
     public People(){
         // require a empty public constructor
     }
