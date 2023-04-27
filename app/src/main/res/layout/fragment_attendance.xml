@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Attendance">
 
     <!-- TODO: Update blank fragment layout -->
-    <ScrollView
+    <!--<ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/tmbg"
@@ -14,23 +14,85 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:contentDescription="@string/app_name">
+        android:contentDescription="@string/app_name">-->
 
-        <LinearLayout
+       <!-- <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent">-->
 
 
-            <TextView
+            <FrameLayout
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:id="@+id/idFLQrCode"
+                android:layout_marginLeft="45dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Your Code Will Appear Hare"
+                    android:textColor="@color/black"
+                    android:textAllCaps="false"
+                    android:textAlignment="center"
+                    android:id="@+id/idTVGenarateQR"
+                    android:elevation="1dp"
+                    android:padding="4dp"
+                    android:textSize="15sp"/>
+
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:id="@+id/idIVQRCode"
+                    android:background="@color/white"/>
+
+            </FrameLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="300dp"
-                android:gravity="center"
-                android:textSize="34sp"
-                android:text="@string/Attendance" />
+                android:layout_below="@id/idFLQrCode"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="15dp"
+                android:id="@+id/idTILData"
+                android:hint="Add text to embed in QR code"
+                android:padding="5dp"
+                android:textColorHint="@color/black"
+                >
 
-        </LinearLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/idEdtData"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+                    android:inputType="textImeMultiLine|textMultiLine"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="20sp"/>
 
-    </ScrollView>
+            </com.google.android.material.textfield.TextInputLayout>
 
-</FrameLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/idTILData"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/button_back"
+                android:text="Generate QR Code"
+                android:id="@+id/idBtnGenerateQR"
+                android:textColor="@color/white"
+                android:textSize="20sp"/>
+
+       <!-- </LinearLayout>
+
+    </ScrollView>-->
+
+</RelativeLayout>

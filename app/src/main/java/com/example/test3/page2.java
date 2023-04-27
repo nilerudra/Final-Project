@@ -111,31 +111,35 @@ public class page2 extends AppCompatActivity {
 
 
         if (myString.equals("Teacher")) {
-           /* GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+            GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
             ref.orderByChild("id").equalTo(acct.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                   if (dataSnapshot.exists()) {
-                    Toast.makeText(page2.this, "Welcome", Toast.LENGTH_SHORT).show();
-                    } else {*/
+                    if (dataSnapshot.exists()) {
+                        Toast.makeText(page2.this, "Welcome", Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(page2.this, teachui.class);
+                        i.putExtra("id", acct.getId());
+                        startActivity(i);
+                    } else {
+                        finish();
+                        Intent in = new Intent(page2.this, teacherlogin.class);
+                        in.putExtra("id", acct.getId());
+                        startActivity(in);
+                    }
+                }
 
-            Intent in = new Intent(page2.this, teacherlogin.class);
-//            in.putExtra("id", acct.getId());
-//            finish();
-            startActivity(in);
-//            }
-//            finish();
-        }
-
-               /* @Override
+                @Override
                 public void onCancelled(DatabaseError error) {
                     Log.w("Firebase", "Failed to read value.", error.toException());
                 }
-            });*/
+            });
+        }
 
-        else if (myString.equals("Student")) {
+        else if(myString.equals("Student"))
+        {
+
+            Intent in = new Intent(page2.this, stud_register.class);
             finish();
-            Intent in = new Intent(page2.this, page3.class);
             startActivity(in);
         }
     }

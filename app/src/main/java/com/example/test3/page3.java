@@ -1,3 +1,4 @@
+/*
 package com.example.test3;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,13 +43,8 @@ public class page3 extends AppCompatActivity {
             t1.setText(s);
             t2.setText(s1);
         }
-
-
-
         bt2.setOnClickListener(view -> nextpg());
         bt.setOnClickListener(view -> signOut());
-
-
     }
 
 
@@ -61,14 +57,16 @@ public class page3 extends AppCompatActivity {
     {
         gsc.signOut().addOnCompleteListener(task -> {
 
-            /*SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            */
+/*SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.remove("myStringKey");
-            editor.apply();*/
+            editor.apply();*//*
+
 
             finish();
             startActivity(new Intent(page3.this,page2.class));
         });
     }
 
-}
+}*/
