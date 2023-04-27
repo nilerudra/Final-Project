@@ -23,7 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 public class teachui extends AppCompatActivity {
         AppCompatButton ap,ap2;
-        //TextViewt;
+        //TextView;
         LinearLayout l;
         int i = 0;
         Toolbar t;

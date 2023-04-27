@@ -13,4 +13,17 @@
     <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
     <color name="purple">#8692f7</color>
+
+    <array name="my_colors">
+        <item>#da1962</item>
+        <item>#93a4ac</item>
+        <item>#883995</item>
+        <item>#576e78</item>
+        <item>#0b7967</item>
+        <item>#3466d5</item>
+        <item>#faa723</item>
+        <item>#4167b2</item>
+        <item>#147c7b</item>
+        <item>#4bba7a</item>
+    </array>
 </resources>
