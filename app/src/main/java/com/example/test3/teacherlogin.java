@@ -82,7 +82,7 @@ public class teacherlogin extends AppCompatActivity {
         String s3 = t2.getText().toString().trim();
 
         if(!s1.isEmpty() && !s2.isEmpty() && isValidMobileNumber(s1)) {
-            Intent intent = getIntent();
+            /*Intent intent = getIntent();
             String id = intent.getStringExtra("id").toString();
             UserInfo u = new UserInfo(id,s2,s1,s3,"",1);
 
@@ -92,7 +92,7 @@ public class teacherlogin extends AppCompatActivity {
 
             for(int i = 0; i < 6; i++){
                 databaseReference.child("Users").child(id).child(key[i]).setValue(value[i]);
-            }
+            }*/
 
             Intent i = new Intent(teacherlogin.this, teachui.class);
             startActivity(i);

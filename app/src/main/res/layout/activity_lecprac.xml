@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".lecprac">
+
+    <EditText
+        android:id="@+id/cls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="15dp"
+        android:hint="Enter Description"
+        android:inputType="textMultiLine"
+        android:maxLines="2"
+        android:minLines="2"
+        android:backgroundTint="#6E6E6E"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:scrollHorizontally="true"
+        android:textColor="#555555"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/crdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="15dp"
+        android:hint="Select Date and time"
+        android:layout_below="@id/cls"
+        android:inputType="none"
+        android:backgroundTint="#FFFFFF"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:scrollHorizontally="true"
+        android:textColor="#A0A0A0"
+        android:textSize="24sp" />
+
+    <!--<DatePicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cls"
+        android:background="#8E8E8E"
+
+        android:layout_marginTop="30dp"/>-->
+
+</RelativeLayout>
