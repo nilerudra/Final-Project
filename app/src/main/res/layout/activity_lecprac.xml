@@ -43,6 +43,26 @@
         android:textColor="#A0A0A0"
         android:textSize="24sp" />
 
+    <TextView
+        android:id="@+id/dnrepeat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="150dp"
+        android:hint="Does not repeat"
+        android:layout_below="@id/crdate"
+        android:inputType="none"
+        android:drawablePadding="10dp"
+        android:backgroundTint="#FFFFFF"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:scrollHorizontally="true"
+        android:textColor="#A0A0A0"
+        android:textSize="24sp"
+        app:drawableLeftCompat="@drawable/baseline_repeat_24" />
+
     <!--<DatePicker
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
