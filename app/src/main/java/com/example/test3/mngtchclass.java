@@ -3,11 +3,15 @@ package com.example.test3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -23,12 +27,14 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
     Toolbar t;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mngtchclass);
         t = findViewById(R.id.toolbarmt);
         setSupportActionBar(t);
+        ta = new Tasks();
         bottomNavigationView
                 = findViewById(R.id.bottomNavigationView);
 
@@ -52,10 +58,12 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
                 .error(R.drawable.baseline_person_24)
                 .circleCrop()
                 .into(imageView);
+
+
     }
 
     Attendance at = new Attendance();
-    Tasks ta = new Tasks();
+    Tasks ta;
     People pe = new People();
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
@@ -71,6 +79,7 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
                         .beginTransaction()
                         .replace(R.id.flFragment, ta)
                         .commit();
+
                 return true;
 
             case R.id.attendance:

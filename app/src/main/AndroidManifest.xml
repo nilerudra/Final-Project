@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Test3">
         <activity
+            android:name=".lecprac"
+            android:exported="false" />
+        <activity
             android:name=".mngtchclass"
             android:exported="false" />
         <activity
