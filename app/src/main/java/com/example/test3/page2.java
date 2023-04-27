@@ -68,9 +68,6 @@ public class page2 extends AppCompatActivity {
         {
             navigateToSecondActivity();
         }
-
-
-
     }
 
     void signIn()
@@ -109,7 +106,6 @@ public class page2 extends AppCompatActivity {
     void navigateToSecondActivity() {
         String myString = sharedPreferences.getString("myStringKey", "not found");
 
-
         if (myString.equals("Teacher")) {
             GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
             ref.orderByChild("id").equalTo(acct.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -120,8 +116,8 @@ public class page2 extends AppCompatActivity {
                         Intent i = new Intent(page2.this, teachui.class);
                         i.putExtra("id", acct.getId());
                         startActivity(i);
-                    } else {
                         finish();
+                    } else {
                         Intent in = new Intent(page2.this, teacherlogin.class);
                         in.putExtra("id", acct.getId());
                         startActivity(in);
@@ -137,9 +133,30 @@ public class page2 extends AppCompatActivity {
 
         else if(myString.equals("Student"))
         {
+           /* GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+            ref.orderByChild("id").equalTo(acct.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        Toast.makeText(page2.this, "Welcome", Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(page2.this, mngstudclass.class);
+                        i.putExtra("id", acct.getId());
+                        startActivity(i);
+                        finish();
+                    } else {
+                        Intent in = new Intent(page2.this, stud_register.class);
+                        in.putExtra("id", acct.getId());
+                        startActivity(in);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    Log.w("Firebase", "Failed to read value.", error.toException());
+                }
+            });*/
 
             Intent in = new Intent(page2.this, stud_register.class);
-            finish();
             startActivity(in);
         }
     }
