@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/EduNexus.iml" filepath="$PROJECT_DIR$/.idea/EduNexus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/EduNexus.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/EduNexus.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/EduNexus.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/EduNexus.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/EduNexus.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/EduNexus.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/EduNexus.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/EduNexus.app.unitTest.iml" />
+    </modules>
+  </component>
+</project>

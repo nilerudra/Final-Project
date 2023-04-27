@@ -45,7 +45,7 @@ public class stud_register extends AppCompatActivity {
 
     public void nextPg()
     {
-        startActivity(new Intent(stud_register.this,mngtchclass.class));
+        startActivity(new Intent(stud_register.this,studui.class));
         finish();
     }
     /*void signOut()
