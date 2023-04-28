@@ -18,7 +18,8 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="#50416E"
+        app:itemTextColor="@color/black"
+        android:background="@color/purple"
         android:elevation="100dp"
         app:menu="@menu/bottom_nav_menu"/>
 
@@ -26,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/toolbarmt"
-        android:background="#826A8E"
+        android:background="@color/purple"
         android:elevation="10dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">

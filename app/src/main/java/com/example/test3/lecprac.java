@@ -53,9 +53,9 @@ public class lecprac extends AppCompatActivity {
                      this,
                     (DatePickerDialog.OnDateSetListener) (view, year1, monthOfYear, dayOfMonth1) -> {
 
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, month);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.YEAR, year1);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth1);
 
                         // Show the TimePickerDialog to allow the user to select a time
                         TimePickerDialog timePickerDialog = new TimePickerDialog(

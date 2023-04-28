@@ -21,6 +21,8 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import java.util.Calendar;
+
 public class Attendance extends Fragment {
 
     private TextView qrCodeTV;
@@ -40,6 +42,15 @@ public class Attendance extends Fragment {
         qrCodeIV = view.findViewById(R.id.idIVQRCode);
         dataEdt = view.findViewById(R.id.idEdtData);
         generateQRBtn = view.findViewById(R.id.idBtnGenerateQR);
+
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        String currentDate = year + "-" + month + "-" + day;
+
+        dataEdt.setText(currentDate + "_");
         generateQRBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

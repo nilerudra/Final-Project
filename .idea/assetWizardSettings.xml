@@ -3,6 +3,11 @@
   <component name="WizardSettings">
     <option name="children">
       <map>
+        <entry key="imageWizard">
+          <value>
+            <PersistentState />
+          </value>
+        </entry>
         <entry key="vectorWizard">
           <value>
             <PersistentState>
@@ -18,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/task/baseline_task_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/mode_edit/baseline_mode_edit_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,9 +33,10 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="50416e" />
-                            <entry key="outputName" value="task" />
-                            <entry key="sourceFile" value="C:\Users\Admin\AndroidStudioProjects\Final-Project-master" />
+                            <entry key="autoMirrored" value="true" />
+                            <entry key="color" value="4f406e" />
+                            <entry key="outputName" value="baseline_mode_edit_24" />
+                            <entry key="sourceFile" value="C:\Users\gadget guru\AndroidStudioProjects\Final Project" />
                           </map>
                         </option>
                       </PersistentState>

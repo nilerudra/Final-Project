@@ -23,7 +23,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Test3">
         <activity
-            android:name=".studui"
+            android:name=".lecpracschmng"
+            android:exported="false" />
+        <activity
+            android:name=".custom"
             android:exported="false" />
         <activity
             android:name=".Scan_QRCode"
