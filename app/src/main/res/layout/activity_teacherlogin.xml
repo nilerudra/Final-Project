@@ -91,7 +91,7 @@
                 android:background="@drawable/custom_edittext"
                 android:inputType="textEmailAddress"
                 android:padding="8dp"
-                android:textColor="@color/black"
+                android:textColor="#666666"
                 android:text=" Enter E-mail here"
                 android:textSize="20sp"/>
 
