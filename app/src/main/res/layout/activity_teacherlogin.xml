@@ -58,54 +58,54 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="40dp"
                 android:background="@drawable/custom_edittext"
-                android:hint=" Enter Your Name"
                 android:drawableEnd="@drawable/baseline_person_24"
                 android:drawablePadding="20dp"
+                android:hint=" Enter Your Name"
                 android:inputType="textAutoCorrect|textCapSentences"
                 android:padding="8dp"
-                android:textSize="20sp"
-                android:textColorHighlight="@color/cardview_dark_background"/>
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/pno"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
+                android:background="@drawable/custom_edittext"
                 android:drawableEnd="@drawable/baseline_phone_24"
                 android:drawablePadding="20dp"
-                android:background="@drawable/custom_edittext"
                 android:hint=" Enter Your Phone no."
                 android:inputType="number"
-                android:textColor="@color/black"
                 android:padding="8dp"
-                android:textSize="20sp"
-                android:textColorHighlight="@color/cardview_dark_background" />
+                android:textColor="@color/black"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
+                android:background="@drawable/custom_edittext"
                 android:drawableEnd="@drawable/baseline_email_24"
                 android:drawablePadding="20dp"
-                android:background="@drawable/custom_edittext"
                 android:inputType="textEmailAddress"
                 android:padding="8dp"
-                android:textColor="@color/black"
                 android:text=" Enter E-mail here"
-                android:textSize="20sp"/>
+                android:textColor="@color/black"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/bt1"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Login"
-                android:padding="8dp"
-                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
                 android:backgroundTint="@color/purple"
+                android:padding="8dp"
+                android:text="Login"
                 android:textSize="18sp"
-                app:cornerRadius="30dp"/>
+                app:cornerRadius="30dp" />
 
             <TextView
                 android:id="@+id/bt"

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -19,13 +20,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.type.DateTime;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class Scan_QRCode extends Fragment {
 
     FirebaseDatabase database;
     DatabaseReference ref;
+    Calendar calendar = Calendar.getInstance();
+    int year = calendar.get(Calendar.YEAR);
+    int month = calendar.get(Calendar.MONTH) + 1;
+    int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+    String currentDate = year + "-" + month + "-" + day;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,9 +61,9 @@ public class Scan_QRCode extends Fragment {
 
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result ->
     {
-        if(result.getContents() != null)
+        if(result.getContents().equals(currentDate + "_"))
         {
-            get();
+            insertid();
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setMessage("Done");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -60,24 +72,20 @@ public class Scan_QRCode extends Fragment {
                     dialog.dismiss();
                 }
             }).show();
-
+        }
+        else
+        {
+            Toast.makeText(requireContext(), "Scan Valid QR Code", Toast.LENGTH_SHORT).show();
         }
     });
 
-    public void get()
+    public void insertid()
     {
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(requireContext());
-        ref.orderByChild("id").equalTo(acct.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        String id = acct.getId();
 
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                
-            }
+        DatabaseReference df = FirebaseDatabase.getInstance().getReference();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-}
+        df.child("Attendence").child(currentDate).child("student_id").setValue(id);
+    }
 }
