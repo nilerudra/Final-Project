@@ -18,98 +18,115 @@
     android:layout_marginBottom="10dp"
     android:contentDescription="@string/app_name">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
+        android:layout_height="500dp">
 
         <TextView
             android:id="@+id/cls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/btnclass"
             android:paddingStart="20dp"
             android:paddingTop="10dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:background="@drawable/clsui"
-            android:paddingBottom="80dp"
-            android:textSize="34sp"
-            android:text="Class 1" />
+            android:paddingBottom="60dp"
+            android:text="Class 1"
+            android:textColor="#000000"
+            android:textSize="38sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/schdlp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="15dp"
+            android:layout_width="150dp"
+            android:layout_height="130dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
             android:background="@drawable/clsui"
-            android:paddingStart="20dp"
+            android:gravity="center"
+            android:paddingStart="10dp"
             android:paddingTop="20dp"
+            android:layout_below="@id/cls"
+            android:paddingEnd="10dp"
             android:paddingBottom="20dp"
-            android:text="Schedule Lect/Pract"
-            android:textSize="20sp" />
+            android:text="Schedule Lecture"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/schdtsk"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="15dp"
+            android:layout_width="150dp"
+            android:layout_height="130dp"
+            android:layout_below="@id/cls"
+            android:layout_toRightOf="@id/schdlp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
             android:background="@drawable/clsui"
-            android:paddingStart="20dp"
+            android:gravity="center"
+            android:paddingStart="10dp"
             android:paddingTop="20dp"
+            android:paddingEnd="10dp"
             android:paddingBottom="20dp"
             android:text="Schedule Tests"
-            android:textSize="20sp" />
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
         <TextView
             android:id="@+id/asswrk"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="15dp"
+            android:layout_width="150dp"
+            android:layout_height="130dp"
+            android:layout_below="@id/schdlp"
+            android:gravity="center"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="30dp"
             android:background="@drawable/clsui"
             android:paddingStart="20dp"
             android:paddingTop="20dp"
+            android:paddingEnd="20dp"
+            android:textColor="@color/white"
             android:paddingBottom="20dp"
             android:text="Assign Work"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
         <TextView
             android:id="@+id/upldstmt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="15dp"
+            android:layout_width="150dp"
+            android:layout_height="130dp"
+            android:layout_toRightOf="@id/asswrk"
+            android:layout_below="@id/schdtsk"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="30dp"
             android:background="@drawable/clsui"
             android:paddingStart="20dp"
+            android:textColor="@color/white"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:text="Upload Study Material"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
 
         <TextView
         android:id="@+id/crtt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="15dp"
+        android:layout_width="150dp"
+        android:layout_height="130dp"
+        android:layout_below="@id/asswrk"
+        android:layout_marginStart="30dp"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="30dp"
         android:background="@drawable/clsui"
         android:paddingStart="20dp"
         android:paddingTop="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/white"
         android:paddingBottom="20dp"
         android:text="Create Task"
-        android:textSize="20sp" />
+        android:textSize="24sp" />
 
-
-
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </ScrollView>
 

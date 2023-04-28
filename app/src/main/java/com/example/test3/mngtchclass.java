@@ -68,14 +68,11 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
                 .into(imageView);
 
         myString = sharedPreferences.getString("myStringKey", "not found");
-
-
     }
 
     Attendance at = new Attendance();
     Tasks ta;
     People pe = new People();
-
     Scan_QRCode sc = new Scan_QRCode();
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
