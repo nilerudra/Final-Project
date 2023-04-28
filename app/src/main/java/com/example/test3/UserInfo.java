@@ -6,9 +6,9 @@ public class UserInfo {
     public String phone = "";
     public String email = "";
     public String gender = "";
-    public int identity = 0;   // 0 - Student, 1 - Teacher
+    public String identity = "";   // 0 - Student, 1 - Teacher
 
-    public UserInfo(String id, String name, String phone, String email, int indentify) {
+    public UserInfo(String id, String name, String phone, String email, String indentify) {
         this.id = id;
         this.name = name;
         this.phone = phone;
@@ -16,7 +16,7 @@ public class UserInfo {
         this.identity = indentify;
     }
 
-    public UserInfo(String id, String name, String phone, String email, String gender, int indentify) {
+    public UserInfo(String id, String name, String phone, String email, String gender, String indentify) {
         this.id = id;
         this.name = name;
         this.phone = phone;
@@ -65,11 +65,11 @@ public class UserInfo {
         this.gender = gender;
     }
 
-    public int getIdentity() {
+    public String getIdentity() {
         return identity;
     }
 
-    public void setIndentify(int indentify) {
+    public void setIndentify(String indentify) {
         this.identity = indentify;
     }
 

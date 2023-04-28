@@ -1,7 +1,5 @@
 package com.example.test3;
 
-
-
 import static java.security.AccessController.getContext;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,7 +33,6 @@ public class page2 extends AppCompatActivity {
     AppCompatButton iv;
     FirebaseDatabase database;
     DatabaseReference ref;
-
     SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +105,7 @@ public class page2 extends AppCompatActivity {
 
         if (myString.equals("Teacher")) {
             GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-            ref.orderByChild("id").equalTo(acct.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            ref.orderByChild("identity").equalTo(acct.getId() + "_1").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
@@ -133,13 +130,13 @@ public class page2 extends AppCompatActivity {
 
         else if(myString.equals("Student"))
         {
-           /* GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-            ref.orderByChild("id").equalTo(acct.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+            ref.orderByChild("identity").equalTo(acct.getId() + "_0").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         Toast.makeText(page2.this, "Welcome", Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(page2.this, mngstudclass.class);
+                        Intent i = new Intent(page2.this, studui.class);
                         i.putExtra("id", acct.getId());
                         startActivity(i);
                         finish();
@@ -154,10 +151,7 @@ public class page2 extends AppCompatActivity {
                 public void onCancelled(DatabaseError error) {
                     Log.w("Firebase", "Failed to read value.", error.toException());
                 }
-            });*/
-
-            Intent in = new Intent(page2.this, stud_register.class);
-            startActivity(in);
+            });
         }
     }
 }
