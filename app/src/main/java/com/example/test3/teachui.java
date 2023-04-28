@@ -5,6 +5,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -89,7 +90,8 @@ imageView.setImageDrawable(drawable);
                 layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
                 ed.setLayoutParams(layoutParams);
                 l.addView(ed);*/
-                d.show();
+                startActivity(new Intent(teachui.this,lecpracschmng.class));
+                //d.show();
         }
 /*privateStringgetInitials(Stringname){
 String[]parts=name.split("");

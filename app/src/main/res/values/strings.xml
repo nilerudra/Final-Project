@@ -25,6 +25,12 @@
         <item>Teacher</item>
     </string-array>
 
+    <string-array name="repocc">
+        <item>day</item>
+        <item>week</item>
+        <item>month</item>
+    </string-array>
+
     <string-array name="spin1">
         <item>Teacher</item>
         <item>Student</item>
