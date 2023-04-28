@@ -68,7 +68,7 @@ public class stud_register extends AppCompatActivity {
                 databaseReference.child("Users").child(id).child(key[i]).setValue(value[i]);
             }
 
-            Intent i = new Intent(stud_register.this, mngtchclass.class);
+            Intent i = new Intent(stud_register.this, studui.class);
             i.putExtra("id",u.getId());
             startActivity(i);
             finish();
@@ -84,8 +84,6 @@ public class stud_register extends AppCompatActivity {
     public boolean isValidMobileNumber(String mobileNumber) {
         String mobilePattern = "^[1-9]\\d{9}$"; // Define the pattern for a valid 10-digit mobile number
         return mobileNumber.matches(mobilePattern); // Check if the input matches the pattern
-        startActivity(new Intent(stud_register.this,studui.class));
-        finish();
     }
     /*void signOut()
     {

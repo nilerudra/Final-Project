@@ -135,7 +135,7 @@ returninitials.toString().toUpperCase();
                                         newClass.setSubject_id(childSnapshot.child("subject_id").getValue(String.class));
 
                                         if(newClass.teacher_id.equals(getIntent().getStringExtra("id"))){
-                                                addClass(newClass.getName(), newClass.getDescription());
+                                                addClass(newClass.getName(), newClass.getDescription(), newClass.subject_id);
                                         }
                                         else{
                                                 Toast.makeText(teachui.this,"hello",Toast.LENGTH_SHORT).show();
@@ -163,7 +163,7 @@ returninitials.toString().toUpperCase();
                 des.setText("");
         }
 
-        public void addClass(String name, String description){
+        public void addClass(String name, String description, String sub_id){
                 TextView ed = new TextView(teachui.this);
                 ed.setText(String.format("%s\n\n%s",name,description));
                 ed.setBackgroundResource(R.drawable.fortui);
@@ -177,18 +177,20 @@ returninitials.toString().toUpperCase();
                 int bottomMargin = 0;
                 layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
                 ed.setLayoutParams(layoutParams);
-                ed.setOnClickListener(view ->mngPage());
+                ed.setOnClickListener(view ->mngPage(name, sub_id));
                 l.addView(ed);
                 d.hide();
         }
 
         public void classadd() {
-                addClass(e.getText().toString(), des.getText().toString());
+                addClass(e.getText().toString(), des.getText().toString(), getIntent().getStringExtra("id")+"_"+e.getText().toString());
                 addClassToDatabase();
         }
 
-        public void mngPage(){
+        public void mngPage(String name, String sub_id){
                 Intent i = new Intent(teachui.this, mngtchclass.class);
+                i.putExtra("sub_id", sub_id);
+                i.putExtra("name",name);
                 startActivity(i);
         }
 }

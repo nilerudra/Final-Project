@@ -29,7 +29,7 @@
         android:background="@drawable/btns"
         android:backgroundTint="#000000"
         android:backgroundTintMode="add"
-        android:text="CreateClass"
+        android:text="@string/join_class"
         android:textAlignment="center"
         android:textColor="#FA000000"
         android:textSize="14sp"

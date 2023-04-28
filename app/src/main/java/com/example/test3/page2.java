@@ -136,7 +136,7 @@ public class page2 extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         Toast.makeText(page2.this, "Welcome", Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(page2.this, mngtchclass.class);
+                        Intent i = new Intent(page2.this, studui.class);
                         i.putExtra("id", acct.getId());
                         startActivity(i);
                         finish();

@@ -21,15 +21,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <TextView
+        <ListView
+            android:id="@+id/Listview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="300dp"
-            android:gravity="center"
-            android:textSize="34sp" />
+            android:layout_height="618dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp" />
 
-
+        
     </LinearLayout>
 
 </ScrollView>
