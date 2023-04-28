@@ -32,6 +32,6 @@ public class Tasks extends Fragment {
     public void schlp()
     {
         //return view.findViewById(R.id.schdlp);
-        startActivity(new Intent(getActivity(),lecprac.class));
+        startActivity(new Intent(getActivity(),lecpracschmng.class));
     }
 }
