@@ -59,10 +59,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="15dp"
                 android:id="@+id/idTILData"
-                android:hint="Add text to embed in QR code"
                 android:padding="5dp"
-                android:textColorHint="@color/black"
-                >
+                android:textColorHint="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -72,6 +70,7 @@
                     android:importantForAutofill="no"
                     android:inputType="textImeMultiLine|textMultiLine"
                     android:textColor="@color/black"
+
                     android:textColorHint="@color/black"
                     android:textSize="20sp"/>
 
@@ -91,6 +90,19 @@
                 android:textColor="@color/white"
                 android:textSize="20sp"/>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/idBtnGenerateQR"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_back"
+        android:text="Get Attendance"
+        android:id="@+id/GetAttendance"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
        <!-- </LinearLayout>
 
     </ScrollView>-->

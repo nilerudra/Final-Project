@@ -26,7 +26,9 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class Scan_QRCode extends Fragment {
 
@@ -61,7 +63,7 @@ public class Scan_QRCode extends Fragment {
 
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result ->
     {
-        if(result.getContents().equals(currentDate + "_"))
+        if(result.getContents().equals(currentDate + "_" + mngtchclass.subId))
         {
             insertid();
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -84,8 +86,10 @@ public class Scan_QRCode extends Fragment {
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(requireContext());
         String id = acct.getId();
 
-        DatabaseReference df = FirebaseDatabase.getInstance().getReference();
+        Map<String, Object> data = new HashMap<>();
+        data.put("student_id", ""+id);
 
-        df.child("Attendence").child(currentDate).child("student_id").setValue(id);
+        DatabaseReference df = FirebaseDatabase.getInstance().getReference();
+        df.child("Attendence").child(currentDate).setValue(data);
     }
 }

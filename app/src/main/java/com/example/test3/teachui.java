@@ -137,9 +137,6 @@ returninitials.toString().toUpperCase();
                                         if(newClass.teacher_id.equals(getIntent().getStringExtra("id"))){
                                                 addClass(newClass.getName(), newClass.getDescription(), newClass.subject_id);
                                         }
-                                        else{
-                                                Toast.makeText(teachui.this,"hello",Toast.LENGTH_SHORT).show();
-                                        }
                                 }
                         }
 

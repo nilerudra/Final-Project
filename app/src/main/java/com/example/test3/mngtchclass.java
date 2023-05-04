@@ -32,7 +32,7 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
     GoogleSignInClient gsc;
 
     String myString;
-    public static String subId;
+    public static String subId,subName;
     SharedPreferences sharedPreferences;
 
 
@@ -72,7 +72,7 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
 
         Intent intent = getIntent();
         subId = intent.getStringExtra("sub_id");
-        Toast.makeText(mngtchclass.this,"" + subId,Toast.LENGTH_SHORT).show();
+        subName = intent.getStringExtra("name");
     }
 
     Attendance at = new Attendance();
