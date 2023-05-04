@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
@@ -24,9 +24,6 @@
         android:roundIcon="@drawable/img"
         android:supportsRtl="true"
         android:theme="@style/Theme.Test3">
-        <activity
-            android:name=".page2"
-            android:exported="false" />
         <activity
             android:name=".lecpracschmng"
             android:exported="false" />
@@ -60,7 +57,7 @@
             android:name=".studui"
             android:exported="false" />
         <activity
-            android:name=".splashScreen"
+            android:name=".page2"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:theme="@style/Theme.Test3.Fullscreen">

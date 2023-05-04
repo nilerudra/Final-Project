@@ -6,6 +6,175 @@
     android:layout_height="match_parent"
     tools:context=".custom">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="REPEATS EVERY"
+        android:id="@+id/repevr"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="20dp"/>
 
+    <EditText
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:id="@+id/occ"
+        android:layout_below="@id/repevr"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"/>
+    <Spinner
+        android:id="@+id/selocc"
+        android:layout_width="128dp"
+        android:layout_marginStart="100dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/repevr"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="#8E8E8E"
+        android:contentDescription="@string/app_name"
+        android:textColor="#2C2C2C"
+        android:spinnerMode="dropdown"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="REPEATS ON"
+        android:id="@+id/repon"
+        android:layout_below="@id/occ"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/chswk"
+        android:padding="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_below="@id/repon">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/w0"
+            android:backgroundTint="#EAEAEA"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/week"
+            android:text="S" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/w1"
+            android:backgroundTint="#EAEAEA"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/week"
+            android:text="M"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:backgroundTint="#EAEAEA"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/w2"
+            android:background="@drawable/week"
+            android:text="T"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/w3"
+            android:backgroundTint="#EAEAEA"
+            android:background="@drawable/week"
+            android:text="W"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/w4"
+            android:backgroundTint="#EAEAEA"
+            android:background="@drawable/week"
+            android:text="T"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:backgroundTint="#EAEAEA"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/w5"
+            android:background="@drawable/week"
+            android:text="F"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="#EAEAEA"
+            android:id="@+id/w6"
+            android:background="@drawable/week"
+            android:text="S"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ENDS"
+        android:id="@+id/ends"
+        android:layout_below="@id/chswk"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"/>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ends"
+        android:id="@+id/endson"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:id="@+id/never"
+            android:layout_height="wrap_content"
+            android:text="Never"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:id="@+id/cusdate"
+            android:layout_height="wrap_content"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:id="@+id/cusocc"
+            android:layout_height="wrap_content"
+            android:text="After occurence"/>
+    </RadioGroup>
+
+    <EditText
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:id="@+id/aftocc"
+        android:layout_alignStart="@id/endson"
+        android:layout_below="@id/ends"
+        android:layout_marginTop="114dp"
+        android:layout_marginStart="140dp"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/save1"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/endson"
+        android:background="@drawable/btns"
+        android:text="Save"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        tools:ignore="TextSizeCheck" />
 
 </RelativeLayout>

@@ -72,13 +72,7 @@ public class teachui extends AppCompatActivity {
                         .error(R.drawable.baseline_person_24)
                         .circleCrop()
                         .into(imageView);
-/*else
-{
-Stringinitials=getInitials(signInAccount.getDisplayName());
-TextDrawabledrawable=TextDrawable.builder().buildRound(initials,Color.GRAY);
-imageView.setImageDrawable(drawable);
 
-}*/
                 ap = findViewById(R.id.bt1);
                 l = findViewById(R.id.cc);
                 ap.setOnClickListener(view -> addcp());
@@ -87,37 +81,23 @@ imageView.setImageDrawable(drawable);
                 ref = database.getReference("Subject");
 
                 showClass();
+                imageView.setOnClickListener(view -> openMenu());
         }
 
+        Tasks ts = new Tasks();
+        Menuopt mno = new Menuopt();
+        public void openMenu()
+        {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.menuopt, mno)
+                        .commit();
+        }
         public void addcp() {
-                /*TextView ed = new TextView(teachui.this);
-                ed.setText("This is newly added" + i);
-                i++;
-                ed.setBackgroundResource(R.drawable.fortui);
-                ed.setTextSize(20);
-                ed.setPadding(40, 25, 40, 150);
-                ed.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ed.getLayoutParams();
-                int leftMargin = 20;
-                int topMargin = 20;
-                int rightMargin = 20;
-                int bottomMargin = 0;
-                layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
-                ed.setLayoutParams(layoutParams);
-                l.addView(ed);*/
                 d.show();
         }
-/*privateStringgetInitials(Stringname){
-String[]parts=name.split("");
-StringBuilderinitials=newStringBuilder();
-for(Stringpart:parts){
-if(!part.isEmpty()){
-initials.append(part.charAt(0));
-}
-}
-returninitials.toString().toUpperCase();
-}*/
-        public void showClass(){
+        public void showClass()
+        {
                 // clear the LinearLayout first
                 ref.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -166,7 +146,7 @@ returninitials.toString().toUpperCase();
                 ed.setBackgroundResource(R.drawable.fortui);
                 ed.setTextSize(26);
                 ed.setTextAppearance(this, R.style.AppTheme);
-                ed.setPadding(40, 25, 40, 150);
+                ed.setPadding(40, 25, 40, 100);
                 ed.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ed.getLayoutParams();
                 int leftMargin = 20;
