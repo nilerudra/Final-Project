@@ -1,39 +1,42 @@
 package com.example.test3;
 
-import static java.security.AccessController.getContext;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.appcompat.widget.AppCompatButton;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class lecprac extends AppCompatActivity {
-    TextView t1;
+    TextView t1,t2,t3;
     RadioGroup rdg;
     Dialog d1;
+    String s = "Custom";
+    EditText edt;
     TextView dtpick;
+    AppCompatButton ap;
     RadioButton rd;
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lecprac);
+
+        edt = findViewById(R.id.cls);
+
+        t2 = findViewById(R.id.crdate);
+
+        ap = findViewById(R.id.save);
+        ap.setOnClickListener(view -> savechngs());
 
         dtpick = findViewById(R.id.crdate);
         Calendar calendar = Calendar.getInstance();
@@ -45,7 +48,6 @@ public class lecprac extends AppCompatActivity {
         int minute = calendar.get(Calendar.MINUTE);
 
         String formattedDateTime = new SimpleDateFormat("MMM/d/yyyy      hh:mm a", Locale.getDefault()).format(new Date(year - 1900, month, day, hour, minute));
-        /*dtpick.setText(day + "/" + (month + 1) + "/" + year + "     " + hour + ":" + minute);*/
         dtpick.setText(formattedDateTime);
         dtpick.setOnClickListener(view -> dtupd());
 
@@ -100,45 +102,51 @@ public class lecprac extends AppCompatActivity {
     {
         d1.show();
             rdg.setOnCheckedChangeListener((radioGroup, i) -> {
-                String s;
                 rd = rdg.findViewById(i);
                 t1.setText(rd.getText());
-                /*if (i == -1) {
-                    // Handle the case where no RadioButton is selected
-                    s = "No radio button selected";
-                } else {
-                    // Get the selected RadioButton object
-                    rd = rdg.findViewById(i);
-                    if (rd == null) {
-                        // Handle the case where the RadioButton is not found
-                        s = "RadioButton not found";
-                    } else {
-                        s = rd.getText().toString();
-                        Toast.makeText(this, ""+s, Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-
-               // Toast.makeText(lecprac.this, rd.getText().toString(), Toast.LENGTH_SHORT).show();
-
-                if (rd != null) {
-                    // Get the text of the selected RadioButton
-                    s = rd.getText().toString();
-                    Toast.makeText(lecprac.this, "hiiii", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Handle the case where the selectedRadioButton is null
-                    s = "No radio button selected";
-                }
-
-                //String s = rd.getText().toString();
-                t1.setText(s);*/
             if(rd.getText().equals("Custom"))
             {
-                startActivity(new Intent(lecprac.this,custom.class));
+                Intent intent = new Intent(lecprac.this,custom.class);
+
+                startActivityForResult(intent,2);
             }
 
                 d1.hide();
             });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 2) {
+           // setResult(2);
+            s = "Repeats " + data.getStringExtra("1");
+            Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+            t1.setText(s);
+            //finish();
+        }
+        else
+        {
+            //t1.setText("Does not repeat");
+            rd = rdg.findViewById(R.id.dnr);
+            rdg.check(rd.getId());
+        }
+    }
+
+    public void savechngs()
+    {
+        String s1 = t2.getText().toString();
+        String[] dt = s1.split("      ");
+        String s2 = dt[0];
+        String s3 = dt[1];
+        Intent intent = new Intent();
+        intent.putExtra("1",edt.getText().toString());
+        intent.putExtra("2",s2);
+        intent.putExtra("3",s3);
+        intent.putExtra("4",t1.getText().toString());
+        setResult(1, intent);
+        finish();
+    }
+
 
 }

@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/tmbg"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
@@ -18,16 +20,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="300dp"
-                android:gravity="center"
-                android:text="@string/People"
-                android:textSize="34sp" />
+            android:layout_height="match_parent"
+            android:id="@+id/schdlecprac"
+            android:orientation="vertical"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
 
 
         </LinearLayout>
@@ -37,14 +36,14 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/edit"
         android:layout_width="48dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
-        android:background="@drawable/edt"
+        android:background="@drawable/edtbut"
+        android:foreground="@drawable/edit1"
         android:padding="2dp"
-        android:foreground="@drawable/baseline_mode_edit_24"
         android:gravity="center" />
 
 </RelativeLayout>

@@ -7,11 +7,17 @@
     android:background="@color/white"
     tools:context=".teachui">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="150dp"
+        android:id="@+id/menuopt"/>
+
 <androidx.appcompat.widget.Toolbar
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:id="@+id/toolbar"
-    android:background="#145365"
+    android:background="#50416E"
     android:elevation="10dp"
     android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">

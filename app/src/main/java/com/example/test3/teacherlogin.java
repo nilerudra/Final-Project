@@ -119,15 +119,10 @@ public class teacherlogin extends AppCompatActivity {
     private void generateExcelFile()
     {
         Workbook workbook = new HSSFWorkbook();
-        // Create a new sheet
         Sheet sheet = workbook.createSheet("My Sheet");
-        // Create a new row
         Row row = sheet.createRow(0);
-        // Create a new cell and set its value
         Cell cell = row.createCell(0);
         cell.setCellValue("rudra");
-
-        // Write the workbook to a file
         File file = new File(getExternalFilesDir(null), "Attendance.xlsx");
         FileOutputStream outputStream = null;
         try {
@@ -140,8 +135,8 @@ public class teacherlogin extends AppCompatActivity {
     }
 
     public boolean isValidMobileNumber(String mobileNumber) {
-        String mobilePattern = "^[1-9]\\d{9}$"; // Define the pattern for a valid 10-digit mobile number
-        return mobileNumber.matches(mobilePattern); // Check if the input matches the pattern
+        String mobilePattern = "^[1-9]\\d{9}$";
+        return mobileNumber.matches(mobilePattern);
     }
     public boolean isValidEmail(String email) {
         String regex = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";

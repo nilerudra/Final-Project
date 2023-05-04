@@ -50,7 +50,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="150dp"
-        android:hint="Does not repeat"
+        android:text="Does not repeat"
         android:layout_below="@id/crdate"
         android:inputType="none"
         android:drawablePadding="10dp"

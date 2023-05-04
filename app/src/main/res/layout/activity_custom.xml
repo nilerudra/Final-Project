@@ -50,6 +50,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/chswk"
+        android:padding="5dp"
         android:layout_marginTop="15dp"
         android:layout_marginStart="20dp"
         android:layout_below="@id/repon">
@@ -57,8 +58,8 @@
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:id="@+id/s1"
-            android:backgroundTint="#BABABA"
+            android:id="@+id/w0"
+            android:backgroundTint="#EAEAEA"
             android:layout_marginEnd="10dp"
             android:background="@drawable/week"
             android:text="S" />
@@ -66,8 +67,8 @@
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:id="@+id/m"
-            android:backgroundTint="#BABABA"
+            android:id="@+id/w1"
+            android:backgroundTint="#EAEAEA"
             android:layout_marginEnd="10dp"
             android:background="@drawable/week"
             android:text="M"/>
@@ -75,9 +76,9 @@
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:backgroundTint="#BABABA"
+            android:backgroundTint="#EAEAEA"
             android:layout_marginEnd="10dp"
-            android:id="@+id/t1"
+            android:id="@+id/w2"
             android:background="@drawable/week"
             android:text="T"/>
 
@@ -85,8 +86,8 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginEnd="10dp"
-            android:id="@+id/w"
-            android:backgroundTint="#BABABA"
+            android:id="@+id/w3"
+            android:backgroundTint="#EAEAEA"
             android:background="@drawable/week"
             android:text="W"/>
 
@@ -94,17 +95,17 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginEnd="10dp"
-            android:id="@+id/t2"
-            android:backgroundTint="#BABABA"
+            android:id="@+id/w4"
+            android:backgroundTint="#EAEAEA"
             android:background="@drawable/week"
             android:text="T"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:backgroundTint="#BABABA"
+            android:backgroundTint="#EAEAEA"
             android:layout_marginEnd="10dp"
-            android:id="@+id/f"
+            android:id="@+id/w5"
             android:background="@drawable/week"
             android:text="F"/>
 
@@ -112,8 +113,8 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="#BABABA"
-            android:id="@+id/s2"
+            android:backgroundTint="#EAEAEA"
+            android:id="@+id/w6"
             android:background="@drawable/week"
             android:text="S"/>
 
@@ -132,6 +133,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ends"
+        android:id="@+id/endson"
         android:layout_marginTop="15dp"
         android:layout_marginStart="20dp">
 
@@ -151,5 +153,28 @@
             android:text="After occurence"/>
     </RadioGroup>
 
+    <EditText
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:id="@+id/aftocc"
+        android:layout_alignStart="@id/endson"
+        android:layout_below="@id/ends"
+        android:layout_marginTop="114dp"
+        android:layout_marginStart="140dp"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/save1"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/endson"
+        android:background="@drawable/btns"
+        android:text="Save"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        tools:ignore="TextSizeCheck" />
 
 </RelativeLayout>
