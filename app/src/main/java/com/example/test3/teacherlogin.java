@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -139,8 +140,8 @@ public class teacherlogin extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                    id.add(childSnapshot.child("id").getValue().toString());
-                    name.add(childSnapshot.child("name").getValue().toString());
+                    id.add(Objects.requireNonNull(childSnapshot.child("id").getValue()).toString());
+                    name.add(Objects.requireNonNull(childSnapshot.child("name").getValue()).toString());
                 }
 
             }
