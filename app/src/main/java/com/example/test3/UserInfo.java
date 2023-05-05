@@ -5,24 +5,19 @@ public class UserInfo {
     public String name = "";
     public String phone = "";
     public String email = "";
-    public String gender = "";
+    public String enr_no = "";
     public String identity = "";   // 0 - Student, 1 - Teacher
 
-    public UserInfo(String id, String name, String phone, String email, String indentify) {
-        this.id = id;
-        this.name = name;
-        this.phone = phone;
-        this.email = email;
-        this.identity = indentify;
+    public UserInfo() {
     }
 
-    public UserInfo(String id, String name, String phone, String email, String gender, String indentify) {
+    public UserInfo(String id, String name, String phone, String email, String enr_no, String identity) {
         this.id = id;
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.gender = gender;
-        this.identity = indentify;
+        this.enr_no = enr_no;
+        this.identity = identity;
     }
 
     public String getId() {
@@ -57,20 +52,20 @@ public class UserInfo {
         this.email = email;
     }
 
-    public String getGender() {
-        return gender;
+    public String getEnr_no() {
+        return enr_no;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setEnr_no(String gender) {
+        this.enr_no = gender;
     }
 
     public String getIdentity() {
         return identity;
     }
 
-    public void setIndentify(String indentify) {
-        this.identity = indentify;
+    public void setIdentity(String identity) {
+        this.identity = identity;
     }
 
     @Override
@@ -80,7 +75,7 @@ public class UserInfo {
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
-                ", gender='" + gender + '\'' +
+                ", enr_no='" + enr_no + '\'' +
                 ", identity=" + identity +
                 '}';
     }

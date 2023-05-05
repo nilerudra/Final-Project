@@ -24,6 +24,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.IOException;
+
 public class mngtchclass extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     ImageView imageView;
     BottomNavigationView bottomNavigationView;
@@ -32,8 +34,11 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
     GoogleSignInClient gsc;
 
     String myString;
-    public static String subId;
+    public static String subId,sub_name;
     SharedPreferences sharedPreferences;
+
+    public mngtchclass() throws IOException {
+    }
 
 
     @Override
@@ -72,6 +77,7 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
 
         Intent intent = getIntent();
         subId = intent.getStringExtra("sub_id");
+        sub_name = intent.getStringExtra("name");
         Toast.makeText(mngtchclass.this,"" + subId,Toast.LENGTH_SHORT).show();
     }
 
