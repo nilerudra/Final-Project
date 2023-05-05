@@ -33,7 +33,7 @@ public class Tasks extends Fragment {
     }
 
     private void upldstdwrk() {
-       // startActivity(new Intent(getActivity(),uploadstudymaterial.class));
+        startActivity(new Intent(getActivity(),uploadstdmaterial.class));
     }
 
     public void schlp()

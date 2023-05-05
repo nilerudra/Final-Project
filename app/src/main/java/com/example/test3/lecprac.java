@@ -8,6 +8,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -102,17 +103,24 @@ public class lecprac extends AppCompatActivity {
     {
         d1.show();
             rdg.setOnCheckedChangeListener((radioGroup, i) -> {
+            if(i != -1) {
                 rd = rdg.findViewById(i);
                 t1.setText(rd.getText());
-            if(rd.getText().equals("Custom"))
-            {
-                Intent intent = new Intent(lecprac.this,custom.class);
-
-                startActivityForResult(intent,2);
+                if (rd.getText().equals("Custom")) {
+                    rdg.clearCheck();
+                    int a = rdg.getChildCount();
+                    if(a>5)
+                    {
+                        View childview = rdg.getChildAt(0);
+                        rdg.removeView(childview);
+                    }
+                    Intent intent = new Intent(lecprac.this, custom.class);
+                    //startActivity(intent);
+                    startActivityForResult(intent, 1);
+                }
             }
-
                 d1.hide();
-            });
+        });
     }
 
     @Override
@@ -124,12 +132,16 @@ public class lecprac extends AppCompatActivity {
             Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
             t1.setText(s);
             //finish();
+            RadioButton radioButton = new RadioButton(this);
+            radioButton.setText(s);
+            radioButton.setId(View.generateViewId());
+            rdg.addView(radioButton,0);
+            radioButton.setChecked(true);
+
         }
         else
         {
-            //t1.setText("Does not repeat");
-            rd = rdg.findViewById(R.id.dnr);
-            rdg.check(rd.getId());
+            t1.setText("Does not repeat");
         }
     }
 

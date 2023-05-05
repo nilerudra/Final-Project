@@ -63,7 +63,7 @@ public class Scan_QRCode extends Fragment {
 
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result ->
     {
-        if(result.getContents().equals(currentDate + "_" + mngtchclass.subId))
+        if(result.getContents().contains(currentDate + "_"))
         {
             insertid();
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());

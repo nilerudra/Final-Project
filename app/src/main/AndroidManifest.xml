@@ -3,7 +3,6 @@
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!--
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -12,7 +11,7 @@
     -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,8 +25,11 @@
         android:theme="@style/Theme.Test3">
 
         <activity
+            android:name=".uploadstdmaterial"
+            android:exported="false" />
+        <activity
             android:name=".page2"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".lecpracschmng"
             android:exported="false" />
@@ -73,13 +75,17 @@
         </activity>
         <activity
             android:name=".CaptureAct"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
     </application>
 
 </manifest>
