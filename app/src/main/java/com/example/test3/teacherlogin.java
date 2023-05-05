@@ -61,11 +61,7 @@ public class teacherlogin extends AppCompatActivity {
         ap = findViewById(R.id.bt1);
 
         ap.setOnClickListener(view -> {
-            try {
-                teacherui();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            teacherui();
         });
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);

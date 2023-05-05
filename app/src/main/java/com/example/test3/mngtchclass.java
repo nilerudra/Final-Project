@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -76,7 +77,6 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
         subId = intent.getStringExtra("sub_id");
         sub_name = intent.getStringExtra("name");
         Toast.makeText(mngtchclass.this,"" + subId,Toast.LENGTH_SHORT).show();
-        subName = intent.getStringExtra("name");
     }
 
     private void show_profile() {
