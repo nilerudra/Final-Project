@@ -31,7 +31,7 @@
         android:backgroundTintMode="add"
         android:text="@string/join_class"
         android:textAlignment="center"
-        android:textColor="#FA000000"
+        android:textColor="#FFFFFF"
         android:textSize="14sp"
         android:textStyle="bold"/>
 

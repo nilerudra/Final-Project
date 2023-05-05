@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -27,6 +28,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 public class teachui extends AppCompatActivity {
@@ -80,19 +91,25 @@ public class teachui extends AppCompatActivity {
                 database = FirebaseDatabase.getInstance();
                 ref = database.getReference("Subject");
 
+                imageView.setOnClickListener(view -> show_profile());
                 showClass();
-                imageView.setOnClickListener(view -> openMenu());
+               /* imageView.setOnClickListener(view -> openMenu());*/
+        }
+
+        private void show_profile() {
+                Intent i = new Intent(teachui.this, Profile_page.class);
+                startActivity(i);
         }
 
         Tasks ts = new Tasks();
-        Menuopt mno = new Menuopt();
+       /* Menuopt mno = new Menuopt();
         public void openMenu()
         {
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.menuopt, mno)
                         .commit();
-        }
+        }*/
         public void addcp() {
                 d.show();
         }
@@ -145,6 +162,7 @@ public class teachui extends AppCompatActivity {
                 ed.setText(String.format("%s\n\n%s",name,description));
                 ed.setBackgroundResource(R.drawable.fortui);
                 ed.setTextSize(26);
+                ed.setTextColor(ed.getContext().getColor(R.color.white));
                 ed.setTextAppearance(this, R.style.AppTheme);
                 ed.setPadding(40, 25, 40, 100);
                 ed.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -161,6 +179,8 @@ public class teachui extends AppCompatActivity {
         }
 
         public void classadd() {
+                //for creating a excel file to store attendance of students
+                generateExcelFile(e.getText().toString());
                 addClass(e.getText().toString(), des.getText().toString(), getIntent().getStringExtra("id")+"_"+e.getText().toString());
                 addClassToDatabase();
         }
@@ -170,5 +190,57 @@ public class teachui extends AppCompatActivity {
                 i.putExtra("sub_id", sub_id);
                 i.putExtra("name",name);
                 startActivity(i);
+        }
+
+        private void generateExcelFile(String name)
+        {
+                Workbook workbook = new HSSFWorkbook();
+                // Create a new sheet
+                Sheet sheet = workbook.createSheet("My Sheet");
+
+                // Create the header row with column names
+                Row headerRow = sheet.createRow(0);
+                Cell enrNoCell = headerRow.createCell(0);
+                enrNoCell.setCellValue("Enrollment No.");
+
+                Cell nameCell = headerRow.createCell(1);
+                nameCell.setCellValue("Name");
+
+                // Create columns for each day of the month
+                int numDays = 30; // Or use Calendar.getActualMaximum(Calendar.DAY_OF_MONTH) to get the actual number of days in the month
+                for (int i = 0; i < numDays; i++) {
+                        Cell dayCell = headerRow.createCell(i + 2);
+                        dayCell.setCellValue("Day " + (i + 1));
+                }
+
+                // Write the workbook to a file
+                // Add data rows for each student
+                // Replace this with your own logic to populate the data
+                /*for (int i = 1; i <= 10; i++) {
+                        Row dataRow = sheet.createRow(i);
+
+                        Cell enrNoDataCell = dataRow.createCell(0);
+                        enrNoDataCell.setCellValue("Enrollment No. " + i);
+
+                        Cell nameDataCell = dataRow.createCell(1);
+                        nameDataCell.setCellValue("Student " + i);
+
+                        for (int j = 0; j < numDays; j++) {
+                                Cell dayDataCell = dataRow.createCell(j + 2);
+                                // Replace this with your own logic to populate attendance data
+                                dayDataCell.setCellValue("Present");
+                        }
+                }*/
+
+                // Write the workbook to a file
+                File file = new File(getExternalFilesDir(null), name + ".xlsx");
+                FileOutputStream outputStream = null;
+                try {
+                        outputStream = new FileOutputStream(file);
+                        workbook.write(outputStream);
+                        outputStream.close();
+                } catch (IOException e) {
+                        throw new RuntimeException(e);
+                }
         }
 }

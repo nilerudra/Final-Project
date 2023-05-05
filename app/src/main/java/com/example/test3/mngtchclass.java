@@ -1,21 +1,17 @@
 package com.example.test3;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -23,6 +19,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.IOException;
 
 public class mngtchclass extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     ImageView imageView;
@@ -32,8 +30,11 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
     GoogleSignInClient gsc;
 
     String myString;
-    public static String subId,subName;
+    public static String subId,sub_name;
     SharedPreferences sharedPreferences;
+
+    public mngtchclass() throws IOException {
+    }
 
 
     @Override
@@ -68,11 +69,19 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
                 .circleCrop()
                 .into(imageView);
 
+        imageView.setOnClickListener(view -> show_profile());
+
         myString = sharedPreferences.getString("myStringKey", "not found");
 
         Intent intent = getIntent();
         subId = intent.getStringExtra("sub_id");
-        subName = intent.getStringExtra("name");
+        sub_name = intent.getStringExtra("name");
+        Toast.makeText(mngtchclass.this,"" + subId,Toast.LENGTH_SHORT).show();
+    }
+
+    private void show_profile() {
+        Intent i = new Intent(mngtchclass.this, Profile_page.class);
+        startActivity(i);
     }
 
     Attendance at = new Attendance();
@@ -94,7 +103,6 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
                         .beginTransaction()
                         .replace(R.id.flFragment, ta)
                         .commit();
-
                 return true;
 
 
@@ -113,7 +121,6 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
                             .replace(R.id.flFragment, sc)
                             .commit();
                 }
-
                 return true;
 
             case R.id.people:

@@ -1,7 +1,5 @@
 package com.example.test3;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -14,6 +12,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -151,6 +153,7 @@ public class lecprac extends AppCompatActivity {
         String[] dt = s1.split("      ");
         String s2 = dt[0];
         String s3 = dt[1];
+
         Intent intent = new Intent();
         intent.putExtra("1",edt.getText().toString());
         intent.putExtra("2",s2);
@@ -158,7 +161,10 @@ public class lecprac extends AppCompatActivity {
         intent.putExtra("4",t1.getText().toString());
         setResult(1, intent);
         finish();
+
+        Toast.makeText(this, "saved in DB", Toast.LENGTH_SHORT).show();
     }
+
 
 
 }

@@ -179,7 +179,6 @@ public class splashScreen extends AppCompatActivity {
                     }
                 }.start();
             }
-
             @Override
             public void onAnimationRepeat(Animation animation) {
 

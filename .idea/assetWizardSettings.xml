@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/mode_edit/baseline_mode_edit_24.xml" />
+                                      <entry key="url" value="file:/$PROJECT_DIR$/../../../gadget%20guru/AppData/Local/Android/Sdk/icons/material/materialicons/person/baseline_person_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -34,8 +34,8 @@
                         <option name="values">
                           <map>
                             <entry key="autoMirrored" value="true" />
-                            <entry key="color" value="4f406e" />
-                            <entry key="outputName" value="baseline_mode_edit_24" />
+                            <entry key="color" value="9f9f9f" />
+                            <entry key="outputName" value="baseline_person_24" />
                             <entry key="sourceFile" value="C:\Users\gadget guru\AndroidStudioProjects\Final Project" />
                           </map>
                         </option>
