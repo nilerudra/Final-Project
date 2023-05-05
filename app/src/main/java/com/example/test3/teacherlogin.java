@@ -2,11 +2,13 @@ package com.example.test3;
 
 import android.content.Intent;
 import android.graphics.Paint;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
@@ -14,8 +16,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -26,11 +31,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class teacherlogin extends AppCompatActivity {
     public FirebaseDatabase database;
+    public static String path;
     public DatabaseReference databaseReference;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -52,7 +60,13 @@ public class teacherlogin extends AppCompatActivity {
         t2 = findViewById(R.id.email);
         ap = findViewById(R.id.bt1);
 
-        ap.setOnClickListener(view -> teacherui());
+        ap.setOnClickListener(view -> {
+            try {
+                teacherui();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         if(acct!=null)

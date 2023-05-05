@@ -50,7 +50,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="150dp"
-        android:hint="Does not repeat"
+        android:text="Does not repeat"
         android:layout_below="@id/crdate"
         android:inputType="none"
         android:drawablePadding="10dp"
@@ -62,6 +62,22 @@
         android:textColor="#A0A0A0"
         android:textSize="24sp"
         app:drawableLeftCompat="@drawable/baseline_repeat_24" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/save"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/dnrepeat"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/btns"
+        android:backgroundTint="#000000"
+        android:text="Save"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:backgroundTintMode="add"
+        tools:ignore="TextSizeCheck" />
 
     <!--<DatePicker
         android:layout_width="match_parent"

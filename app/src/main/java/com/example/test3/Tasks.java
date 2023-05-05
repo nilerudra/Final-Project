@@ -14,7 +14,7 @@ import com.example.test3.R;
 
 public class Tasks extends Fragment {
 
-    TextView t;
+    TextView t,t2;
     View view;
     public Tasks(){
         // require a empty public constructor
@@ -26,7 +26,14 @@ public class Tasks extends Fragment {
         //schlp();
         t = view.findViewById(R.id.schdlp);
         t.setOnClickListener(view1 -> schlp());
+
+        t2 = view.findViewById(R.id.upldstmt);
+        t2.setOnClickListener(view1 -> upldstdwrk());
         return view;
+    }
+
+    private void upldstdwrk() {
+       // startActivity(new Intent(getActivity(),uploadstudymaterial.class));
     }
 
     public void schlp()

@@ -23,6 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Test3">
         <activity
+            android:name=".Profile_page"
+            android:exported="false" />
+        <activity
+            android:name=".page2"
+            android:exported="false" />
+        <activity
             android:name=".lecpracschmng"
             android:exported="false" />
         <activity
@@ -42,8 +48,7 @@
             android:exported="false" />
         <activity
             android:name=".teacherlogin"
-            android:exported="false"/>
-
+            android:exported="false" />
         <!--
         <activity
             android:name=".page3"
@@ -54,9 +59,9 @@
             android:exported="false" />
         <activity
             android:name=".studui"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
-            android:name=".page2"
+            android:name=".splashScreen"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:theme="@style/Theme.Test3.Fullscreen">
@@ -71,6 +76,19 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme" />
+
+        <receiver
+            android:name=".BroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".NotificationService"
+            android:foregroundServiceType="mediaPlayback"
+            android:stopWithTask="false" />
 
         <meta-data
             android:name="preloaded_fonts"

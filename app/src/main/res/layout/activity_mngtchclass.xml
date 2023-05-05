@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         app:itemTextColor="@color/black"
-        android:background="@color/purple"
+        android:background="#50416E"
         android:elevation="100dp"
         app:menu="@menu/bottom_nav_menu"/>
 
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/toolbarmt"
-        android:background="@color/purple"
+        android:background="#50416E"
         android:elevation="10dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
@@ -57,12 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
         </LinearLayout>
 
     </ScrollView>-->
-
-
-
-
 </RelativeLayout>
