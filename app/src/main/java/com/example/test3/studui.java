@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,7 +29,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.apache.poi.ss.formula.functions.T;
+
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -36,6 +43,7 @@ import java.util.Objects;
 public class studui extends AppCompatActivity {
 
     AppCompatButton ap,ap2;
+    final int[] j = {0};
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
     ImageView imageView;
@@ -67,6 +75,8 @@ public class studui extends AppCompatActivity {
                 .circleCrop()
                 .into(imageView);
 
+        imageView.setOnClickListener(view -> show_profile());
+
         l = findViewById(R.id.cc);
 
         d = new Dialog(this);
@@ -81,9 +91,99 @@ public class studui extends AppCompatActivity {
         ap = findViewById(R.id.joinclass);
         ap.setOnClickListener(view -> joinClass());
         ls = new ArrayList();
+        notificationWork();
         loadSubjects();
-
     }
+
+    private void notificationWork() {
+        Toast.makeText(this, "hello all", Toast.LENGTH_SHORT).show();
+        ArrayList<String> sub = new ArrayList<>();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("SubjectConnectsStudent");
+        DatabaseReference r = FirebaseDatabase.getInstance().getReference("Scheduling");
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    assert acct != null;
+                    Toast.makeText(studui.this, acct.getId() + " - "+ childSnapshot.child("student_id").getValue().toString(), Toast.LENGTH_SHORT).show();
+                    if(Objects.equals(acct.getId(), Objects.requireNonNull(childSnapshot.child("student_id").getValue()).toString())){
+                        sub.add(childSnapshot.child("subject_id").getValue().toString());
+                        Toast.makeText(studui.this, "hiii"+childSnapshot.child("subject_id").getValue().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                for (String subjectId : sub) {
+                    DatabaseReference subjectSchedulingRef = r.child(subjectId);
+                    subjectSchedulingRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            // Loop through each push ID under the subject ID and retrieve scheduling data for each push ID
+                            for (DataSnapshot pushIdSnapshot : dataSnapshot.getChildren()) {
+                                String pushId = pushIdSnapshot.getKey();
+                                String date = pushIdSnapshot.child("Date").getValue(String.class);
+                                String time = pushIdSnapshot.child("Time").getValue(String.class);
+                                String repetition = pushIdSnapshot.child("Repetition").getValue(String.class);
+                                String description = pushIdSnapshot.child("description").getValue(String.class);
+
+                                Toast.makeText(studui.this, "" + date, Toast.LENGTH_LONG).show();
+
+                                String tm = convertTimeTo24HourFormat(time);
+
+                                assert repetition != null;
+                                if(repetition.equals("Every day"))
+                                {
+                                    sendNotificationEveryDay(tm);
+                                }
+                                // Do whatever you need to do with the scheduling data for this push ID
+                                // You can also add this data to an ArrayList or other data structure for later use
+                                // ...
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            // Handle any errors that occur while retrieving data from Firebase Realtime Database
+                            // ...
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle any errors that occur while retrieving data from Firebase Realtime Database
+                // ...
+            }
+        });
+    }
+
+    public void sendNotificationEveryDay(String t)
+    {
+        //Sending notification to a student for scheduled lecture before lecture time
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        String[] sch = t.split(":");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(sch[0]));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(sch[1]));
+        calendar.set(Calendar.SECOND, 0);
+
+        Intent i = new Intent(studui.this, BroadcastReceiver.class);
+        i.putExtra("sub_name", mngtchclass.sub_name);
+
+        PendingIntent pi = PendingIntent.getBroadcast(studui.this, 100, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
+
+        Toast.makeText(this, "Scheduled", Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void show_profile() {
+        Intent i = new Intent(studui.this, Profile_page.class);
+        startActivity(i);
+    }
+
 
     public void loadSubjects(){
         DatabaseReference dr = FirebaseDatabase.getInstance().getReference("Subject");
@@ -162,6 +262,20 @@ public class studui extends AppCompatActivity {
         e.setText("");
 
         loadSubjects();
+    }
+
+    public static String convertTimeTo24HourFormat(String time)
+    {
+        // create a DateTimeFormatter for parsing the input string
+        DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("h:mm a");
+
+        // create a DateTimeFormatter for formatting the output string
+        DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("HH:mm");
+
+        // parse the input string and format it to 24-hour format
+        LocalTime time24 = LocalTime.parse(time.toLowerCase(), inputFormat);
+        String time24String = time24.format(outputFormat);
+        return time24String;
     }
 
     public void join(){

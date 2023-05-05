@@ -41,7 +41,7 @@ public class NotificationService extends Service {
         NotificationCompat.Builder notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(R.drawable.logo)
-                .setContentText("New Message")
+                .setContentText(intent.getStringExtra("subject"))
                 .setSubText("New Message from EduNexs");
 
         Intent launchIntent = getPackageManager().getLaunchIntentForPackage(getPackageName());
