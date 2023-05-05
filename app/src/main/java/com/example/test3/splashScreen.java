@@ -18,7 +18,6 @@ public class splashScreen extends AppCompatActivity {
     private ImageView logo;
     private View topview1, topview2, topview3;
     private View bottomview1, bottomview2,  bottomview3;
-
     private int count = 0;
 
     @Override
@@ -99,13 +98,11 @@ public class splashScreen extends AppCompatActivity {
 
             }
         });
-
         topview3Animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
             }
-
             @Override
             public void onAnimationEnd(Animation animation) {
                 logo.setVisibility(View.VISIBLE);
@@ -117,13 +114,11 @@ public class splashScreen extends AppCompatActivity {
 
             }
         });
-
         logoAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
             }
-
             @Override
             public void onAnimationEnd(Animation animation) {
                 name.setVisibility(View.VISIBLE);
@@ -137,20 +132,18 @@ public class splashScreen extends AppCompatActivity {
                         name.setText(name.getText().toString()+animateTxt.charAt(count));
                         count++;
                     }
-
                     @Override
                     public void onFinish() {
                         Intent i = new Intent(splashScreen.this, page2.class);
                         startActivity(i);
+                        finish();
                     }
                 }.start();
             }
-
             @Override
             public void onAnimationRepeat(Animation animation) {
 
             }
         });
-
     }
 }

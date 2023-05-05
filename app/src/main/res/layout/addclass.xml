@@ -43,9 +43,9 @@
         android:background="@drawable/btns"
         android:backgroundTint="#000000"
         android:backgroundTintMode="add"
-        android:text="CreateClass"
+        android:text="Create Class"
         android:textAlignment="center"
-        android:textColor="#FA000000"
+        android:textColor="#FFFFFF"
         android:textSize="14sp"
         android:textStyle="bold"/>
 

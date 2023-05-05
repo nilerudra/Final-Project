@@ -65,6 +65,7 @@
         android:backgroundTintMode="add"
         android:text="Create Class"
         android:textSize="14sp"
+        android:textColor="#FFFFFF"
         tools:ignore="TextSizeCheck" />
 
 </RelativeLayout>

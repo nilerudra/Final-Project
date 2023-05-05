@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -27,7 +28,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 
 public class teachui extends AppCompatActivity {
         AppCompatButton ap,ap2;
@@ -80,19 +80,25 @@ public class teachui extends AppCompatActivity {
                 database = FirebaseDatabase.getInstance();
                 ref = database.getReference("Subject");
 
+                imageView.setOnClickListener(view -> show_profile());
                 showClass();
-                imageView.setOnClickListener(view -> openMenu());
+               /* imageView.setOnClickListener(view -> openMenu());*/
+        }
+
+        private void show_profile() {
+                Intent i = new Intent(teachui.this, Profile_page.class);
+                startActivity(i);
         }
 
         Tasks ts = new Tasks();
-        Menuopt mno = new Menuopt();
+       /* Menuopt mno = new Menuopt();
         public void openMenu()
         {
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.menuopt, mno)
                         .commit();
-        }
+        }*/
         public void addcp() {
                 d.show();
         }
@@ -145,6 +151,7 @@ public class teachui extends AppCompatActivity {
                 ed.setText(String.format("%s\n\n%s",name,description));
                 ed.setBackgroundResource(R.drawable.fortui);
                 ed.setTextSize(26);
+                ed.setTextColor(ed.getContext().getColor(R.color.white));
                 ed.setTextAppearance(this, R.style.AppTheme);
                 ed.setPadding(40, 25, 40, 100);
                 ed.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
