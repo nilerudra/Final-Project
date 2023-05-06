@@ -76,12 +76,12 @@ public class People extends Fragment {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
-        Toast.makeText(requireContext(),"ok" + ls.size(),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(requireContext(),"ok" + ls.size(),Toast.LENGTH_SHORT).show();
 
         for(int i = 0; i < ls.size(); i++) {
 
             String filename = ls.get(i) + ".jpg";
-            Toast.makeText(requireContext(),filename,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(requireContext(),filename,Toast.LENGTH_SHORT).show();
             // Create a reference to the image file in Firebase Storage
             StorageReference imageRef = storageRef.child("user_profile_images/" + filename); // Replace "filename" with the name of the image file you want to download
 

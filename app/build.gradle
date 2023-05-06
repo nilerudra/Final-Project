@@ -107,7 +107,7 @@ dependencies {
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
 
     implementation 'org.apache.poi:poi-ooxml:4.1.2'
-    implementation 'org.apache.poi:poi:4.1.2'
+    //implementation 'org.apache.poi:poi:4.1.2'-->
 
     implementation ('com.google.apis:google-api-services-drive:v3-rev136-1.25.0')
             {

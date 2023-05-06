@@ -29,7 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.apache.poi.ss.formula.functions.T;
+//import org.apache.poi.ss.formula.functions.T;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -127,13 +127,13 @@ public class studui extends AppCompatActivity {
 
                                 Toast.makeText(studui.this, "" + date, Toast.LENGTH_LONG).show();
 
-                                String tm = convertTimeTo24HourFormat(time);
+                                /*String tm = convertTimeTo24HourFormat(time);
 
                                 assert repetition != null;
                                 if(repetition.equals("Every day"))
                                 {
                                     sendNotificationEveryDay(tm);
-                                }
+                                }*/
                                 // Do whatever you need to do with the scheduling data for this push ID
                                 // You can also add this data to an ArrayList or other data structure for later use
                                 // ...
@@ -297,7 +297,7 @@ public class studui extends AppCompatActivity {
         int bottomMargin = 0;
         layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
         ed.setLayoutParams(layoutParams);
-        ed.setOnClickListener(view -> mngPage(name, sub_id));
+        ed.setOnClickListener(view -> mngPage(name, sub_id, description));
         l.addView(ed);
         d.hide();
     }
@@ -307,10 +307,11 @@ public class studui extends AppCompatActivity {
         d.show();
     }
 
-    public void mngPage(String name, String sub_id){
+    public void mngPage(String name, String sub_id, String desc){
         Intent i = new Intent(studui.this, mngtchclass.class);
         i.putExtra("sub_id", sub_id);
         i.putExtra("name",name);
+        i.putExtra("dsc",desc);
         startActivity(i);
     }
 }

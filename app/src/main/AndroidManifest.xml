@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
@@ -14,7 +14,9 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -25,9 +27,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Test3">
         <activity
+            android:name=".create_activity"
+            android:exported="false" />
+        <activity
+            android:name=".assign_activity"
+            android:exported="false" />
+        <activity
+            android:name=".schdl_test"
+            android:exported="false" />
+        <activity
+            android:name=".schedule_test"
+            android:exported="false" />
+        <activity
+            android:name=".progressbar"
+            android:exported="false" />
+        <activity
             android:name=".Profile_page"
             android:exported="false" />
-
         <activity
             android:name=".uploadstdmaterial"
             android:exported="false" />
@@ -99,10 +115,9 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-        <meta-data android:name="com.google.android.gms.version"
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
     </application>
 
 </manifest>

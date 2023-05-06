@@ -6,10 +6,13 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,15 +31,23 @@ import java.util.Objects;
 public class lecpracschmng extends AppCompatActivity {
     AppCompatButton ap;
     LinearLayout l1;
+    SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lecpracschmng);
 
-        l1 = findViewById(R.id.schdlecprac);
-
         ap = findViewById(R.id.edit);
         ap.setOnClickListener(view -> nxtpg());
+        sharedPreferences = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+        String s = sharedPreferences.getString("myStringKey", "not found");
+        if(s.equals("Student"))
+        {
+            ap.setVisibility(View.GONE);
+        }
+        l1 = findViewById(R.id.schdlecprac);
+
+
         loadFromDB();
     }
 

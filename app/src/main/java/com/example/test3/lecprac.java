@@ -30,6 +30,7 @@ public class lecprac extends AppCompatActivity {
     TextView dtpick;
     AppCompatButton ap;
     RadioButton rd;
+    String status;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lecprac);
