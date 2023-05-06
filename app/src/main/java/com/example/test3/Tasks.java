@@ -14,7 +14,7 @@ import com.example.test3.R;
 
 public class Tasks extends Fragment {
 
-    TextView t,t2;
+    TextView t,t2,t3;
     View view;
     public Tasks(){
         // require a empty public constructor
@@ -26,6 +26,10 @@ public class Tasks extends Fragment {
         //schlp();
         t = view.findViewById(R.id.schdlp);
         t.setOnClickListener(view1 -> schlp());
+
+        t3 = view.findViewById(R.id.cls);
+
+        t3.setText(mngtchclass.sub_name);
 
         t2 = view.findViewById(R.id.upldstmt);
         t2.setOnClickListener(view1 -> upldstdwrk());

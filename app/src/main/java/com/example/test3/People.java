@@ -65,7 +65,7 @@ public class People extends Fragment {
         ls = new ArrayList();
         sName = new ArrayList();
         processStudentData();
-        Toast.makeText(requireContext(),"showing student started",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(requireContext(),"showing student started",Toast.LENGTH_SHORT).show();
 
         return view;
     }
@@ -76,12 +76,12 @@ public class People extends Fragment {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
-        Toast.makeText(requireContext(),"ok" + ls.size(),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(requireContext(),"ok" + ls.size(),Toast.LENGTH_SHORT).show();
 
         for(int i = 0; i < ls.size(); i++) {
 
             String filename = ls.get(i) + ".jpg";
-            Toast.makeText(requireContext(),filename,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(requireContext(),filename,Toast.LENGTH_SHORT).show();
             // Create a reference to the image file in Firebase Storage
             StorageReference imageRef = storageRef.child("user_profile_images/" + filename); // Replace "filename" with the name of the image file you want to download
 
@@ -93,8 +93,8 @@ public class People extends Fragment {
                 public void onSuccess(byte[] bytes) {
                     // Image downloaded successfully, convert the byte array to a Bitmap and display it in an ImageView
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    Toast.makeText(requireContext(),"send to person adapter",Toast.LENGTH_SHORT).show();
-                    Toast.makeText(requireContext(),sName.get(finalI[0]) + " - " + bitmap,Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(requireContext(),"send to person adapter",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(requireContext(),sName.get(finalI[0]) + " - " + bitmap,Toast.LENGTH_SHORT).show();
                     Person p = new Person();
                     p.setName(sName.get(finalI[0]));
                     p.setImage(bitmap);
@@ -128,7 +128,7 @@ public class People extends Fragment {
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
                     String student_id = childSnapshot.child("student_id").getValue(String.class);
                     ls.add(student_id);
-                    Toast.makeText(requireContext(),"" + student_id,Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(requireContext(),"" + student_id,Toast.LENGTH_SHORT).show();
                     Log.w("Firebase", "" + student_id);
                     // Do something with the sub ID
                 }
@@ -143,7 +143,7 @@ public class People extends Fragment {
                                 if(Objects.equals(childSnapshot.child("id").getValue(String.class), ls.get(finalI))){
                                     String name = childSnapshot.child("name").getValue(String.class);
                                     sName.add(name);
-                                    Toast.makeText(requireContext(),"br " + name,Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(requireContext(),"br " + name,Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }

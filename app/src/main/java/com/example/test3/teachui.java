@@ -207,11 +207,11 @@ public class teachui extends AppCompatActivity {
                 nameCell.setCellValue("Name");
 
                 // Create columns for each day of the month
-                int numDays = 30; // Or use Calendar.getActualMaximum(Calendar.DAY_OF_MONTH) to get the actual number of days in the month
+                /*int numDays = 30; // Or use Calendar.getActualMaximum(Calendar.DAY_OF_MONTH) to get the actual number of days in the month
                 for (int i = 0; i < numDays; i++) {
                         Cell dayCell = headerRow.createCell(i + 2);
                         dayCell.setCellValue("Day " + (i + 1));
-                }
+                }*/
 
                 // Write the workbook to a file
                 // Add data rows for each student
