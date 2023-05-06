@@ -118,7 +118,7 @@
         android:paddingEnd="20dp"
         android:textColor="@color/white"
         android:paddingBottom="15dp"
-        android:text=" Create Task"
+        android:text="Assign activity"
         android:textSize="24sp" />
 
     </RelativeLayout>

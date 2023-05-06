@@ -1,9 +1,26 @@
+/*
+package com.example.test3;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+
+public class schedule_test extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_schedule_test);
+    }
+}*/
+
 package com.example.test3;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -28,16 +45,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Objects;
 
-public class lecpracschmng extends AppCompatActivity {
+public class schedule_test extends AppCompatActivity {
     AppCompatButton ap;
     LinearLayout l1;
     SharedPreferences sharedPreferences;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lecpracschmng);
+        setContentView(R.layout.activity_schedule_test);
 
-        ap = findViewById(R.id.edit);
+        ap = findViewById(R.id.edit1);
         ap.setOnClickListener(view -> nxtpg());
         sharedPreferences = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
         String s = sharedPreferences.getString("myStringKey", "not found");
@@ -45,6 +63,7 @@ public class lecpracschmng extends AppCompatActivity {
         {
             ap.setVisibility(View.GONE);
         }
+
         l1 = findViewById(R.id.schdlecprac);
 
 
@@ -54,9 +73,9 @@ public class lecpracschmng extends AppCompatActivity {
     public void nxtpg()
     {
 
-        Intent intent = new Intent(lecpracschmng.this,lecprac.class);
-
-        startActivityForResult(intent,1);
+        Intent intent = new Intent(schedule_test.this,schdl_test.class);
+        intent.putExtra("1","Enter test description\\name");
+        startActivityForResult(intent,2);
     }
 
     @Override
@@ -69,12 +88,13 @@ public class lecpracschmng extends AppCompatActivity {
         String time = "nope";
         String date = "nope";
         String occurence = "Occured";
-        if (resultCode == 1) {
+
+        if (resultCode == 6) {
             Toast.makeText(this, "entered occurence", Toast.LENGTH_SHORT).show();
             value = data.getStringExtra("1");
             date = data.getStringExtra("2");
             time = data.getStringExtra("3");
-            occurence = data.getStringExtra("4");
+            occurence = "Marks " + data.getStringExtra("4");
 
             reference.child("description").setValue(value);
             reference.child("Date").setValue(date);
@@ -122,7 +142,7 @@ public class lecpracschmng extends AppCompatActivity {
 
 
     public void addClass(String name,String date, String description, String sub_id){
-        TextView ed = new TextView(lecpracschmng.this);
+        TextView ed = new TextView(schedule_test.this);
         ed.setText(String.format("%s\n%s\n%s\n%s",name,date,description,sub_id));
         ed.setBackgroundResource(R.drawable.fortui);
         ed.setTextSize(15);

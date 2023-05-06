@@ -101,7 +101,7 @@ public class teachui extends AppCompatActivity {
                 startActivity(i);
         }
 
-        Tasks ts = new Tasks();
+        //Tasks ts = new Tasks();
        /* Menuopt mno = new Menuopt();
         public void openMenu()
         {
@@ -173,7 +173,7 @@ public class teachui extends AppCompatActivity {
                 int bottomMargin = 0;
                 layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
                 ed.setLayoutParams(layoutParams);
-                ed.setOnClickListener(view ->mngPage(name, sub_id));
+                ed.setOnClickListener(view ->mngPage(name, sub_id, description));
                 l.addView(ed);
                 d.hide();
         }
@@ -185,10 +185,11 @@ public class teachui extends AppCompatActivity {
                 addClassToDatabase();
         }
 
-        public void mngPage(String name, String sub_id){
+        public void mngPage(String name, String sub_id, String desc){
                 Intent i = new Intent(teachui.this, mngtchclass.class);
                 i.putExtra("sub_id", sub_id);
                 i.putExtra("name",name);
+                i.putExtra("dsc",desc);
                 startActivity(i);
         }
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -30,7 +31,7 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
     GoogleSignInClient gsc;
 
     String myString;
-    public static String subId,sub_name;
+    public static String subId,sub_name,descp;
     SharedPreferences sharedPreferences;
 
     public mngtchclass() throws IOException {
@@ -44,14 +45,43 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
         t = findViewById(R.id.toolbarmt);
         setSupportActionBar(t);
         ta = new Tasks();
+        //std_dashboard = new std_dashboard();
+        sharedPreferences = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+
+        String s = sharedPreferences.getString("myStringKey", "not found");
+        myString = sharedPreferences.getString("myStringKey", "not found");
+
+        Intent intent = getIntent();
+        subId = intent.getStringExtra("sub_id");
+        sub_name = intent.getStringExtra("name");
+        descp = intent.getStringExtra("dsc");
+        Toast.makeText(mngtchclass.this,"" + subId,Toast.LENGTH_SHORT).show();
+
         bottomNavigationView
                 = findViewById(R.id.bottomNavigationView);
 
-        bottomNavigationView
-                .setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.task);
+        if(s.equals("Teacher")) {
+            bottomNavigationView
+                    .setOnNavigationItemSelectedListener(this);
+            bottomNavigationView.setSelectedItemId(R.id.task);
+        } else if (s.equals("Student")) {
+            //BottomNavigationView bottomNavigationView = findViewById(R.id.bottomnav);
+            Menu menu = bottomNavigationView.getMenu();
+            menu.clear();
+            bottomNavigationView.inflateMenu(R.menu.bottom_nav_menu_std);
 
-        sharedPreferences = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+
+            bottomNavigationView
+                    .setOnNavigationItemSelectedListener(this);
+            bottomNavigationView.setSelectedItemId(R.id.dashboard);
+        }
+        else
+        {
+            bottomNavigationView
+                    .setOnNavigationItemSelectedListener(this);
+            bottomNavigationView.setSelectedItemId(R.id.task);
+        }
+
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
                 .requestProfile()
@@ -70,13 +100,6 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
                 .into(imageView);
 
         imageView.setOnClickListener(view -> show_profile());
-
-        myString = sharedPreferences.getString("myStringKey", "not found");
-
-        Intent intent = getIntent();
-        subId = intent.getStringExtra("sub_id");
-        sub_name = intent.getStringExtra("name");
-        Toast.makeText(mngtchclass.this,"" + subId,Toast.LENGTH_SHORT).show();
     }
 
     private void show_profile() {
@@ -86,6 +109,7 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
 
     Attendance at = new Attendance();
     Tasks ta;
+    std_dashboard std_dashboard = new std_dashboard();
     People pe = new People();
 
     Scan_QRCode sc = new Scan_QRCode();
@@ -97,38 +121,57 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.task:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flFragment, ta)
-                        .commit();
-                return true;
-
-
-            case R.id.attendance:
-                if(myString.equals("Teacher"))
-                {
+        if (myString.equals("Teacher")) {
+            switch (item.getItemId()) {
+                case R.id.task:
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.flFragment, at)
+                            .replace(R.id.flFragment, ta)
                             .commit();
-                }
-                else if (myString.equals("Student"))
-                {
+                    return true;
+
+
+                case R.id.attendance:
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.flFragment, at)
+                                .commit();
+
+                    return true;
+
+                case R.id.people:
+
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.flFragment, sc)
+                            .replace(R.id.flFragment, pe)
                             .commit();
-                }
-                return true;
+                    
+            }
+        } else if (myString.equals("Student")) {
+            switch (item.getItemId()) {
+                case R.id.dashboard:
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.flFragment, std_dashboard)
+                            .commit();
+                    return true;
 
-            case R.id.people:
 
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flFragment, pe)
-                        .commit();
+                case R.id.attendance:
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.flFragment, sc)
+                                .commit();
+                    return true;
+
+                case R.id.people:
+
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.flFragment, pe)
+                            .commit();
+
+            }
         }
         return false;
     }

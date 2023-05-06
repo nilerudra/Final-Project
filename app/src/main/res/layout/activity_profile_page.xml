@@ -62,7 +62,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="400dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:elevation="5dp"
@@ -76,57 +76,78 @@
                     android:textSize="14sp"
                     android:textColor="@color/black"/>
 
-                <TextView
-                    android:layout_width="80dp"
+                <EditText
+                    android:layout_width="match_parent"
+                    android:id="@+id/edtName"
+                    android:padding="10dp"
                     android:layout_height="40dp"
                     android:text="Name"
                     android:textSize="14sp"
                     android:textColor="@color/black"/>
 
-                <TextView
-                    android:layout_width="80dp"
+                <EditText
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:id="@+id/edt_email"
                     android:layout_height="40dp"
                     android:text="email"
                     android:textSize="14sp"
                     android:textColor="@color/black"/>
 
-                <TextView
-                    android:layout_width="80dp"
+                <EditText
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:id="@+id/edt_phone"
                     android:layout_height="40dp"
                     android:text="phone"
                     android:textSize="14sp"
                     android:textColor="@color/black"/>
 
-                <TextView
-                    android:layout_width="80dp"
+                <EditText
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:id="@+id/edt_role"
                     android:layout_height="40dp"
                     android:text="role"
                     android:textSize="14sp"
                     android:textColor="@color/black"/>
 
-                <TextView
-                    android:layout_width="100dp"
+                <EditText
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:id="@+id/edt_enr"
                     android:layout_height="40dp"
                     android:text="enrollment no"
                     android:textSize="14sp"
                     android:textColor="@color/black"/>
 
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:text="etc"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"/>
-
                 <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="300dp"
+                    android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:text="Submit"
                     android:textColor="@color/white"
                     android:textSize="22sp"
                     android:padding="5dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="30dp"
                     android:background="@color/purple">
                 </androidx.appcompat.widget.AppCompatButton>
+
+                <TextView
+                    android:id="@+id/btnlogout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bt1"
+                    android:layout_gravity="center"
+                    android:fontFamily="sans-serif-smallcaps"
+                    android:text="Logout"
+                    android:textAlignment="center"
+                    android:textColor="@color/purple"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="monospace" />
 
             </LinearLayout>
         </LinearLayout>
