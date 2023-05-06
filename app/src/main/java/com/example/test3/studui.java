@@ -211,7 +211,9 @@ public class studui extends AppCompatActivity {
                                 if(Objects.equals(childSnapshot.child("subject_id").getValue(String.class), ls.get(finalI))){
                                     String name = childSnapshot.child("name").getValue(String.class);
                                     String desc = childSnapshot.child("description").getValue(String.class);
-                                    addClass(name,desc,ls.get(finalI));
+                                    String lec_hour = childSnapshot.child("estimated_lec").getValue(String.class);
+                                    String teacher = childSnapshot.child("teacher_id").getValue(String.class);
+                                    addClass(name,desc,ls.get(finalI),lec_hour,teacher);
                                 }
                             }
                         }
@@ -283,9 +285,9 @@ public class studui extends AppCompatActivity {
         checkSubject(s);
     }
 
-    public void addClass(String name, String description, String sub_id){
+    public void addClass(String name, String description, String sub_id, String lec_hour, String t){
         TextView ed = new TextView(studui.this);
-        ed.setText(String.format("%s\n\n%s",name,description));
+        ed.setText(String.format("%s\n%s\n%s",name,description,lec_hour + " Lecture hours"));
         ed.setBackgroundResource(R.drawable.fortui);
         ed.setTextSize(20);
         ed.setPadding(40, 25, 40, 150);
@@ -297,7 +299,7 @@ public class studui extends AppCompatActivity {
         int bottomMargin = 0;
         layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
         ed.setLayoutParams(layoutParams);
-        ed.setOnClickListener(view -> mngPage(name, sub_id, description));
+        ed.setOnClickListener(view -> mngPage(name, sub_id, description, lec_hour,t));
         l.addView(ed);
         d.hide();
     }
@@ -307,11 +309,13 @@ public class studui extends AppCompatActivity {
         d.show();
     }
 
-    public void mngPage(String name, String sub_id, String desc){
+    public void mngPage(String name, String sub_id, String desc, String lec_hour, String t){
         Intent i = new Intent(studui.this, mngtchclass.class);
         i.putExtra("sub_id", sub_id);
         i.putExtra("name",name);
         i.putExtra("dsc",desc);
+        i.putExtra("lec",lec_hour);
+        i.putExtra("tid",t);
         startActivity(i);
     }
 }

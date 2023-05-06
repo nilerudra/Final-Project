@@ -5,12 +5,22 @@ public class Subject {
     String description;
     String teacher_id;
     String subject_id;
+    String estimated_lec;
 
-    public Subject(String name, String description, String teacher_id, String subject_id) {
+    public Subject(String name, String description, String teacher_id, String subject_id, String estimated_hour) {
         this.name = name;
         this.description = description;
         this.teacher_id = teacher_id;
         this.subject_id = subject_id;
+        this.estimated_lec = estimated_hour;
+    }
+
+    public String getEstimated_lec() {
+        return estimated_lec;
+    }
+
+    public void setEstimated_lec(String estimated_lec) {
+        this.estimated_lec = estimated_lec;
     }
 
     public String getName() {

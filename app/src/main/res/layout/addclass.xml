@@ -20,11 +20,25 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/estlecmon"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:inputType="number"
+        android:hint="Enter estimated lecture hours for subject"
+        android:layout_below="@+id/cname"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/txtthe"
+        android:padding="15dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/cldesc"
         android:inputType="textMultiLine"
-        android:layout_below="@id/cname"
+        android:layout_below="@id/estlecmon"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:hint="Enter Class Description(Optional)"

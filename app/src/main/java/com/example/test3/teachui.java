@@ -49,7 +49,7 @@ public class teachui extends AppCompatActivity {
         GoogleSignInOptions gso;
         GoogleSignInClient gsc;
         Dialog d;
-        EditText e,des;
+        EditText e,des,no;
         FirebaseDatabase database;
         DatabaseReference ref;
         //RelativeLayout.LayoutParamsparams;
@@ -66,6 +66,7 @@ public class teachui extends AppCompatActivity {
                 ap2 = d.findViewById(R.id.bt1);
                 e = d.findViewById(R.id.cname);
                 des = d.findViewById(R.id.cldesc);
+                no = d.findViewById(R.id.estlecmon);
                 ap2.setOnClickListener(view -> classadd());
 
                 gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
@@ -123,16 +124,20 @@ public class teachui extends AppCompatActivity {
                                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                                         // Get the class ID and create a new Class instance
                                         String classId = childSnapshot.getKey();
-                                        Subject newClass = new Subject("", "", "", "");
+                                        Subject newClass = new Subject("", "", "", "","");
+                                        //Toast.makeText(teachui.this, no.getText().toString(), Toast.LENGTH_SHORT).show();
 
                                         // Fill the values of the Class instance using the child values in the snapshot
                                         newClass.setName(childSnapshot.child("name").getValue(String.class));
                                         newClass.setDescription(childSnapshot.child("description").getValue(String.class));
                                         newClass.setTeacher_id(childSnapshot.child("teacher_id").getValue(String.class));
                                         newClass.setSubject_id(childSnapshot.child("subject_id").getValue(String.class));
+                                        newClass.setEstimated_lec(childSnapshot.child("estimated_lec").getValue(String.class));
+
+                                        //Toast.makeText(teachui.this, newClass.getEstimated_lec(), Toast.LENGTH_SHORT).show();
 
                                         if(newClass.teacher_id.equals(getIntent().getStringExtra("id"))){
-                                                addClass(newClass.getName(), newClass.getDescription(), newClass.subject_id);
+                                                addClass(newClass.getName(), newClass.getDescription(), newClass.subject_id, newClass.estimated_lec);
                                         }
                                 }
                         }
@@ -149,19 +154,20 @@ public class teachui extends AppCompatActivity {
                 String name = e.getText().toString();
                 String description = des.getText().toString();
                 String subject_id = teacher_id + "_" + name;
+                String est_lec_h = no.getText().toString().trim();
 
-                Subject sub = new Subject(name,description,teacher_id,subject_id);
+                Subject sub = new Subject(name,description,teacher_id,subject_id,est_lec_h);
                 ref.push().setValue(sub);
 
                 e.setText("");
                 des.setText("");
         }
 
-        public void addClass(String name, String description, String sub_id){
+        public void addClass(String name, String description, String sub_id, String est){
                 TextView ed = new TextView(teachui.this);
-                ed.setText(String.format("%s\n\n%s",name,description));
+                ed.setText(String.format("%s\n%s\n%s",name,description,est + " Lecture hours"));
                 ed.setBackgroundResource(R.drawable.fortui);
-                ed.setTextSize(26);
+                ed.setTextSize(20);
                 ed.setTextColor(ed.getContext().getColor(R.color.white));
                 ed.setTextAppearance(this, R.style.AppTheme);
                 ed.setPadding(40, 25, 40, 100);
@@ -181,7 +187,7 @@ public class teachui extends AppCompatActivity {
         public void classadd() {
                 //for creating a excel file to store attendance of students
                 generateExcelFile(e.getText().toString());
-                addClass(e.getText().toString(), des.getText().toString(), getIntent().getStringExtra("id")+"_"+e.getText().toString());
+                addClass(e.getText().toString(), des.getText().toString(), getIntent().getStringExtra("id")+"_"+e.getText().toString(), no.getText().toString().trim());
                 addClassToDatabase();
         }
 
