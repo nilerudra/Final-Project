@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -120,6 +121,7 @@ public class stud_register extends AppCompatActivity {
             if(photoUrl != null){
                 Glide.with(this)
                         .load(photoUrl)
+                        .circleCrop()
                         .into(new SimpleTarget<Drawable>() {
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
@@ -156,6 +158,38 @@ public class stud_register extends AppCompatActivity {
             }
             else{
                 Toast.makeText(stud_register.this,"No profile photo found",Toast.LENGTH_SHORT).show();
+
+                Drawable vectorDrawable = getResources().getDrawable(R.drawable.baseline_person_24);
+                Bitmap defaultBitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(defaultBitmap);
+                vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                vectorDrawable.draw(canvas);
+
+                // Create a storage reference for the user's photo
+                String filename = signInAccount.getId() + ".jpg"; // Replace ".jpg" with the actual file type of the image
+                StorageReference storageRef = reference.child("user_profile_images/" + filename);
+
+
+                // Upload the default image to Firebase Storage
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                defaultBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] data = baos.toByteArray();
+                UploadTask uploadTask = storageRef.putBytes(data);
+
+
+                Toast.makeText(stud_register.this, "Uploading default image", Toast.LENGTH_SHORT).show();
+                // Listen for upload success or failure
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(stud_register.this, "Default image uploaded", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(stud_register.this, "Failed to upload default image", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
 // Download the image from the URL and save it as a file on the device

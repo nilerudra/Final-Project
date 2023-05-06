@@ -71,9 +71,9 @@ public class Scan_QRCode extends Fragment {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         currentDate = dateFormat.format(new Date());
 
-        if(result.getContents().contains(mngtchclass.sub_name))
+        if(result != null && result.getContents().contains(currentDate +"_"+ mngtchclass.sub_name))
         {
-            insertId();
+            insertId(result.getContents());
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setMessage("Done");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -89,25 +89,27 @@ public class Scan_QRCode extends Fragment {
         }
     });
 
-    public void insertId()
+    public void insertId(String s)
     {
+        String[] ar = s.split("_");
+        String lecNo = ar[2];
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(requireContext());
         assert acct != null;
         String id = acct.getId();
 
         DatabaseReference df = FirebaseDatabase.getInstance().getReference("Attendance").child(mngtchclass.sub_name);
-        df.orderByKey().equalTo(currentDate).addListenerForSingleValueEvent(new ValueEventListener() {
+        df.orderByKey().equalTo(currentDate + "_" + lecNo).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     assert id != null;
-                    df.child(currentDate).child(id).setValue("Present");
+                    df.child(currentDate + "_" + lecNo).child(id).setValue("Present");
                 } else {
                     df.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
                             assert id != null;
-                            df.child(currentDate).child(id).setValue(id);
+                            df.child(currentDate + "_" + lecNo).child(id).setValue(id);
                         }
                     });
                 }
