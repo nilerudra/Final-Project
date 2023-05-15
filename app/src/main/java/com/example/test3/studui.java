@@ -3,12 +3,19 @@ package com.example.test3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.app.NotificationCompat;
 
 import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -28,6 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.RemoteMessage;
 
 //import org.apache.poi.ss.formula.functions.T;
 
@@ -39,6 +47,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TimeZone;
 
 public class studui extends AppCompatActivity {
 
@@ -106,10 +115,10 @@ public class studui extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     assert acct != null;
-                    Toast.makeText(studui.this, acct.getId() + " - "+ childSnapshot.child("student_id").getValue().toString(), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(studui.this, acct.getId() + " - "+ childSnapshot.child("student_id").getValue().toString(), Toast.LENGTH_SHORT).show();
                     if(Objects.equals(acct.getId(), Objects.requireNonNull(childSnapshot.child("student_id").getValue()).toString())){
                         sub.add(childSnapshot.child("subject_id").getValue().toString());
-                        Toast.makeText(studui.this, "hiii"+childSnapshot.child("subject_id").getValue().toString(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(studui.this, "hiii"+childSnapshot.child("subject_id").getValue().toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
                 for (String subjectId : sub) {
@@ -125,21 +134,9 @@ public class studui extends AppCompatActivity {
                                 String repetition = pushIdSnapshot.child("Repetition").getValue(String.class);
                                 String description = pushIdSnapshot.child("description").getValue(String.class);
 
-                                Toast.makeText(studui.this, "" + date, Toast.LENGTH_LONG).show();
-
-                                /*String tm = convertTimeTo24HourFormat(time);
-
-                                assert repetition != null;
-                                if(repetition.equals("Every day"))
-                                {
-                                    sendNotificationEveryDay(tm);
-                                }*/
-                                // Do whatever you need to do with the scheduling data for this push ID
-                                // You can also add this data to an ArrayList or other data structure for later use
-                                // ...
+                                Toast.makeText(studui.this, time, Toast.LENGTH_SHORT).show();
                             }
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                             // Handle any errors that occur while retrieving data from Firebase Realtime Database
@@ -148,7 +145,6 @@ public class studui extends AppCompatActivity {
                     });
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Handle any errors that occur while retrieving data from Firebase Realtime Database
@@ -157,39 +153,15 @@ public class studui extends AppCompatActivity {
         });
     }
 
-    public void sendNotificationEveryDay(String t)
-    {
-        //Sending notification to a student for scheduled lecture before lecture time
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        String[] sch = t.split(":");
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(sch[0]));
-        calendar.set(Calendar.MINUTE, Integer.parseInt(sch[1]));
-        calendar.set(Calendar.SECOND, 0);
-
-        Intent i = new Intent(studui.this, BroadcastReceiver.class);
-        i.putExtra("sub_name", mngtchclass.sub_name);
-
-        PendingIntent pi = PendingIntent.getBroadcast(studui.this, 100, i, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
-
-        Toast.makeText(this, "Scheduled", Toast.LENGTH_SHORT).show();
-    }
-
-
     private void show_profile() {
         Intent i = new Intent(studui.this, Profile_page.class);
         startActivity(i);
     }
 
-
     public void loadSubjects(){
         DatabaseReference dr = FirebaseDatabase.getInstance().getReference("Subject");
         DatabaseReference r = FirebaseDatabase.getInstance().getReference("SubjectConnectsStudent");
         Query query = r.orderByChild("student_id").equalTo(getIntent().getStringExtra("id"));
-
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -211,11 +183,12 @@ public class studui extends AppCompatActivity {
                                 if(Objects.equals(childSnapshot.child("subject_id").getValue(String.class), ls.get(finalI))){
                                     String name = childSnapshot.child("name").getValue(String.class);
                                     String desc = childSnapshot.child("description").getValue(String.class);
-                                    addClass(name,desc,ls.get(finalI));
+                                    String lec_hour = childSnapshot.child("estimated_lec").getValue(String.class);
+                                    String teacher = childSnapshot.child("teacher_id").getValue(String.class);
+                                    addClass(name,desc,ls.get(finalI),lec_hour,teacher);
                                 }
                             }
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
 
@@ -241,7 +214,6 @@ public class studui extends AppCompatActivity {
                     Toast.makeText(studui.this, "Enter Correct Code", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError error) {
                 Log.w("Firebase", "Failed to read value.", error.toException());
@@ -264,28 +236,14 @@ public class studui extends AppCompatActivity {
         loadSubjects();
     }
 
-    public static String convertTimeTo24HourFormat(String time)
-    {
-        // create a DateTimeFormatter for parsing the input string
-        DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("h:mm a");
-
-        // create a DateTimeFormatter for formatting the output string
-        DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("HH:mm");
-
-        // parse the input string and format it to 24-hour format
-        LocalTime time24 = LocalTime.parse(time.toLowerCase(), inputFormat);
-        String time24String = time24.format(outputFormat);
-        return time24String;
-    }
-
     public void join(){
         String s = e.getText().toString().trim();
         checkSubject(s);
     }
 
-    public void addClass(String name, String description, String sub_id){
+    public void addClass(String name, String description, String sub_id, String lec_hour, String t){
         TextView ed = new TextView(studui.this);
-        ed.setText(String.format("%s\n\n%s",name,description));
+        ed.setText(String.format("%s\n%s\n%s",name,description,lec_hour + " Lecture hours"));
         ed.setBackgroundResource(R.drawable.fortui);
         ed.setTextSize(20);
         ed.setPadding(40, 25, 40, 150);
@@ -297,7 +255,7 @@ public class studui extends AppCompatActivity {
         int bottomMargin = 0;
         layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
         ed.setLayoutParams(layoutParams);
-        ed.setOnClickListener(view -> mngPage(name, sub_id, description));
+        ed.setOnClickListener(view -> mngPage(name, sub_id, description, lec_hour,t));
         l.addView(ed);
         d.hide();
     }
@@ -307,11 +265,14 @@ public class studui extends AppCompatActivity {
         d.show();
     }
 
-    public void mngPage(String name, String sub_id, String desc){
+    public void mngPage(String name, String sub_id, String desc, String lec_hour, String t){
         Intent i = new Intent(studui.this, mngtchclass.class);
         i.putExtra("sub_id", sub_id);
         i.putExtra("name",name);
         i.putExtra("dsc",desc);
+        i.putExtra("lec",lec_hour);
+        i.putExtra("tid",t);
         startActivity(i);
     }
+
 }

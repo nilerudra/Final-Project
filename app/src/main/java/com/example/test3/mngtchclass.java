@@ -31,7 +31,7 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
     GoogleSignInClient gsc;
 
     String myString;
-    public static String subId,sub_name,descp;
+    public static String subId,sub_name,descp,hours,teacher_id;
     SharedPreferences sharedPreferences;
 
     public mngtchclass() throws IOException {
@@ -55,6 +55,8 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
         subId = intent.getStringExtra("sub_id");
         sub_name = intent.getStringExtra("name");
         descp = intent.getStringExtra("dsc");
+        hours = intent.getStringExtra("lec");
+        teacher_id = intent.getStringExtra("tid");
         Toast.makeText(mngtchclass.this,"" + subId,Toast.LENGTH_SHORT).show();
 
         bottomNavigationView
