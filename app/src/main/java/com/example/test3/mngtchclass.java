@@ -32,7 +32,7 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
 
     String myString;
     public static String subId,sub_name,descp,hours,teacher_id;
-    SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences,sharedPreferences1;
 
     public mngtchclass() throws IOException {
     }
@@ -51,6 +51,9 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
         String s = sharedPreferences.getString("myStringKey", "not found");
         myString = sharedPreferences.getString("myStringKey", "not found");
 
+        sharedPreferences1 = getSharedPreferences("sub_name", Context.MODE_PRIVATE);
+
+
         Intent intent = getIntent();
         subId = intent.getStringExtra("sub_id");
         sub_name = intent.getStringExtra("name");
@@ -58,6 +61,13 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
         hours = intent.getStringExtra("lec");
         teacher_id = intent.getStringExtra("tid");
         Toast.makeText(mngtchclass.this,"" + subId,Toast.LENGTH_SHORT).show();
+
+        SharedPreferences.Editor editor = sharedPreferences1.edit();
+        editor.putString("sub", sub_name);
+        editor.apply();
+
+        editor.putString("subid", subId);
+        editor.apply();
 
         bottomNavigationView
                 = findViewById(R.id.bottomNavigationView);

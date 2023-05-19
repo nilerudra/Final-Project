@@ -101,7 +101,7 @@
             android:textColor="@color/white"
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
-            android:text=" Upload Study Material"
+            android:text="Upload Learning Resources"
             android:textSize="24sp" />
 
         <TextView

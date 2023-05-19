@@ -20,8 +20,8 @@
             android:layout_height="500dp">
 
             <TextView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
                 android:layout_alignTop="@id/progressBar"
                 android:layout_alignEnd="@id/progressBar"
                 android:id="@+id/progress"
@@ -32,8 +32,8 @@
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="@style/Circularprogressbar"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
                 android:layout_below="@id/clsdisc"
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
@@ -44,7 +44,7 @@
 
             <TextView
                 android:id="@+id/attend"
-                android:layout_width="200dp"
+                android:layout_width="170dp"
                 android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/progressBar"
@@ -83,13 +83,13 @@
                 android:layout_below="@id/clsdisc"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginEnd="220dp"
-                android:background="@drawable/btnclass"
+                android:layout_marginEnd="200dp"
+                android:background="@drawable/stddshui"
                 android:paddingStart="15dp"
                 android:paddingTop="33dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="15dp"
-                android:text="View Scheduled Lectures and Practicals"
+                android:text="View scheduled lectures and practicals"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 
@@ -101,16 +101,16 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="35dp"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/btnclass"
+                android:background="@drawable/stddshui"
                 android:paddingStart="10dp"
                 android:paddingTop="15dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="15dp"
-                android:text="View scheduled Tests"
+                android:text="View scheduled tests"
                 android:textColor="@color/white"
                 android:textSize="24sp" />
 
-            <EditText
+            <TextView
                 android:id="@+id/asswrkstd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -118,13 +118,13 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/btnclass"
+                android:background="@drawable/stddshui"
                 android:paddingStart="15dp"
                 android:paddingTop="10dp"
                 android:paddingEnd="20dp"
                 android:textColor="@color/white"
                 android:paddingBottom="15dp"
-                android:text="0"
+                android:text="Assigned work"
                 android:textSize="24sp" />
             <TextView
                 android:id="@+id/upldstmtudp"
@@ -134,12 +134,12 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/btnclass"
+                android:background="@drawable/stddshui"
                 android:paddingStart="20dp"
                 android:textColor="@color/white"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
-                android:text="View Study Material"
+                android:text="Learning resources"
                 android:textSize="24sp" />
 
             <TextView
@@ -150,13 +150,13 @@
                 android:layout_below="@id/upldstmtudp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/btnclass"
+                android:background="@drawable/stddshui"
                 android:paddingStart="20dp"
                 android:paddingTop="15dp"
                 android:paddingEnd="20dp"
                 android:textColor="@color/white"
                 android:paddingBottom="15dp"
-                android:text=" Create Task"
+                android:text="Assigned activities"
                 android:textSize="24sp" />
 
         </RelativeLayout>

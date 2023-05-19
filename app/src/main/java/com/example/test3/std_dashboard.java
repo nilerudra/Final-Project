@@ -40,9 +40,9 @@ import java.util.HashMap;
 
 public class std_dashboard extends Fragment {
 
-    TextView t,t2;
+    TextView t,t2,t5;
     View view;
-    EditText edt;
+    TextView edt;
     ProgressBar progressBar;
     int i = 0;
     TextView progress,text1,text2;
@@ -85,6 +85,9 @@ public class std_dashboard extends Fragment {
         edt = view.findViewById(R.id.asswrkstd);
         progress = view.findViewById(R.id.progress);
 
+        t5 = view.findViewById(R.id.upldstmtudp);
+        t5.setOnClickListener(view1 -> download());
+
         try {
             setpro();
         } catch (IOException e) {
@@ -93,6 +96,11 @@ public class std_dashboard extends Fragment {
         return view;
     }
 
+
+    public void download()
+    {
+        startActivity(new Intent(getActivity(),DownloadStdResources.class));
+    }
     public void setpro() throws IOException {
 /*
 
@@ -215,7 +223,7 @@ public class std_dashboard extends Fragment {
         int present = 5;//attendanceData.get("1");
         present = present * 100;
         total = present/total;
-        int a = total;
+        int a = 75;//total;
 
 
         final Handler handler = new Handler();
