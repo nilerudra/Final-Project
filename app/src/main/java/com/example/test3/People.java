@@ -62,8 +62,8 @@ public class People extends Fragment {
         personAdapter = new PersonAdapter(requireContext(),R.layout.list_row,list);
         listView.setAdapter(personAdapter);
 
-        ls = new ArrayList();
-        sName = new ArrayList();
+        ls = new ArrayList<>();
+        sName = new ArrayList<>();
         processStudentData();
         //Toast.makeText(requireContext(),"showing student started",Toast.LENGTH_SHORT).show();
 
@@ -72,6 +72,9 @@ public class People extends Fragment {
 
 
     public void loadFromDB(){
+        if(!isAdded()){
+            return;
+        }
         // Get a reference to the Firebase Storage service
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -91,6 +94,9 @@ public class People extends Fragment {
             imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
+                    if(!isAdded()){
+                        return;
+                    }
                     // Image downloaded successfully, convert the byte array to a Bitmap and display it in an ImageView
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     //Toast.makeText(requireContext(),"send to person adapter",Toast.LENGTH_SHORT).show();
@@ -107,12 +113,15 @@ public class People extends Fragment {
                     Log.e(TAG, "Error downloading image from Firebase Storage: " + e.getMessage());
                 }
             });
-            personAdapter.notifyDataSetChanged();
-
         }
+        personAdapter.notifyDataSetChanged();
     }
 
     public void getStudentId(){
+        if(!isAdded()){
+            return;
+        }
+
         DatabaseReference dr = FirebaseDatabase.getInstance().getReference("Users");
         DatabaseReference r = FirebaseDatabase.getInstance().getReference("SubjectConnectsStudent");
 
@@ -124,6 +133,10 @@ public class People extends Fragment {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if(!isAdded()){
+                    return;
+                }
+
                 list.clear();
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
                     String student_id = childSnapshot.child("student_id").getValue(String.class);
@@ -135,9 +148,13 @@ public class People extends Fragment {
 
                 for(int i = 0; i < ls.size(); i++){
                     int finalI = i;
-                    dr.addValueEventListener(new ValueEventListener() {
+                    dr.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(!isAdded()){
+                                return;
+                            }
+
                             for (DataSnapshot childSnapshot : snapshot.getChildren()) {
 
                                 if(Objects.equals(childSnapshot.child("id").getValue(String.class), ls.get(finalI))){
