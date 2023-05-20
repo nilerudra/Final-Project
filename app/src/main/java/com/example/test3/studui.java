@@ -54,6 +54,7 @@ public class studui extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference ref;
     ArrayList<String> ls;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +97,6 @@ public class studui extends AppCompatActivity {
     }
 
     private void notificationWork() {
-        Toast.makeText(this, "hello all", Toast.LENGTH_SHORT).show();
         ArrayList<String> sub = new ArrayList<>();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("SubjectConnectsStudent");
         DatabaseReference r = FirebaseDatabase.getInstance().getReference("Scheduling");
@@ -106,10 +106,8 @@ public class studui extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     assert acct != null;
-                    Toast.makeText(studui.this, acct.getId() + " - "+ childSnapshot.child("student_id").getValue().toString(), Toast.LENGTH_SHORT).show();
                     if(Objects.equals(acct.getId(), Objects.requireNonNull(childSnapshot.child("student_id").getValue()).toString())){
                         sub.add(childSnapshot.child("subject_id").getValue().toString());
-                        Toast.makeText(studui.this, "hiii"+childSnapshot.child("subject_id").getValue().toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
                 for (String subjectId : sub) {
@@ -124,26 +122,11 @@ public class studui extends AppCompatActivity {
                                 String time = pushIdSnapshot.child("Time").getValue(String.class);
                                 String repetition = pushIdSnapshot.child("Repetition").getValue(String.class);
                                 String description = pushIdSnapshot.child("description").getValue(String.class);
-
-                                Toast.makeText(studui.this, "" + date, Toast.LENGTH_LONG).show();
-
-                                /*String tm = convertTimeTo24HourFormat(time);
-
-                                assert repetition != null;
-                                if(repetition.equals("Every day"))
-                                {
-                                    sendNotificationEveryDay(tm);
-                                }*/
-                                // Do whatever you need to do with the scheduling data for this push ID
-                                // You can also add this data to an ArrayList or other data structure for later use
-                                // ...
                             }
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-                            // Handle any errors that occur while retrieving data from Firebase Realtime Database
-                            // ...
                         }
                     });
                 }

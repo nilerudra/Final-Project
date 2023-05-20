@@ -1,6 +1,7 @@
 package com.example.test3;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ public class teacherlogin extends AppCompatActivity {
     TextView bt,t2;
     AppCompatButton ap;
     EditText e1,e2;
+    SharedPreferences sharedPreferences;
     String s1,s2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -7,12 +7,25 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linkurl"
+        android:id="@+id/linktitle"
         android:layout_alignParentTop="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="20dp"
-        android:hint="Enter Link for learning resources online"
+        android:hint="Enter link title(optional)"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/txtthe"
+        android:padding="15dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linkurl"
+        android:layout_below="@id/linktitle"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:hint="Enter link for learning resources online"
         android:layout_marginBottom="20dp"
         android:background="@drawable/txtthe"
         android:padding="15dp" />

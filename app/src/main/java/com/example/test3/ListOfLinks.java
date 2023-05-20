@@ -3,7 +3,6 @@ package com.example.test3;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -11,16 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 
 
@@ -30,7 +26,8 @@ public class ListOfLinks extends Fragment {
     private DatabaseReference databaseReference;
     private ValueEventListener valueEventListener;
     ArrayList<String> itemList;
-    ArrayAdapter<String> adapter;
+    TextView textView;
+    LinkAdapter adapter;
     public ListOfLinks() {
         // Required empty public constructor
     }
@@ -44,10 +41,11 @@ public class ListOfLinks extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_list_of_links, container, false);
 
+        textView = rootView.findViewById(R.id.placeholder);
         listView = rootView.findViewById(R.id.listlinks);
-        databaseReference = FirebaseDatabase.getInstance().getReference("Links").child(mngtchclass.subId);
+        databaseReference = FirebaseDatabase.getInstance().getReference("Links").child(uploadstdmaterial.sub_Id);
         itemList = new ArrayList<>();
-        adapter = new ArrayAdapter<>(getActivity(), R.layout.res,R.id.item, itemList);
+        adapter = new LinkAdapter(getActivity(), itemList);
         listView.setAdapter(adapter);
 
         return rootView;
@@ -56,22 +54,40 @@ public class ListOfLinks extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        //textView.setVisibility(View.VISIBLE);
         valueEventListener = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 itemList.clear();
                 adapter.clear();
                 adapter.notifyDataSetChanged();
-                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    String link = childSnapshot.child("link").getValue().toString();
-                    itemList.add(link);
+                if(dataSnapshot.exists()) {
+                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                        if(childSnapshot.exists() && childSnapshot.child("linktitle").getValue() != null && childSnapshot.child("link").getValue() != null) {
+                            String title = childSnapshot.child("linktitle").getValue().toString();
+                            String link = childSnapshot.child("link").getValue().toString();
+                            itemList.add(title + ":" + link);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                    if(itemList.isEmpty())
+                    {
+                        textView.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        textView.setVisibility(View.GONE);
+                    }
                 }
-                adapter.notifyDataSetChanged();
+                else
+                {
+                    textView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                textView.setVisibility(View.VISIBLE);
             }
         };
 

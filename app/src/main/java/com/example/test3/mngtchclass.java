@@ -60,7 +60,6 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
         descp = intent.getStringExtra("dsc");
         hours = intent.getStringExtra("lec");
         teacher_id = intent.getStringExtra("tid");
-        Toast.makeText(mngtchclass.this,"" + subId,Toast.LENGTH_SHORT).show();
 
         SharedPreferences.Editor editor = sharedPreferences1.edit();
         editor.putString("sub", sub_name);

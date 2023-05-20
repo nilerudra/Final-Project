@@ -58,7 +58,9 @@ Then rebuild and see if it works for you
             android:exported="false" />
         <activity
             android:name=".uploadstdmaterial"
-            android:exported="false" />
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".page2"
             android:exported="false" />
@@ -90,7 +92,26 @@ Then rebuild and see if it works for you
         -->
         <activity
             android:name=".teachui"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".studui"
             android:exported="false" />
@@ -101,7 +122,6 @@ Then rebuild and see if it works for you
             android:theme="@style/Theme.Test3.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

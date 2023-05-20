@@ -59,11 +59,14 @@ public class uploadstdmaterial extends AppCompatActivity {
     private static final int PICK_FILE_REQUEST = 1;
     private Thread signInThread,thread;
     String filePath = "default";
-    SharedPreferences sharedPreferences1,sharedPreferences,sharedPreferences3;
-    String flag,folderId,sub_name,sub_Id;
+    SharedPreferences sharedPreferences1,sharedPreferences,sharedPreferences3,sharedPreferences4,sharedPreferences5;
+    String flag,folderId,sub_name;
+    int value = 0;
+    String dynamicurl;
+    public static String sub_Id;
     Dialog d1,d2;
     TextView t1;
-    EditText t2;
+    EditText t2,t3;
     ViewPager viewPager;
     TabLayout tabLayout;
     @SuppressLint("MissingInflatedId")
@@ -72,11 +75,18 @@ public class uploadstdmaterial extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uploadstdmaterial);
 
+        sharedPreferences4 = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+
+        String s = sharedPreferences4.getString("myStringKey", "not found");
+
         d2 = new Dialog(this);
         d2.setContentView(R.layout.uploadlink);
         t2 = d2.findViewById(R.id.linkurl);
+        t3 = d2.findViewById(R.id.linktitle);
         bt2 = d2.findViewById(R.id.savelink);
         bt2.setOnClickListener(view -> saveLinks());
+
+
 
         bt1 = findViewById(R.id.upldlink);
         bt1.setOnClickListener(view ->updlink());
@@ -89,7 +99,6 @@ public class uploadstdmaterial extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("sub_name", Context.MODE_PRIVATE);
         sub_name = sharedPreferences.getString("sub", "");
         sub_Id = sharedPreferences.getString("subid", "");
-        Toast.makeText(this, sub_Id, Toast.LENGTH_SHORT).show();
         sharedPreferences1 = getSharedPreferences("flag", Context.MODE_PRIVATE);
         flag = sharedPreferences1.getString("key2" + sub_name,"0");
         if(flag.equals("0")) {
@@ -119,8 +128,6 @@ public class uploadstdmaterial extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPreferences3.edit();
                         editor.putString("sub" + sub_name, folderId);
                         editor.apply();
-
-                        showToast("Folder Created!");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -136,20 +143,44 @@ public class uploadstdmaterial extends AppCompatActivity {
         ViewPagerAdapter adapterv = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapterv);
 
+
+        sharedPreferences5 = getSharedPreferences("dynamicurl", Context.MODE_PRIVATE);
+        dynamicurl = sharedPreferences5.getString("urldyn", "not found");
+
+        if (s.equals("Student")) {
+            bt.setVisibility(View.GONE);
+            bt1.setVisibility(View.GONE);
+        }
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                int position = tab.getPosition();
-                switch (position) {
-                    case 0:
-                        bt.setVisibility(View.VISIBLE);
-                        bt1.setVisibility(View.GONE);
-                        break;
-                    case 1:
-                        bt.setVisibility(View.GONE);
-                        bt1.setVisibility(View.VISIBLE);
-                        break;
+                if(s.equals("Teacher")) {
+                    int position = tab.getPosition();
+                    switch (position) {
+                        case 0:
+                            if(!dynamicurl.equals("not found") && value == 0)
+                            {
+                                tab = tabLayout.getTabAt(1);
+                                tabLayout.selectTab(tab);
+                                value = 1;
+                            }
+                            bt.setVisibility(View.VISIBLE);
+                            bt1.setVisibility(View.GONE);
+                            break;
+                        case 1:
+                            if(!dynamicurl.equals("not found"))
+                            {
+                                t2.setText(dynamicurl);
+                                d2.show();
+                                SharedPreferences.Editor editor = sharedPreferences5.edit();
+                                editor.remove("urldyn");
+                                editor.apply();
+                            }
+                            bt.setVisibility(View.GONE);
+                            bt1.setVisibility(View.VISIBLE);
+                            break;
+                    }
                 }
             }
 
@@ -173,15 +204,25 @@ public class uploadstdmaterial extends AppCompatActivity {
     {
         if(!t2.getText().toString().isEmpty())
         {
+            String s = " ";
+            if(t3.getText().toString().endsWith(":"))
+            {
+                s = t3.getText().toString().substring(0,t3.getText().toString().length() - 1);
+            }
+            else
+                s = t3.getText().toString();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference reference = database.getReference("Links").child(mngtchclass.subId).push();
 
+            reference.child("linktitle").setValue(s);
             reference.child("link").setValue(t2.getText().toString());
+            t3.setText("");
             t2.setText("");
             d2.hide();
+            dynamicurl = "not found";
         }
         else
-            Toast.makeText(this, "Please provide a link", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please provide link/url", Toast.LENGTH_SHORT).show();
     }
     public void updlink()
     {
@@ -234,7 +275,6 @@ public class uploadstdmaterial extends AppCompatActivity {
     {
         acct = GoogleSignIn.getLastSignedInAccount(this);
         if (acct != null) {
-            //showToast(acct.getEmail());
             JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
             GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(this, Collections.singleton(DriveScopes.DRIVE_FILE));
             credential.setSelectedAccount(acct.getAccount());
@@ -352,8 +392,6 @@ public class uploadstdmaterial extends AppCompatActivity {
                 Intent authIntent = e.getIntent();
                 startActivityForResult(authIntent, REQUEST_AUTHORIZATION);
             } catch (FileNotFoundException fnf) {
-                showToast("Arrived here");
-                Log.d("This is happening : " ,fnf.toString());
                 showToast(fnf.toString());
             } catch (Exception ae) {
                 ae.printStackTrace();

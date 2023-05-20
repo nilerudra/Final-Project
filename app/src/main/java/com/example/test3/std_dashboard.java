@@ -67,7 +67,7 @@ public class std_dashboard extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_std_dashboard, container, false);
-        //schlp();
+
         t = view.findViewById(R.id.view_schdlp);
         t.setOnClickListener(view1 -> schlp());
 
@@ -99,7 +99,8 @@ public class std_dashboard extends Fragment {
 
     public void download()
     {
-        startActivity(new Intent(getActivity(),DownloadStdResources.class));
+        /*startActivity(new Intent(getActivity(),DownloadStdResources.class));*/
+        startActivity(new Intent(getActivity(),uploadstdmaterial.class));
     }
     public void setpro() throws IOException {
 /*
@@ -218,7 +219,6 @@ public class std_dashboard extends Fragment {
 */
 
         String s = mngtchclass.hours;
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
         int total = 80;//Integer.parseInt(s);
         int present = 5;//attendanceData.get("1");
         present = present * 100;

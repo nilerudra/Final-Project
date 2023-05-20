@@ -4,16 +4,31 @@
     android:layout_width="match_parent"
     android:padding="5dp"
     android:layout_height="match_parent">
+
     <TextView
-        android:id="@+id/item"
+        android:id="@+id/titleoflink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:layout_marginTop="10dp"
+        android:textSize="22sp"
+        android:text="Name of Student"
+        android:textColor="#8B0B0B0B"
+        />
+
+    <TextView
+        android:id="@+id/item"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/titleoflink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:layout_marginTop="15dp"
         android:textSize="18sp"
         android:text="Name of Student"
-        android:textColor="@color/black"
+        android:textColor="#8B0054FF"
         />
 
 

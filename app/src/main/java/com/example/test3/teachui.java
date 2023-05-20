@@ -1,12 +1,15 @@
 package com.example.test3;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,11 +50,14 @@ public class teachui extends AppCompatActivity {
         Toolbar t;
         ImageView imageView;
         GoogleSignInOptions gso;
+        int flag = 0;
         GoogleSignInClient gsc;
         Dialog d;
         EditText e,des,no;
         FirebaseDatabase database;
         DatabaseReference ref;
+        GoogleSignInAccount acct;
+        SharedPreferences sharedPreferences,sharedPreferences4;
         //RelativeLayout.LayoutParamsparams;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,29 @@ public class teachui extends AppCompatActivity {
                 t = findViewById(R.id.toolbar);
                 setSupportActionBar(t);
 //getSupportActionBar().setTitle(null);
+                acct = GoogleSignIn.getLastSignedInAccount(this);
+
+                sharedPreferences4 = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+
+                String s = sharedPreferences4.getString("myStringKey", "not found");
+
+                sharedPreferences = getSharedPreferences("dynamicurl", Context.MODE_PRIVATE);
+                String dynamicurl = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+
+                if(dynamicurl != null)
+                {
+                        if(s.equals("Teacher")) {
+                                flag = 1;
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("urldyn", dynamicurl);
+                                editor.apply();
+                                Toast.makeText(this, "Please select related subject", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                                Toast.makeText(this, "You can't share the link", Toast.LENGTH_SHORT).show();
+                                finish();
+                        }
+                }
 
                 d = new Dialog(this);
                 d.setContentView(R.layout.addclass);
@@ -135,8 +164,7 @@ public class teachui extends AppCompatActivity {
                                         newClass.setEstimated_lec(childSnapshot.child("estimated_lec").getValue(String.class));
 
                                         //Toast.makeText(teachui.this, newClass.getEstimated_lec(), Toast.LENGTH_SHORT).show();
-
-                                        if(newClass.teacher_id.equals(getIntent().getStringExtra("id"))){
+                                        if(newClass.teacher_id.equals(getIntent().getStringExtra("id")) || newClass.teacher_id.equals(acct.getId())){
                                                 addClass(newClass.getName(), newClass.getDescription(), newClass.subject_id, newClass.estimated_lec);
                                         }
                                 }
@@ -150,7 +178,16 @@ public class teachui extends AppCompatActivity {
         }
 
         public void addClassToDatabase(){
-                String teacher_id = getIntent().getStringExtra("id");
+                String teacher_id;
+                if(flag == 0)
+                {
+                        teacher_id = getIntent().getStringExtra("id");
+                }
+                else
+                {
+                        teacher_id = acct.getId();
+                }
+
                 String name = e.getText().toString();
                 String description = des.getText().toString();
                 String subject_id = teacher_id + "_" + name;
@@ -187,7 +224,13 @@ public class teachui extends AppCompatActivity {
         public void classadd() {
                 //for creating a excel file to store attendance of students
                 generateExcelFile(e.getText().toString());
-                addClass(e.getText().toString(), des.getText().toString(), getIntent().getStringExtra("id")+"_"+e.getText().toString(), no.getText().toString().trim());
+                if(flag == 0) {
+                        addClass(e.getText().toString(), des.getText().toString(), getIntent().getStringExtra("id") + "_" + e.getText().toString(), no.getText().toString().trim());
+                }
+                else
+                {
+                        addClass(e.getText().toString(), des.getText().toString(),  acct.getId() + "_" + e.getText().toString(), no.getText().toString().trim());
+                }
                 addClassToDatabase();
         }
 
