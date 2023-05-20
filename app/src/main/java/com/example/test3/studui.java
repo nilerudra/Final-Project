@@ -3,6 +3,8 @@ package com.example.test3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.Toolbar;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -33,6 +35,7 @@ import java.util.Objects;
 public class studui extends AppCompatActivity {
 
     AppCompatButton ap,ap2;
+    Toolbar t;
     //final int[] j = {0};
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -49,6 +52,8 @@ public class studui extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studui);
+        t = findViewById(R.id.toolbar);
+        setSupportActionBar(t);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
                 .requestProfile()

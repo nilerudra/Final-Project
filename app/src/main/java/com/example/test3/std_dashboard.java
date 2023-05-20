@@ -81,6 +81,7 @@ public class std_dashboard extends Fragment {
         text2.setText(mngtchclass.descp);
 
         progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setProgress(0);
 
         edt = view.findViewById(R.id.asswrkstd);
         progress = view.findViewById(R.id.progress);
@@ -88,11 +89,12 @@ public class std_dashboard extends Fragment {
         t5 = view.findViewById(R.id.upldstmtudp);
         t5.setOnClickListener(view1 -> download());
 
-        try {
+        /*try {
             setpro();
         } catch (IOException e) {
+            Toast.makeText(getActivity(), "Error loading attendance", Toast.LENGTH_SHORT).show();
             throw new RuntimeException(e);
-        }
+        }*/
         return view;
     }
 
@@ -199,7 +201,6 @@ public class std_dashboard extends Fragment {
                 total = present/total;
                 int a = total;
 
-
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -223,6 +224,33 @@ public class std_dashboard extends Fragment {
             // Handle any errors that occur while downloading the file
             exception.printStackTrace();
         });
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            setpro();
+        } catch (IOException e) {
+            Toast.makeText(getActivity(), "Error loading attendance", Toast.LENGTH_SHORT).show();
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        progressBar.setProgress(0);
+        progress.setText("0%");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        progressBar.setProgress(0);
+        progress.setText("0%");
     }
 
     public void progress()
