@@ -3,19 +3,9 @@ package com.example.test3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.app.NotificationCompat;
-
-import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -35,24 +25,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.RemoteMessage;
-
-//import org.apache.poi.ss.formula.functions.T;
-
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.TimeZone;
 
 public class studui extends AppCompatActivity {
 
     AppCompatButton ap,ap2;
-    final int[] j = {0};
+    //final int[] j = {0};
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
     ImageView imageView;
@@ -100,11 +81,11 @@ public class studui extends AppCompatActivity {
         ap = findViewById(R.id.joinclass);
         ap.setOnClickListener(view -> joinClass());
         ls = new ArrayList();
-        notificationWork();
+        /*notificationWork();*/
         loadSubjects();
     }
 
-    private void notificationWork() {
+    /*private void notificationWork() {
         Toast.makeText(this, "hello all", Toast.LENGTH_SHORT).show();
         ArrayList<String> sub = new ArrayList<>();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("SubjectConnectsStudent");
@@ -151,7 +132,7 @@ public class studui extends AppCompatActivity {
                 // ...
             }
         });
-    }
+    }*/
 
     private void show_profile() {
         Intent i = new Intent(studui.this, Profile_page.class);
@@ -171,12 +152,12 @@ public class studui extends AppCompatActivity {
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
                     String subId = childSnapshot.child("subject_id").getValue(String.class);
                     ls.add(subId);
-                    Log.w("Firebase", "" + subId);
+                    //Log.w("Firebase", "" + subId);
                     // Do something with the sub ID
                 }
                 for(int i = 0; i < ls.size(); i++){
                     int finalI = i;
-                    dr.addValueEventListener(new ValueEventListener() {
+                    dr.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot childSnapshot : snapshot.getChildren()) {

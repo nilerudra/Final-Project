@@ -117,7 +117,7 @@ public class teachui extends AppCompatActivity {
         public void showClass()
         {
                 // clear the LinearLayout first
-                ref.addValueEventListener(new ValueEventListener() {
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 l.removeAllViews();
