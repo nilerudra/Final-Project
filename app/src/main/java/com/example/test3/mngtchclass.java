@@ -30,9 +30,9 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
-    String myString;
+    String myString,dynamicurl;
     public static String subId,sub_name,descp,hours,teacher_id;
-    SharedPreferences sharedPreferences,sharedPreferences1;
+    SharedPreferences sharedPreferences,sharedPreferences1,sharedPreferences5;
 
     public mngtchclass() throws IOException {
     }
@@ -111,6 +111,13 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
                 .into(imageView);
 
         imageView.setOnClickListener(view -> show_profile());
+
+        sharedPreferences5 = getSharedPreferences("dynamicurl", Context.MODE_PRIVATE);
+        dynamicurl = sharedPreferences5.getString("urldyn", "not found");
+        if(!dynamicurl.equals("not found"))
+        {
+            startActivity(new Intent(this,uploadstdmaterial.class));
+        }
     }
 
     private void show_profile() {

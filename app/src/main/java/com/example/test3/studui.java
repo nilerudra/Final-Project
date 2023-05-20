@@ -6,7 +6,11 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,7 +50,9 @@ public class studui extends AppCompatActivity {
     LinearLayout l;
     FirebaseDatabase database;
     DatabaseReference ref;
+    SharedPreferences sharedPreferences1;
     ArrayList<String> ls;
+    String flag = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,36 @@ public class studui extends AppCompatActivity {
                 .error(R.drawable.baseline_person_24)
                 .circleCrop()
                 .into(imageView);
+
+
+        sharedPreferences1 = getSharedPreferences("photouristud", Context.MODE_PRIVATE);
+        flag = sharedPreferences1.getString("key2" + signInAccount.getId(),"0");
+        if(flag.equals("0")) {
+
+            SharedPreferences.Editor editor = sharedPreferences1.edit();
+            editor.putString("key2" + signInAccount.getId(), "1");
+            editor.apply();
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference reference = database.getReference("photouris");
+            String key = reference.push().getKey();
+
+            if(photoUrl != null) {
+                reference.child(key).child("uri").setValue(photoUrl.toString());
+                reference.child(key).child("id").setValue(signInAccount.getId());
+            }
+            else
+            {
+                Resources resources = getResources();
+                int drawableId = R.drawable.profile_def; // Replace with the actual drawable resource ID
+                Uri drawableUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                        resources.getResourcePackageName(drawableId) + '/' +
+                        resources.getResourceTypeName(drawableId) + '/' +
+                        resources.getResourceEntryName(drawableId));
+
+                reference.child(key).child("uri").setValue(drawableUri.toString());
+                reference.child(key).child("id").setValue(signInAccount.getId());
+            }
+        }
 
         imageView.setOnClickListener(view -> show_profile());
 

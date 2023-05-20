@@ -191,54 +191,6 @@ public class stud_register extends AppCompatActivity {
                     }
                 });
             }
-
-// Download the image from the URL and save it as a file on the device
-            /*try {
-                File localFile = File.createTempFile("images", "jpg");
-                localFile.deleteOnExit();
-                URL url = new URL(photoUrl.toString());
-                InputStream inputStream = url.openStream();
-                OutputStream outputStream = new FileOutputStream(localFile);
-                byte[] buffer = new byte[2048];
-                int length;
-                while ((length = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, length);
-                }
-                inputStream.close();
-                outputStream.close();
-
-                // Create a reference to the image file in Firebase Storage with a unique name
-                String filename = signInAccount.getId() + ".jpg"; // Replace ".jpg" with the actual file type of the image
-                StorageReference imageRef = reference.child("user_profile_images/" + filename);
-
-                // Upload the image to Firebase Storage
-                Uri fileUri = Uri.fromFile(localFile);
-                UploadTask uploadTask = imageRef.putFile(fileUri);
-                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Image uploaded successfully, get the URL of the image
-                        imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                // URL of the image is available here, you can save it to Firebase Database or use it as required
-                                String imageUrl = uri.toString();
-                                Toast.makeText(stud_register.this,imageUrl,Toast.LENGTH_SHORT).show();
-                                //Log.d(TAG, "Image uploaded to Firebase Storage. URL: " + imageUrl);
-                            }
-                        });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(stud_register.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-                        //Log.e(TAG, "Error uploading image to Firebase Storage: " + e.getMessage());
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
-
             Intent i = new Intent(stud_register.this, studui.class);
             i.putExtra("id",u.getId());
             startActivity(i);
@@ -253,16 +205,12 @@ public class stud_register extends AppCompatActivity {
     }
 
     public boolean isValidMobileNumber(String mobileNumber) {
-        String mobilePattern = "^[1-9]\\d{9}$"; // Define the pattern for a valid 10-digit mobile number
-        return mobileNumber.matches(mobilePattern); // Check if the input matches the pattern
+        String mobilePattern = "^[1-9]\\d{9}$";
+        return mobileNumber.matches(mobilePattern);
     }
     void signOut()
     {
         gsc1.signOut().addOnCompleteListener(task -> {
-          /*  SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.remove("myStringKey");
-            editor.apply();*/
             finish();
             startActivity(new Intent(stud_register.this,page2.class));
         });

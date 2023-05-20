@@ -7,10 +7,12 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -57,7 +59,8 @@ public class teachui extends AppCompatActivity {
         FirebaseDatabase database;
         DatabaseReference ref;
         GoogleSignInAccount acct;
-        SharedPreferences sharedPreferences,sharedPreferences4;
+        String flag1 = "0";
+        SharedPreferences sharedPreferences,sharedPreferences4,sharedPreferences1;
         //RelativeLayout.LayoutParamsparams;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +116,37 @@ public class teachui extends AppCompatActivity {
                         .error(R.drawable.baseline_person_24)
                         .circleCrop()
                         .into(imageView);
+
+
+                sharedPreferences1 = getSharedPreferences("photouriteach", Context.MODE_PRIVATE);
+                flag1 = sharedPreferences1.getString("key2" + signInAccount.getId(),"0");
+                if(flag1.equals("0")) {
+
+                        SharedPreferences.Editor editor = sharedPreferences1.edit();
+                        editor.putString("key2" + signInAccount.getId(), "1");
+                        editor.apply();
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference reference = database.getReference("photouris");
+                        //String key = reference.getKey();
+                        Toast.makeText(this, "arrived here", Toast.LENGTH_SHORT).show();
+                        String key = reference.push().getKey();
+                        if(photoUrl != null) {
+                                reference.child(key).child("uri").setValue(photoUrl.toString());
+                                reference.child(key).child("id").setValue(signInAccount.getId());
+                        }
+                        else
+                        {
+                                Resources resources = getResources();
+                                int drawableId = R.drawable.profile_def; // Replace with the actual drawable resource ID
+                                Uri drawableUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                                        resources.getResourcePackageName(drawableId) + '/' +
+                                        resources.getResourceTypeName(drawableId) + '/' +
+                                        resources.getResourceEntryName(drawableId));
+
+                                reference.child(key).child("uri").setValue(drawableUri.toString());
+                                reference.child(key).child("id").setValue(signInAccount.getId());
+                        }
+                }
 
                 ap = findViewById(R.id.bt1);
                 l = findViewById(R.id.cc);
