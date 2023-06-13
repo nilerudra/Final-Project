@@ -1,116 +1,431 @@
 package com.example.test3;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-import static com.google.android.material.internal.ContextUtils.getActivity;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.documentfile.provider.DocumentFile;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.FileContent;
-import com.google.api.client.http.HttpExecuteInterceptor;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
-
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.Permission;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class uploadstdmaterial extends AppCompatActivity {
 
-    GoogleSignInOptions gso;
-    GoogleSignInClient gsc;
-    GoogleSignInAccount acct;
-    Button bt;
-    DriveServiceHelper driveServiceHelper;
+    GoogleSignInAccount acct,stud;
+    AppCompatButton bt,bt1,bt2;
     private static final int REQUEST_AUTHORIZATION = 1001;
     private static final int PICK_FILE_REQUEST = 1;
-
+    private Thread signInThread,thread,another;
     String filePath = "default";
-    private Handler mHandler = new Handler();
+    SharedPreferences sharedPreferences1,sharedPreferences,sharedPreferences3,sharedPreferences4,sharedPreferences5;
+    public static String sub_name,stud_id = "Nope";
+    String flag,folderId;
+    int value = 0;
+    static String dynamicurl,getFlag;
+    public static String sub_Id,s;
+    Dialog d1,d2;
+    TextView t1;
+    EditText t2,t3;
+    ViewPager viewPager;
+    TabLayout tabLayout;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uploadstdmaterial);
 
+        sharedPreferences4 = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+
+        s = sharedPreferences4.getString("myStringKey", "not found");
+
+        d2 = new Dialog(this);
+        d2.setContentView(R.layout.uploadlink);
+        t2 = d2.findViewById(R.id.linkurl);
+        t3 = d2.findViewById(R.id.linktitle);
+        bt2 = d2.findViewById(R.id.savelink);
+        bt2.setOnClickListener(view -> getUrl());
+
+
+
+        bt1 = findViewById(R.id.upldlink);
+        bt1.setOnClickListener(view ->updlink());
+
         bt = findViewById(R.id.upload);
-        //processStudentData();
-        bt.setOnClickListener(view -> showFileChooser());
-        /*GoogleSignInOptions signInOptions =
-        new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.server_client_id))
-                .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
-                .build();
+        bt.setOnClickListener(view -> showChooser());
 
-GoogleSignInClient signInClient = GoogleSignIn.getClient(this, signInOptions);
+        acct = GoogleSignIn.getLastSignedInAccount(this);
+        sharedPreferences3 = getSharedPreferences("fold_id", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("sub_name", Context.MODE_PRIVATE);
+        sub_name = sharedPreferences.getString("sub", "");
+        sub_Id = sharedPreferences.getString("subid", "");
+        sharedPreferences1 = getSharedPreferences("flag", Context.MODE_PRIVATE);
+        flag = sharedPreferences1.getString("key2" + sub_name,"0");
+        if(flag.equals("0")) {
 
-Intent signInIntent = signInClient.getSignInIntent();
-startActivityForResult(signInIntent, REQUEST_CODE_SIGN_IN);
-*/
+            SharedPreferences.Editor editor = sharedPreferences1.edit();
+            editor.putString("key2" + sub_name, "1");
+            editor.apply();
+
+            d1 = new Dialog(this);
+            d1.setContentView(R.layout.directionofuse);
+            t1 = d1.findViewById(R.id.drctouse);
+            t1.setText("Hello " + acct.getDisplayName() + "! On this page you can Upload the Study Material related to subject " + sub_name + " and provide links to videos and blogs online.");
+            d1.show();
+            thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Drive driveService = getDriveService();
+                    File folderMetadata = new File();
+                    folderMetadata.setName("Study Material: " + sub_name);
+                    folderMetadata.setParents(Collections.singletonList("root"));
+                    folderMetadata.setMimeType("application/vnd.google-apps.folder");
+
+                    try {
+                        File createdFolder = driveService.files().create(folderMetadata).setFields("id").execute();
+                        folderId = createdFolder.getId();
+
+                        SharedPreferences.Editor editor = sharedPreferences3.edit();
+                        editor.putString("sub" + sub_name, folderId);
+                        editor.apply();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
+        }
 
 
-        /*if(acct!=null)
-        {
-            Toast.makeText(this, "Verified", Toast.LENGTH_SHORT).show();
-            handlesignin();
-            Toast.makeText(this, acct.getEmail(), Toast.LENGTH_SHORT).show();
-            //navigateToSecondActivity();
-            //splashScreen ss = new splashScreen();
+        stud = GoogleSignIn.getLastSignedInAccount(this);
+
+
+        if (s.equals("Student")) {
+            stud_id = stud.getId();
+            bt.setVisibility(View.GONE);
+            bt1.setVisibility(View.GONE);
+        }
+
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Drive driveService = getDriveService();
+                File folderMetadata = new File();
+                folderMetadata.setName("Study Material: " + sub_name);
+                folderMetadata.setParents(Collections.singletonList("root"));
+                folderMetadata.setMimeType("application/vnd.google-apps.folder");
+                File folder = null;
+                try {
+                    folder = driveService.files().get(sharedPreferences3.getString("sub" + sub_name, "")).execute();
+                } catch (IOException e) {
+                    try {
+                        if(folder == null) {
+                            File createdFolder = driveService.files().create(folderMetadata).setFields("id").execute();
+                            folderId = createdFolder.getId();
+                            SharedPreferences.Editor editor = sharedPreferences3.edit();
+                            editor.putString("sub" + sub_name, folderId);
+                            editor.apply();
+                        }
+                    } catch (IOException ee) {
+                        ee.printStackTrace();
+                    }
+                }
+            }
+        });
+        thread.start();
+
+
+        viewPager = findViewById(R.id.viewpager);
+        tabLayout = findViewById(R.id.tabLayout);
+
+        ViewPagerAdapter adapterv = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapterv);
+
+
+        sharedPreferences5 = getSharedPreferences("dynamicurl", Context.MODE_PRIVATE);
+        dynamicurl = sharedPreferences5.getString("urldyn", "not found");
+        getFlag = sharedPreferences5.getString("flag", "not found");
+
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                if(s.equals("Teacher")) {
+                    int position = tab.getPosition();
+                    switch (position) {
+                        case 0:
+                            if(!dynamicurl.equals("not found") && value == 0)
+                            {
+                                if(getFlag.equals("file"))
+                                {
+                                    bt.setVisibility(View.VISIBLE);
+                                    bt1.setVisibility(View.GONE);
+                                    java.io.File file = new java.io.File(getFilePath(getApplicationContext(),Uri.parse(dynamicurl)));
+                                    Toast.makeText(uploadstdmaterial.this, file.toString(), Toast.LENGTH_SHORT).show();
+                                    signInThread = new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            uploadFile(file);
+                                        }
+                                    });
+                                    signInThread.start();
+                                    SharedPreferences.Editor editor = sharedPreferences5.edit();
+                                    editor.remove("urldyn");
+                                    editor.apply();
+                                    dynamicurl = "not found";
+
+                                }
+                                else {
+                                    bt.setVisibility(View.GONE);
+                                    bt1.setVisibility(View.VISIBLE);
+                                    tab = tabLayout.getTabAt(1);
+                                    tabLayout.selectTab(tab);
+                                    value = 1;
+                                }
+                            }
+                            else {
+                                bt.setVisibility(View.VISIBLE);
+                                bt1.setVisibility(View.GONE);
+                            }
+                            break;
+                        case 1:
+                            if(!dynamicurl.equals("not found"))
+                            {
+                                if(getFlag.equals("file"))
+                                {
+
+                                }
+                                else {
+                                    t2.setText(dynamicurl);
+                                    d2.show();
+                                    SharedPreferences.Editor editor = sharedPreferences5.edit();
+                                    editor.remove("urldyn");
+                                    editor.apply();
+                                }
+                            }
+                            bt.setVisibility(View.GONE);
+                            bt1.setVisibility(View.VISIBLE);
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    public static String getFilePath(Context context, Uri uri) {
+        if (getFlag.equals("file")) {
+            try {
+                String path = null;
+                String[] projection = {MediaStore.Images.Media.DATA};
+                Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+                if (cursor != null) {
+                    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    cursor.moveToFirst();
+                    path = cursor.getString(columnIndex);
+                    cursor.close();
+                }
+
+                return path;
+            }
+            catch (SecurityException se)
+            {
+                se.printStackTrace();
+            }
+            getFlag = "";
+        }
+        return "";
+    }
+
+    public void getUrl()
+    {
+        if(!t2.getText().toString().isEmpty()) {
+            String url = t2.getText().toString();
+            String s = " ";
+            if(t3.getText().toString().endsWith(":"))
+            {
+                s = t3.getText().toString().substring(0,t3.getText().toString().length() - 1);
+            }
+            else
+                s = t3.getText().toString();
+
+            String title = s;
+            another = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String faviconUrl = null;
+
+                    try {
+                /*Document document = Jsoup.connect(url).get();
+                faviconUrl = document.select("img.thumbnail").attr("src");
+                // Retrieve the favicon URL from the HTML
+                //faviconUrl = document.select("link[rel~=(?i)^(shortcut|icon)$]").attr("href");
+                if (faviconUrl.startsWith("//")) {
+                    faviconUrl = "http:" + faviconUrl;
+                } else if (!faviconUrl.startsWith("http")) {
+                    faviconUrl = url + faviconUrl;
+                }*/
+                        // Assuming you have the website URL stored in a variable called "websiteUrl"
+                        Document doc = Jsoup.connect(url).get();
+                        Element iconElement = doc.select("link[rel~=(?i)^(shortcut|icon|favicon)]").first();
+                        faviconUrl = iconElement.absUrl("href");
+
+
+                        // Assuming you have the website URL stored in a variable called "websiteUrl"
+                        //Document doc = Jsoup.connect(websiteUrl).get();
+                        Elements iconElements = doc.select("link[rel~=icon], link[rel~=shortcut icon], link[rel~=apple-touch-icon]");
+
+                        int maxIconSize = 0;
+
+                        for (Element element : iconElements) {
+                            String href = element.attr("href");
+                            String sizeAttr = element.attr("sizes");
+
+                            // Extract the size from sizes attribute if available
+                            int size = 0;
+                            if (!sizeAttr.isEmpty()) {
+                                String[] sizes = sizeAttr.split("x");
+                                if (sizes.length > 0) {
+                                    try {
+                                        size = Integer.parseInt(sizes[0].trim());
+                                    } catch (NumberFormatException e) {
+                                        // Handle parsing error if needed
+                                    }
+                                }
+                            }
+
+                            // Check if the size is larger than the previous largest icon
+                            if (size > maxIconSize) {
+                                maxIconSize = size;
+                                faviconUrl = href;
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (RuntimeException re) {
+                        re.printStackTrace();
+                    }
+
+                    saveLinks(faviconUrl,title, url);
+                }
+            });
+            another.start();
+            d2.hide();
+            t2.setText("");
+            t3.setText("");
         }
         else
-            Toast.makeText(this, "Didn't Verified", Toast.LENGTH_SHORT).show();*/
+        {
+            showToast("Please provide link/url...");
+        }
+    }
+    public void saveLinks(String faviconurl, String s, String url)
+    {
 
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference reference = database.getReference("Links").child(mngtchclass.subId).push();
+
+            reference.child("linktitle").setValue(s);
+            reference.child("linkthumnail").setValue(faviconurl);
+            reference.child("link").setValue(url);
+            dynamicurl = "not found";
+    }
+    public void updlink()
+    {
+        d2.show();
+    }
+
+    public void showChooser()
+    {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     200);
         }
-
-
+        else {
+            showFileChooser();
+        }
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case 200:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Storage permission granted", Toast.LENGTH_SHORT).show();
-                    showFileChooser();//processStudentData();// permission granted, proceed with accessing the storage
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                    {
+                         startActivity(new Intent(this,Request_access.class));
+                    }
+                    else
+                        showFileChooser();
                 } else {
                     Toast.makeText(this, "Cannot access storage", Toast.LENGTH_SHORT).show(); // permission denied, handle the situation accordingly
                 }
@@ -127,72 +442,11 @@ startActivityForResult(signInIntent, REQUEST_CODE_SIGN_IN);
         });
     }
 
-    public void handlesignin()
+
+    public Drive getDriveService()
     {
-        /*
-
-
-
-        try {
-        GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-        String accessToken = account.getIdToken();
-
-        // Use the access token to authorize requests to the Google Drive API
-        HttpTransport transport = AndroidHttp.newCompatibleTransport();
-        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-
-        GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
-        Drive driveService = new Drive.Builder(transport, jsonFactory, credential)
-                .setApplicationName(getString(R.string.app_name))
-                .build();
-
-        // Call Google Drive API methods using the authorized driveService object
-        // ...
-        } catch (ApiException e) {
-        Log.w(TAG, "handleSignInResult:error", e);
-        // ...
-        }
-
-
-
-        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-
-        GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
-        Drive driveService = new Drive.Builder(transport, jsonFactory, credential)
-                .setApplicationName(getString(R.string.app_name))
-                .build();
-
-
-
-        Drive driveService = new Drive.Builder(transport, jsonFactory, credential)
-                .setApplicationName(getString(R.string.app_name))
-                .build();
-        */
-
-        //GoogleSignInAccount account = acct.getResult(ApiException.class);
-        //HttpTransport transport = AndroidHttp.newCompatibleTransport();
-        //imp - GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
-        /*HttpRequestInitializer requestInitializer = new HttpRequestInitializer() {
-            @Override
-            public void initialize(HttpRequest request) throws IOException {
-                request.getHeaders().setAuthorization("Bearer " + accessToken);
-            }
-        };*/
-        //credential.setSelectedAccount(acct.getAccount());
-
-        /*gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("778432956795-5v179rvp7pt0ao9n0tqhd3ioel1elmsi.apps.googleusercontent.com")
-                .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
-                .build();
-        gsc = GoogleSignIn.getClient(this,gso);*/
-
-        //here checks if user has already signed in. if yes the it does not return null and we go to secondactivity().
         acct = GoogleSignIn.getLastSignedInAccount(this);
-        if(acct != null) {
-
-            showToast(acct.getEmail());
-            /*String accessToken = acct.getIdToken();
-            GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);*/
+        if (acct != null) {
             JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
             GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(this, Collections.singleton(DriveScopes.DRIVE_FILE));
             credential.setSelectedAccount(acct.getAccount());
@@ -202,162 +456,162 @@ startActivityForResult(signInIntent, REQUEST_CODE_SIGN_IN);
                     credential)
                     .setApplicationName("EduNexus")
                     .build();
+            return googleDriveService;
+        }
+        else
+            return null;
+    }
+    @Override
+    protected void onActivityResult ( int requestCode, int resultCode, Intent data){
 
-            File fileMetaData = new File();
-            fileMetaData.setName("myFile");
+            if (requestCode == REQUEST_AUTHORIZATION && resultCode == RESULT_OK) {
+                showFileChooser();
+            }
 
-            //java.io.File externalStorageDirectory = Environment.getExternalStorageDirectory();
-            //java.io.File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-// specify the rest of the file path
+            /*if (requestCode == PICK_FILE_REQUEST_11 && resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    Uri fileUri = data.getData();
 
-// create a file object by combining the two paths
-            showToast(filePath);
-            java.io.File file = new java.io.File("/storage/emulated/0/sample.pdf");
-            showToast(file.toString());
-            showToast("1 arrived here");
-            showToast("1 arrived here");
-            showToast("1 arrived here");showToast("1 arrived here");showToast("1 arrived here");
-            showToast("1 arrived here");
+                    // Access the file using the DocumentFile
+                    DocumentFile documentFile = DocumentFile.fromSingleUri(this, fileUri);
 
+                    if (documentFile != null && documentFile.isFile()) {
+                        Uri fileContentUri = documentFile.getUri();
+                        java.io.File originalFile = new java.io.File(fileContentUri.getPath());
+                        signInThread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                uploadFile(originalFile);
+                            }
+                        });
+                        signInThread.start();
+                    }
+                }
+            }*/
 
-            //Toast.makeText(this, file.toString(), Toast.LENGTH_SHORT).show();
-            FileContent mediaContent = new FileContent("application/pdf", file);
-            showToast("1 arrived here");
-            String s = "File not initialized";
+            /*if (requestCode == REQUEST_CODE_OPEN_DOCUMENT_TREE && resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    Uri treeUri = data.getData();
+
+                    try {
+                        getContentResolver().takePersistableUriPermission(treeUri,
+                                Intent.FLAG_GRANT_READ_URI_PERMISSION |
+                                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, treeUri); // Set the initial directory
+
+                        startActivityForResult(intent, PICK_FILE_REQUEST);
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }*/
+
+            if (requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+                    filePath = data.getData().getPath();
+                    if (filePath.startsWith("/document/primary:")) {
+                        //Toast.makeText(this, "Path contains /document/primary:", Toast.LENGTH_SHORT).show();
+                        filePath = Environment.getExternalStorageDirectory() + "/" + filePath.substring("/document/primary:".length());
+                    }
+                    java.io.File file = new java.io.File(filePath);
+                    signInThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            uploadFile(file);
+                        }
+                    });
+                    signInThread.start();
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+
+        private void showFileChooser () {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("*/*");
+
             try {
-                File file1 = googleDriveService.files().create(fileMetaData, mediaContent).setFields("id").execute();
-                showToast("File Uploaded successfully!!!");
-                s = file1.getId();
+                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                    startActivityForResult(Intent.createChooser(intent1, "Select a file to upload"), REQUEST_CODE_OPEN_DOCUMENT_TREE);
+                }
+                else {*/
+                    showToast("Select Study Material for Subject");
+                    startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), PICK_FILE_REQUEST);
+               // }
+            } catch (android.content.ActivityNotFoundException ex) {
+                showToast("please install a file manager");
+            }
+        }
+
+        public void uploadFile (java.io.File originalFile)
+        {
+            Drive googleDriveService = getDriveService();
+            String folder_id = sharedPreferences3.getString("sub" + sub_name, "");
+            File fileMetaData = new File();
+            fileMetaData.setParents(Collections.singletonList(folder_id));
+            java.io.File file = originalFile;
+            fileMetaData.setName(file.getName());
+            FileContent mediaContent = new FileContent("application/octet-stream", file);
+            try {
+                File file1 = googleDriveService.files().create(fileMetaData, mediaContent).setFields("id, webContentLink, webViewLink").execute();
+                String fileId = file1.getId();
+                Permission publicPermission = new Permission()
+                        .setType("anyone")
+                        .setRole("reader");
+                googleDriveService.permissions().create(fileId, publicPermission).execute();
+                String publicUrl = file1.getWebViewLink();
+
+                String downloadUrl = file1.getWebContentLink();
+
+
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference reference = database.getReference("Drive Links").child(mngtchclass.subId).push();
+
+                reference.child("fileName").setValue(file.getName());
+                reference.child("fileLink").setValue(publicUrl);
+                reference.child("fileDownloadLink").setValue(downloadUrl);
+
+                showToast("File Uploaded successfully!");
             } catch (UserRecoverableAuthIOException e) {
-                // This exception is thrown when additional authorization is required
-                showToast("Entered User Recoverable Auth IO Exception");
-                //Toast.makeText(this, "Entered User Recoverable Auth IO Exception", Toast.LENGTH_SHORT).show();
+                showToast("Re-authentication required!");
                 Intent authIntent = e.getIntent();
                 startActivityForResult(authIntent, REQUEST_AUTHORIZATION);
+            } catch (FileNotFoundException fnf) {
+                showToast(fnf.toString());
             } catch (Exception ae) {
-                //Toast.makeText(this, "Entered Catch", Toast.LENGTH_SHORT).show();
-                showToast("Entered Catch");
                 ae.printStackTrace();
-                //String s1 = ae.getMessage();
-                //Toast.makeText(this, ae.toString(), Toast.LENGTH_SHORT).show();
-                //showToast(ae.getMessage());
-                showToast(ae.toString());
-                System.out.println(ae.toString());
+                showToast("Error uploading file, Please try again...");
             }
 
-            showToast(s);
-            //Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-
-            //Toast.makeText(this, "Entered handlesignin", Toast.LENGTH_SHORT).show();
-            //driveServiceHelper = new DriveServiceHelper(googleDriveService);
-        }
-    }
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_AUTHORIZATION && resultCode == RESULT_OK) {
-            // The user authorized the app, so retry the Drive API operation
-            // that triggered the authorization request
-            processStudentData();
-        }
-        if (requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Toast.makeText(this, "Selected File returning path", Toast.LENGTH_SHORT).show();
-            /*Uri uri = data.getData();
-
-            if (uri == null) {
-                filePath = "uri is null";
+            java.io.File destinationFolder = new java.io.File(getApplicationContext().getFilesDir(), "Study material" + sub_Id);
+            if (!destinationFolder.exists()) {
+                destinationFolder.mkdirs();
             }
-            String[] projection = {MediaStore.Images.Media.DATA};
-            Cursor cursor = this.getContentResolver().query(uri, projection, null, null, null);
-            if (cursor != null) {
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                String path = cursor.getString(column_index);
-                cursor.close();
-                filePath = path;
-            }
-            filePath = uri.getPath();
-*/
-            filePath = data.getData().getPath();
-            if (filePath.startsWith("/document/primary:")) {
-                Toast.makeText(this, "Path contains /document/primary:", Toast.LENGTH_SHORT).show();
-                filePath = Environment.getExternalStorageDirectory() + "/" + filePath.substring("/document/primary:".length());
-            }
-            //filePath = FileUtils.getPath(this, uri); // get the path of the selected file
-            Toast.makeText(this, filePath, Toast.LENGTH_SHORT).show();
-            // use the filePath to access the selected file
-            processStudentData();
-        }
-        else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
 
-
-    private void showFileChooser() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        //intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        try {
-            //startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), PICK_FILE_REQUEST);
-            startActivityForResult(intent,PICK_FILE_REQUEST);
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-
-    public void uploadFile()
-    {
-
-
-
-
-
-
-        /*ProgressDialog progressDialog = new ProgressDialog(uploadstdmaterial.this);
-        progressDialog.setTitle("Uploading to Google Drive");
-        progressDialog.setMessage("Please wait.....");
-        progressDialog.show();
-
-        String filePath = "/storage/emulated/0/Sem 6/Sem 6/Computer Graphics/Model Answer/22318-2019-Winter-model-answer-paper[Msbte study resources].pdf";
-         driveServiceHelper.createFilePDF(filePath).addOnSuccessListener(new OnSuccessListener<String>() {
-            @Override
-            public void onSuccess(String s) {
-                progressDialog.dismiss();
-                Toast.makeText(uploadstdmaterial.this, "uploaded Successfully", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                progressDialog.dismiss();
-                Toast.makeText(uploadstdmaterial.this, "Check your google drive api key", Toast.LENGTH_SHORT).show();
-            }
-        });*/
-
-
-        //String s1 = driveServiceHelper.retfid();
-        //Toast.makeText(this, s1, Toast.LENGTH_SHORT).show();
-    }
-
-    private Runnable getStudentIdAndLoadFromDB = new Runnable() {
-        @Override
-        public void run() {
-            handlesignin();
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //loadFromDB();
+            java.io.File destinationFile = new java.io.File(destinationFolder, originalFile.getName());
+            try {
+                InputStream inputStream = new FileInputStream(originalFile);
+                OutputStream outputStream = new FileOutputStream(destinationFile);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, length);
                 }
-            }, 500); // delay for 1000 milliseconds
-        }
-    };
 
-    private void processStudentData() {
-        new Thread(getStudentIdAndLoadFromDB).start();
+                outputStream.flush();
+                outputStream.close();
+                inputStream.close();
+            }
+            catch (FileNotFoundException fileNotFoundException)
+            {
+                Toast.makeText(this, "File not found", Toast.LENGTH_SHORT).show();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
-}

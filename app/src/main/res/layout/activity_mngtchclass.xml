@@ -15,13 +15,13 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        app:itemTextColor="@color/black"
+        android:layout_alignParentBottom="true"
         android:background="#50416E"
         android:elevation="100dp"
-        app:menu="@menu/bottom_nav_menu"/>
+        app:itemTextColor="@color/black"
+        app:menu="@menu/bottom_nav_menu" />
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"

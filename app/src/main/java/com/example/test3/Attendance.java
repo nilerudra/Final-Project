@@ -2,6 +2,8 @@ package com.example.test3;
 
 import static androidx.fragment.app.FragmentManager.TAG;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -14,11 +16,13 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +41,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -58,6 +63,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,7 +80,7 @@ public class Attendance extends Fragment {
     private TextView qrCodeTV;
     private ImageView qrCodeIV;
     private TextInputEditText dataEdt;
-    String currentDate;
+    String currentDate, currentDateTime;
     ArrayList<String> stud_id;
     ArrayList<String> stud_name;
     ArrayList<String> stud_enr;
@@ -81,10 +88,10 @@ public class Attendance extends Fragment {
     ArrayList<String> studentLs;
     ArrayList<String> studName;
     ArrayList<String> studEnr;
-    String selectedItem;
     Button generateQRBtn;
     Button generate_attendace;
     Button doneAttendance;
+    private Dialog loadingDialog;
 
     public Attendance() {
     }
@@ -100,47 +107,22 @@ public class Attendance extends Fragment {
         generate_attendace = v.findViewById(R.id.attendance);
         doneAttendance = v.findViewById(R.id.Done);
 
-        Spinner spinner = v.findViewById(R.id.spinner);
-
-        // Sample data for the spinner
-        List<String> data = new ArrayList<>();
-        data.add("1");
-        data.add("2");
-        data.add("3");
-        data.add("4");
-        data.add("5");
-
-        // Create an ArrayAdapter to populate the spinner with the data
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, data);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Set the adapter for the spinner
-        spinner.setAdapter(adapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedItem = (String) parent.getItemAtPosition(position);
-                dataEdt.setText(String.format("%s_%s_%s", currentDate, mngtchclass.sub_name,selectedItem));
-                // Do something with the selected item
-                //Toast.makeText(requireContext(), "Selected: " + selectedItem, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        loadingDialog = new Dialog(requireContext());
+        loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loadingDialog.setContentView(R.layout.dialog_loading);
+        loadingDialog.setCancelable(false);
 
         generate_attendace.setEnabled(false);
+        doneAttendance.setEnabled(false);
+        doneAttendance.setBackground(getResources().getDrawable(R.drawable.button_red_back));
+        generate_attendace.setBackground(getResources().getDrawable(R.drawable.button_red_back));
 
-        doneAttendance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                generate_attendace.setEnabled(true);
-                generateQRBtn.setEnabled(false);
-                Toast.makeText(requireContext(),"Now you can generate attendance",Toast.LENGTH_SHORT).show();
-            }
+        doneAttendance.setOnClickListener(v1 -> {
+            doneAttendance.setEnabled(false);
+            doneAttendance.setBackground(getResources().getDrawable(R.drawable.button_red_back));
+            generate_attendace.setEnabled(true);
+            generate_attendace.setBackground(getResources().getDrawable(R.drawable.button_back));
+            Toast.makeText(requireContext(),"Now you can generate attendance",Toast.LENGTH_SHORT).show();
         });
 
         Calendar calendar = Calendar.getInstance();
@@ -151,10 +133,10 @@ public class Attendance extends Fragment {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         currentDate = dateFormat.format(new Date());
-        //String currentTime = timeFormat.format(new Date());
+        String currentTime = timeFormat.format(new Date());
+        currentDateTime = currentDate + " " + currentTime;
 
-
-
+        dataEdt.setText(String.format("%s_%s", currentDateTime, mngtchclass.sub_name));
 
         generateQRBtn.setOnClickListener(view -> generateQR());
         generate_attendace.setOnClickListener(view -> generateAttendace());
@@ -185,135 +167,195 @@ public class Attendance extends Fragment {
 
 
     private void showToast(final String message) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (isAdded()) {
+            requireActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
 
     public void writeInFile(){
 
         //showToast("updating file");
-        int i = 0;
-        // require a empty public constructor
-        File file = new File(requireContext().getExternalFilesDir(null), mngtchclass.sub_name+".xlsx");
+        if(isAdded()) {
 
-        if(file.exists()){
-            //showToast("file exist");
-            FileInputStream inputStream = null;
-            try {
-                inputStream = new FileInputStream(file);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            int i = 0;
+            // require a empty public constructor
+            File file = new File(requireContext().getExternalFilesDir(null), mngtchclass.sub_name + ".xlsx");
 
-            Workbook workbook = null;
-            try {
-                workbook = new HSSFWorkbook(inputStream);
-            } catch (IOException e) {
-                //showToast(e.getMessage());
-            }
-            assert workbook != null;
-            Sheet sheet = workbook.getSheet("My Sheet");
-        /*Row firstRow = sheet.createRow(0);
-        Cell enrCell = firstRow.createCell(0);
-        enrCell.setCellValue("Enrollment No.");
-
-        Cell nameCell = firstRow.createCell(1);
-        nameCell.setCellValue("Name");*/
-            int rowCount = stud_enr.size();
-            Row row;
-
-            for (int j = 0; j < rowCount; j++) {
-                row = sheet.getRow(j + 1);
-                if (row == null) {
-                    row = sheet.createRow(j + 1);
+            if (file.exists()) {
+                //showToast("file exist");
+                FileInputStream inputStream = null;
+                loadingDialog.show();
+                try {
+                    inputStream = new FileInputStream(file);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
 
-                Cell enrNoValueCell = row.createCell(0);
-                enrNoValueCell.setCellValue(stud_enr.get(j));
+                Workbook workbook = null;
+                try {
+                    workbook = new HSSFWorkbook(inputStream);
+                } catch (IOException e) {
+                    //showToast(e.getMessage());
+                }
+                assert workbook != null;
+                Sheet sheet = workbook.getSheet("My Sheet");
 
-                Cell nameValueCell = row.createCell(1);
-                nameValueCell.setCellValue(stud_name.get(j));
-            }
+                int rowCount = stud_enr.size();
+                Row row;
 
-            FileOutputStream outputStream = null;
-            try {
-                outputStream = new FileOutputStream(file);
-                workbook.write(outputStream);
-                outputStream.close();
-                //showToast("file updated");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+                for (int j = 0; j < rowCount; j++) {
+                    row = sheet.getRow(j + 1);
+                    if (row == null) {
+                        row = sheet.createRow(j + 1);
+                    }
 
-            GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(requireContext());
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            assert acct != null;
-            StorageReference reference = storage.getReference("attendance_files/").child(acct.getId()+"/" + mngtchclass.sub_name+".xlsx");
+                    Cell enrNoValueCell = row.createCell(0);
+                    enrNoValueCell.setCellValue(stud_enr.get(j));
 
-            Uri fileUri = Uri.fromFile(file);
-            StorageMetadata metadata = new StorageMetadata.Builder()
-                    .setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") // or "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                    .build();
+                    Cell nameValueCell = row.createCell(1);
+                    nameValueCell.setCellValue(stud_name.get(j));
+                }
 
-            UploadTask uploadTask = reference.putFile(fileUri, metadata);
+                FileOutputStream outputStream = null;
+                try {
+                    outputStream = new FileOutputStream(file);
+                    workbook.write(outputStream);
+                    outputStream.close();
+                    //showToast("file updated");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    showToast("File uploaded successfully");
-                    // File upload successful
-                    // Retrieve the download URL of the uploaded file
-                    reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri downloadUrl) {
-                            String downloadUrlStr = downloadUrl.toString();
-                            // Do something with the download URL (e.g., save it to a database)
-                            // ...
+                GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(requireContext());
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                assert acct != null;
+                StorageReference reference = storage.getReference("attendance_files/").child(acct.getId() + "/" + mngtchclass.sub_name + ".xlsx");
+
+                Uri fileUri = Uri.fromFile(file);
+                StorageMetadata metadata = new StorageMetadata.Builder()
+                        .setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") // or "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        .build();
+
+                UploadTask uploadTask = reference.putFile(fileUri, metadata);
+
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        showToast("File uploaded successfully.....");
+                        loadingDialog.dismiss();
+                        // File upload successful
+                        // Retrieve the download URL of the uploaded file
+                        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri downloadUrl) {
+                                String downloadUrlStr = downloadUrl.toString();
+                                // Do something with the download URL (e.g., save it to a database)
+                                // ...
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Failed to retrieve the download URL
+                                // Handle the error
+                                showToast("Error occurred");
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // File upload failed
+                        // Handle the error
+                    }
+                });
+
+            } else {
+                GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(requireContext());
+                assert acct != null;
+                StorageReference r = FirebaseStorage.getInstance().getReference("attendance_files/").child(acct.getId() + "/" + mngtchclass.sub_name + ".xlsx");
+
+                r.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        // File exists
+                        // Perform your desired actions here
+                        if(!isAdded()){
+                            return;
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Failed to retrieve the download URL
-                            // Handle the error
+
+                        File f = new File(requireContext().getExternalFilesDir(null), mngtchclass.sub_name + ".xlsx");
+                        try {
+
+                            // Open output stream to the local file
+                            FileOutputStream outputStream = new FileOutputStream(f);
+                            outputStream.write(bytes);
+                            outputStream.close();
+
+                            // Close the streams
+                            //inputStream.close();
+                            outputStream.close();
+
+                            writeInFile();
+                            // File has been copied successfully
+                            // Perform your desired actions here
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            // Handle the exception appropriately
                         }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    // File upload failed
-                    // Handle the error
-                }
-            });
 
-        }else{
-            Workbook workbook = new HSSFWorkbook();
-            // Create a new sheet
-            Sheet sheet = workbook.createSheet("My Sheet");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        if(!isAdded()){
+                            return;
+                        }
 
-            // Create the header row with column names
-            Row headerRow = sheet.createRow(0);
-            Cell enrNoCell = headerRow.createCell(0);
-            enrNoCell.setCellValue("Enrollment No.");
+                        if (exception instanceof StorageException && ((StorageException) exception).getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                            // File does not exist
+                            // Perform your desired actions here
 
-            Cell nameCell = headerRow.createCell(1);
-            nameCell.setCellValue("Name");
+                            Workbook workbook = new HSSFWorkbook();
+                            // Create a new sheet
+                            Sheet sheet = workbook.createSheet("My Sheet");
 
-            File f = new File(requireContext().getExternalFilesDir(null), mngtchclass.sub_name + ".xlsx");
-            FileOutputStream outputStream = null;
-            try {
-                outputStream = new FileOutputStream(file);
-                workbook.write(outputStream);
-                outputStream.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                            // Create the header row with column names
+                            Row headerRow = sheet.createRow(0);
+                            Cell enrNoCell = headerRow.createCell(0);
+                            enrNoCell.setCellValue("Enrollment No.");
+
+                            Cell nameCell = headerRow.createCell(1);
+                            nameCell.setCellValue("Name");
+
+                            File f = new File(requireContext().getExternalFilesDir(null), mngtchclass.sub_name + ".xlsx");
+                            FileOutputStream outputStream = null;
+                            try {
+                                outputStream = new FileOutputStream(file);
+                                workbook.write(outputStream);
+                                outputStream.close();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            writeInFile();
+
+                        } else {
+                            // Error occurred while checking file existence
+                            // Handle the error appropriately
+                            showToast("Error occurred while checking file existence");
+                        }
+                    }
+                });
             }
-            writeInFile();
+        }
+        else{
+            showToast("Something wrong happened");
         }
     }
 
@@ -385,6 +427,7 @@ public class Attendance extends Fragment {
         }
         else
         {
+            loadingDialog.show();
             WindowManager manager = (WindowManager) requireActivity().getSystemService(Context.WINDOW_SERVICE);
             Display display = manager.getDefaultDisplay();
             Point point = new Point();
@@ -422,6 +465,11 @@ public class Attendance extends Fragment {
             //displaying QR code on screen
             qrCodeIV.setImageBitmap(bitmap);
             qrCodeTV.setVisibility(View.GONE);
+            doneAttendance.setEnabled(true);
+            doneAttendance.setBackground(getResources().getDrawable(R.drawable.button_back));
+            generateQRBtn.setEnabled(false);
+            generateQRBtn.setBackground(getResources().getDrawable(R.drawable.button_red_back));
+            loadingDialog.dismiss();
         }
     }
 
@@ -432,14 +480,13 @@ public class Attendance extends Fragment {
         studentLs = new ArrayList<>();
         studName = new ArrayList<>();
         studEnr = new ArrayList<>();
-
         //showToast("Function started for generating attendance");
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Attendance");
         DatabaseReference r = FirebaseDatabase.getInstance().getReference("Users");
 
         databaseReference.child(mngtchclass.sub_name)
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot childSnapshot : snapshot.getChildren()) {
@@ -449,7 +496,7 @@ public class Attendance extends Fragment {
 
                         //showToast(studentLs.get(0));
                         //ArrayList<String> id = new ArrayList<>();
-                        r.addValueEventListener(new ValueEventListener() {
+                        r.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
@@ -498,6 +545,8 @@ public class Attendance extends Fragment {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        loadingDialog.show();
+
         Sheet sheet = workbook.getSheet("My Sheet");
 
         int rowCount = sheet.getLastRowNum() - sheet.getFirstRowNum() + 1;
@@ -533,13 +582,19 @@ public class Attendance extends Fragment {
         }*/
 
 
+        String s = dataEdt.getText().toString();
+        String[] ar = s.split("_");
+        String a = ar[0];
+        //showToast("hmmm " + a);
+
         //String dayRow = "Day " + currentDay;
         // Iterate over each row
+        showToast("" + rowCount);
         for (int i = 1; i < rowCount; i++) {
             Row row = sheet.getRow(i);
             Row r = sheet.getRow(0);
             Cell c = r.createCell(lastColNum + 1);
-            c.setCellValue(date + "_" + selectedItem);
+            c.setCellValue(a);
 
             // Get the cell values for the current row
             String enrNo = row.getCell(0).getStringCellValue();
@@ -583,6 +638,7 @@ public class Attendance extends Fragment {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 showToast("File uploaded successfully");
+                loadingDialog.dismiss();
                 // File upload successful
                 // Retrieve the download URL of the uploaded file
                 reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -605,6 +661,7 @@ public class Attendance extends Fragment {
             public void onFailure(@NonNull Exception e) {
                 // File upload failed
                 // Handle the error
+                loadingDialog.dismiss();
             }
         });
     }
@@ -612,6 +669,9 @@ public class Attendance extends Fragment {
 
     public void generateAttendace(){
         generateQRBtn.setEnabled(true);
+        generate_attendace.setEnabled(false);
+        generateQRBtn.setBackground(getResources().getDrawable(R.drawable.button_back));
+        generate_attendace.setBackground(getResources().getDrawable(R.drawable.button_red_back));
         takingAttendance();
     }
 

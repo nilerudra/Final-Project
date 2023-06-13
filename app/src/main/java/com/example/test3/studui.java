@@ -1,7 +1,5 @@
 package com.example.test3;
 
-import static android.content.ContentValues.TAG;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,7 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,10 +33,12 @@ import java.util.Map;
 import java.util.Objects;
 
 
+
 public class studui extends AppCompatActivity {
 
     AppCompatButton ap,ap2;
-    final int[] j = {0};
+    Toolbar t;
+    //final int[] j = {0};
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
     ImageView imageView;
@@ -49,13 +48,18 @@ public class studui extends AppCompatActivity {
     LinearLayout l;
     FirebaseDatabase database;
     DatabaseReference ref;
+    SharedPreferences sharedPreferences1;
     ArrayList<String> ls;
+    String flag = "0";
+
 
     String token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studui);
+        t = findViewById(R.id.toolbar);
+        setSupportActionBar(t);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
                 .requestProfile()
@@ -85,6 +89,36 @@ public class studui extends AppCompatActivity {
                 .circleCrop()
                 .into(imageView);
 
+
+        sharedPreferences1 = getSharedPreferences("photouristud", Context.MODE_PRIVATE);
+        flag = sharedPreferences1.getString("key2" + signInAccount.getId(),"0");
+        if(flag.equals("0")) {
+
+            SharedPreferences.Editor editor = sharedPreferences1.edit();
+            editor.putString("key2" + signInAccount.getId(), "1");
+            editor.apply();
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference reference = database.getReference("photouris");
+            String key = reference.push().getKey();
+
+            if(photoUrl != null) {
+                reference.child(key).child("uri").setValue(photoUrl.toString());
+                reference.child(key).child("id").setValue(signInAccount.getId());
+            }
+            else
+            {
+                Resources resources = getResources();
+                int drawableId = R.drawable.profile_def; // Replace with the actual drawable resource ID
+                Uri drawableUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                        resources.getResourcePackageName(drawableId) + '/' +
+                        resources.getResourceTypeName(drawableId) + '/' +
+                        resources.getResourceEntryName(drawableId));
+
+                reference.child(key).child("uri").setValue(drawableUri.toString());
+                reference.child(key).child("id").setValue(signInAccount.getId());
+            }
+        }
+
         imageView.setOnClickListener(view -> show_profile());
 
         l = findViewById(R.id.cc);
@@ -101,11 +135,11 @@ public class studui extends AppCompatActivity {
         ap = findViewById(R.id.joinclass);
         ap.setOnClickListener(view -> joinClass());
         ls = new ArrayList();
-        notificationWork();
+        /*notificationWork();*/
         loadSubjects();
     }
 
-    private void notificationWork() {
+    /*private void notificationWork() {
         Toast.makeText(this, "hello all", Toast.LENGTH_SHORT).show();
         ArrayList<String> sub = new ArrayList<>();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("SubjectConnectsStudent");
@@ -140,8 +174,6 @@ public class studui extends AppCompatActivity {
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-                            // Handle any errors that occur while retrieving data from Firebase Realtime Database
-                            // ...
                         }
                     });
                 }
@@ -152,7 +184,7 @@ public class studui extends AppCompatActivity {
                 // ...
             }
         });
-    }
+    }*/
 
     private void show_profile() {
         Intent i = new Intent(studui.this, Profile_page.class);
@@ -177,7 +209,7 @@ public class studui extends AppCompatActivity {
                 }
                 for(int i = 0; i < ls.size(); i++){
                     int finalI = i;
-                    dr.addValueEventListener(new ValueEventListener() {
+                    dr.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot childSnapshot : snapshot.getChildren()) {

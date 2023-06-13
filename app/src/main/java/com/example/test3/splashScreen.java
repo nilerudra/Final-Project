@@ -172,6 +172,7 @@ public class splashScreen extends AppCompatActivity {
                             //splashScreen ss = new splashScreen();
                         }
                         else{
+                            finish();
                             Intent i = new Intent(splashScreen.this, page2.class);
                             startActivity(i);
                         }
@@ -195,18 +196,17 @@ public class splashScreen extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        //i[0] = 10;
-                        Toast.makeText(splashScreen.this, "Welcome teacher", Toast.LENGTH_SHORT).show();
+
                         Intent i = new Intent(splashScreen.this, teachui.class);
                         i.putExtra("id", acct.getId());
                         startActivity(i);
                         finish();
                     } else {
-                        //i[0] = 10;
-                        Toast.makeText(splashScreen.this, "thik hai teacher", Toast.LENGTH_SHORT).show();
+
                         Intent in = new Intent(splashScreen.this, teacherlogin.class);
                         in.putExtra("id", acct.getId());
                         startActivity(in);
+                        finish();
                     }
                 }
 
@@ -248,16 +248,15 @@ public class splashScreen extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        Toast.makeText(splashScreen.this, "Welcome student", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(splashScreen.this, studui.class);
                         i.putExtra("id", acct.getId());
                         startActivity(i);
                         finish();
                     } else {
-                        Toast.makeText(splashScreen.this, "br hai teacher", Toast.LENGTH_SHORT).show();
                         Intent in = new Intent(splashScreen.this, stud_register.class);
                         in.putExtra("id", acct.getId());
                         startActivity(in);
+                        finish();
                     }
                 }
 

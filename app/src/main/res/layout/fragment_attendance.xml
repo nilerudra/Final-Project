@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Attendance">
+    tools:context=".Tasks">
 
-    <!-- TODO: Update blank fragment layout -->
-    <!--<ScrollView
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/tmbg"
@@ -14,20 +14,22 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:contentDescription="@string/app_name">-->
+        android:contentDescription="@string/app_name">
 
-       <!-- <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">-->
+            android:layout_height="500dp"
+            tools:context=".Attendance">
 
 
             <FrameLayout
-                android:layout_width="250dp"
-                android:layout_height="250dp"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
                 android:id="@+id/idFLQrCode"
-                android:layout_marginLeft="45dp"
+                android:layout_marginStart="45dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="70dp">
+                android:layout_marginTop="45dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -43,10 +45,9 @@
                     android:textSize="15sp"/>
 
                 <ImageView
-                    android:layout_width="250dp"
-                    android:layout_height="250dp"
                     android:id="@+id/idIVQRCode"
-                    android:background="@color/white"/>
+                    android:layout_width="300dp"
+                    android:layout_height="300dp" />
 
             </FrameLayout>
 
@@ -56,7 +57,7 @@
                 android:layout_below="@id/idFLQrCode"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="15dp"
                 android:id="@+id/idTILData"
                 android:hint="Add text to embed in QR code"
@@ -83,9 +84,7 @@
                 android:layout_below="@id/idTILData"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="10dp"
-                android:padding="13dp"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/button_back"
                 android:text="Generate QR Code"
                 android:id="@+id/idBtnGenerateQR"
@@ -97,15 +96,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/idBtnGenerateQR"
-                android:layout_marginBottom="10dp"
                 android:background="@drawable/button_back"
-                android:text="Attendance Taken"
+                android:text="Done taking attendance"
                 android:textColor="@color/white"
-                android:padding="13dp"
                 android:textSize="20sp" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -114,27 +111,16 @@
                 android:layout_below="@id/Done"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
-                android:padding="13dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/button_back"
                 android:text="Generate Attendance"
                 android:id="@+id/attendance"
                 android:textColor="@color/white"
                 android:textSize="20sp"/>
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="128dp"
-        android:layout_height="48dp"
-        android:layout_centerHorizontal="true"
-        android:backgroundTint="#8E8E8E"
-        android:layout_marginTop="20dp"
-        android:textColor="#2C2C2C"
-        android:layout_marginEnd="157dp" />
 
-    <!-- </LinearLayout>
+        </RelativeLayout>
 
- </ScrollView>-->
+    </ScrollView>
 
-</RelativeLayout>
+</FrameLayout>

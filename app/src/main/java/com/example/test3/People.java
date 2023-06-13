@@ -2,8 +2,11 @@ package com.example.test3;
 
 import static com.google.firebase.inappmessaging.internal.Logging.TAG;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,8 +45,9 @@ public class People extends Fragment {
     ListView listView;
     ArrayList<String> ls;
     ArrayList<String> sName;
-    ArrayList<Person> list;
+    ArrayList<String> list;
     PersonAdapter personAdapter;
+    TextView textView;
     //ArrayAdapter<String> adapter;
     public People(){
     }
@@ -55,23 +62,100 @@ public class People extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_people, container, false);
-        listView = view.findViewById(R.id.Listview);
-        list = new ArrayList<>();
-        //adapter = new ArrayAdapter<String>(requireContext() ,R.layout.list_item, list);
 
-        personAdapter = new PersonAdapter(requireContext(),R.layout.list_row,list);
+        imageView = view.findViewById(R.id.profileImageteach);
+
+        listView = view.findViewById(R.id.Listview);
+        listView.setDivider(null);
+        list = new ArrayList<>();
+        textView = view.findViewById(R.id.teacher);
+        //adapter = new ArrayAdapter<String>(requireContext() ,R.layout.list_item, list);
+        sName = new ArrayList<>();
+        personAdapter = new PersonAdapter(requireContext(),sName);
         listView.setAdapter(personAdapter);
 
-        ls = new ArrayList();
-        sName = new ArrayList();
-        processStudentData();
+        ls = new ArrayList<>();
+
+        //processStudentData();
+
         //Toast.makeText(requireContext(),"showing student started",Toast.LENGTH_SHORT).show();
 
         return view;
     }
 
+    ImageView imageView;
+    @Override
+    public void onResume() {
+        super.onResume();
+        getStudentId();
 
-    public void loadFromDB(){
+        DatabaseReference teacher = FirebaseDatabase.getInstance().getReference("Subject");
+        DatabaseReference tinfo = FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("photouris");
+        teacher.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    if (!childSnapshot.child("teacher_id").getValue(String.class).isEmpty() && childSnapshot.child("subject_id").getValue().toString().equals(mngtchclass.subId)) {
+                        String teacher_id = childSnapshot.child("teacher_id").getValue(String.class);
+
+                        tinfo.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                                    if (Objects.equals(childSnapshot.child("id").getValue(String.class), teacher_id)) {
+                                        String name = childSnapshot.child("name").getValue(String.class);
+                                        textView.setText(name);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(getContext(), "Database error", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                                    if(childSnapshot.child("id").getValue(String.class).equals(teacher_id)) {
+                                        String uri = childSnapshot.child("uri").getValue(String.class);
+
+                                        Uri photoUrl = Uri.parse(uri);
+                                        Glide.with(getContext())
+                                                .load(photoUrl)
+                                                .placeholder(R.drawable.baseline_person_24)
+                                                .error(R.drawable.baseline_person_24)
+                                                .circleCrop()
+                                                .into(imageView);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(getContext(), "Database error", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    /*public void loadFromDB(){
+        if(!isAdded()){
+            return;
+        }
         // Get a reference to the Firebase Storage service
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -91,6 +175,9 @@ public class People extends Fragment {
             imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
+                    if(!isAdded()){
+                        return;
+                    }
                     // Image downloaded successfully, convert the byte array to a Bitmap and display it in an ImageView
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     //Toast.makeText(requireContext(),"send to person adapter",Toast.LENGTH_SHORT).show();
@@ -107,59 +194,78 @@ public class People extends Fragment {
                     Log.e(TAG, "Error downloading image from Firebase Storage: " + e.getMessage());
                 }
             });
-            personAdapter.notifyDataSetChanged();
-
         }
-    }
-
+        personAdapter.notifyDataSetChanged();
+    }*/
+    private ValueEventListener valueEventListener;
     public void getStudentId(){
+        if(!isAdded()){
+            return;
+        }
+        /*sName.clear();
+        personAdapter.notifyDataSetChanged();*/
         DatabaseReference dr = FirebaseDatabase.getInstance().getReference("Users");
+
         DatabaseReference r = FirebaseDatabase.getInstance().getReference("SubjectConnectsStudent");
 
         //Query query =
 
         //Log.d("Firebase", "Query parameter: " + r.orderByChild("subject_id").equalTo(subject_id).toString());
 
-        r.orderByChild("subject_id").equalTo(mngtchclass.subId).addListenerForSingleValueEvent(new ValueEventListener() {
+        //r.orderByChild("subject_id").equalTo(mngtchclass.subId);
+            valueEventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange (DataSnapshot dataSnapshot){
+                    if (!isAdded()) {
+                        return;
+                    }
+                    //r.orderByChild("subject_id").equalTo(mngtchclass.subId);
+                    list.clear();
+                    sName.clear();
+                    personAdapter.notifyDataSetChanged();
+                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                        if(childSnapshot.child("subject_id").getValue().toString().equals(mngtchclass.subId)) {
+                            String student_id = childSnapshot.child("student_id").getValue().toString();
+                            ls.add(student_id);
+                            Log.w("Firebase", "" + student_id);
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                list.clear();
-                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    String student_id = childSnapshot.child("student_id").getValue(String.class);
-                    ls.add(student_id);
-                    //Toast.makeText(requireContext(),"" + student_id,Toast.LENGTH_SHORT).show();
-                    Log.w("Firebase", "" + student_id);
-                    // Do something with the sub ID
-                }
 
-                for(int i = 0; i < ls.size(); i++){
-                    int finalI = i;
-                    dr.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-
-                                if(Objects.equals(childSnapshot.child("id").getValue(String.class), ls.get(finalI))){
-                                    String name = childSnapshot.child("name").getValue(String.class);
-                                    sName.add(name);
-                                    //Toast.makeText(requireContext(),"br " + name,Toast.LENGTH_SHORT).show();
+                            dr.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (!isAdded()) {
+                                        return;
+                                    }
+                                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                                        if (Objects.equals(childSnapshot.child("id").getValue(String.class), student_id)) {
+                                            String name = childSnapshot.child("name").getValue(String.class);
+                                            sName.add(name + "/" + childSnapshot.child("id").getValue(String.class));
+                                        }
+                                    }
+                                    personAdapter.notifyDataSetChanged();
                                 }
-                            }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(getContext(), "Database error", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
                         }
-                    });
+                        // Do something with the sub ID
+                    }
+
+                    /*for (int i = 0; i < ls.size(); i++) {
+                        int finalI = i;
+
+                    }*/
                 }
-            }
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Handle error
-            }
-        });
+                @Override
+                public void onCancelled (DatabaseError error){
+                    // Handle error
+                }
+            };
+            r.addValueEventListener(valueEventListener);
     }
 
     /*public void getStudentIdAndLoadFromDB() {
@@ -188,22 +294,22 @@ public class People extends Fragment {
         dataThread.start();
     }*/
 
-    private Handler mHandler = new Handler();
+    /*private Handler mHandler = new Handler();
 
     private Runnable getStudentIdAndLoadFromDB = new Runnable() {
         @Override
         public void run() {
             getStudentId();
-            mHandler.postDelayed(new Runnable() {
+            *//*mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     loadFromDB();
                 }
-            }, 1000); // delay for 1000 milliseconds
+            }, 1000); *//*// delay for 1000 milliseconds
         }
     };
 
     private void processStudentData() {
         new Thread(getStudentIdAndLoadFromDB).start();
-    }
+    }*/
 }

@@ -106,19 +106,6 @@ public class lecpracschmng extends AppCompatActivity {
 
     }
 
-    public static String convertTimeTo24HourFormat(String time) {
-
-        // create a DateTimeFormatter for parsing the input string
-        DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("h:mm a");
-
-// create a DateTimeFormatter for formatting the output string
-        DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("HH:mm");
-
-// parse the input string and format it to 24-hour format
-        LocalTime time24 = LocalTime.parse(time, inputFormat);
-        String time24String = time24.format(outputFormat);
-        return time24String;
-    }
 
 
     public void addClass(String name,String date, String description, String sub_id){

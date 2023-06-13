@@ -43,7 +43,6 @@ android {
         viewBinding true
     }
     namespace 'com.example.test3'
-
 }
 
 dependencies {
@@ -84,10 +83,9 @@ dependencies {
 
     implementation 'org.apache.poi:poi:5.2.3'*/
 
+    implementation 'org.jsoup:jsoup:1.14.2'
     implementation 'com.google.android.gms:play-services-drive:17.0.0'
-
     implementation 'com.google.apis:google-api-services-drive:v3-rev20220302-1.32.1'
-
     implementation 'androidx.wear.tiles:tiles-material:1.1.0'
     implementation 'com.google.firebase:firebase-inappmessaging:20.3.1'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
@@ -106,6 +104,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'com.google.zxing:core:3.5.1'
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+
 
     implementation 'org.apache.poi:poi-ooxml:4.1.2'
 
@@ -127,7 +126,4 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
 
     implementation "androidx.work:work-runtime:2.7.0"
-
-    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
-
 }
