@@ -142,7 +142,7 @@ public class People extends Fragment {
                     String student_id = childSnapshot.child("student_id").getValue(String.class);
                     ls.add(student_id);
                     //Toast.makeText(requireContext(),"" + student_id,Toast.LENGTH_SHORT).show();
-                    Log.w("Firebase", "" + student_id);
+                    //Log.w("Firebase", "" + student_id);
                     // Do something with the sub ID
                 }
 
