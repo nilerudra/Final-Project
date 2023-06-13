@@ -28,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.api.client.util.Objects;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -68,7 +69,6 @@ public class teachui extends AppCompatActivity {
                 setContentView(R.layout.activity_teachui);
                 t = findViewById(R.id.toolbar);
                 setSupportActionBar(t);
-//getSupportActionBar().setTitle(null);
                 acct = GoogleSignIn.getLastSignedInAccount(this);
 
                 sharedPreferences4 = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
@@ -77,20 +77,31 @@ public class teachui extends AppCompatActivity {
 
                 sharedPreferences = getSharedPreferences("dynamicurl", Context.MODE_PRIVATE);
                 String dynamicurl = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+                Uri sharedFileUri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
 
-                if(dynamicurl != null)
-                {
-                        if(s.equals("Teacher")) {
+
+                if (s.equals("Teacher")) {
+                        if (dynamicurl != null) {
                                 flag = 1;
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString("urldyn", dynamicurl);
                                 editor.apply();
+                                editor.putString("flag", "url");
+                                editor.apply();
                                 Toast.makeText(this, "Please select related subject", Toast.LENGTH_SHORT).show();
+                        } else if (sharedFileUri != null) {
+                                        flag = 1;
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString("urldyn", sharedFileUri.toString());
+                                        editor.apply();
+                                        editor.putString("flag", "file");
+                                        editor.apply();
+                                        Toast.makeText(this, "Please select related subject", Toast.LENGTH_SHORT).show();
                         }
-                        else {
-                                Toast.makeText(this, "You can't share the link", Toast.LENGTH_SHORT).show();
-                                finish();
-                        }
+                }
+                else {
+                        Toast.makeText(this, "You can't share the link", Toast.LENGTH_SHORT).show();
+                        finish();
                 }
 
                 d = new Dialog(this);

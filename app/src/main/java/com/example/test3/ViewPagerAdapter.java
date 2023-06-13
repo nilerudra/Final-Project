@@ -36,9 +36,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return "Files";
+                return "DOCS";
             case 1:
-                return "Links";
+                return "LINKS";
             default:
                 throw new IllegalArgumentException("Invalid position: " + position);
         }

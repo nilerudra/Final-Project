@@ -83,6 +83,7 @@ dependencies {
 
     implementation 'org.apache.poi:poi:5.2.3'*/
 
+    implementation 'org.jsoup:jsoup:1.14.2'
     implementation 'com.google.android.gms:play-services-drive:17.0.0'
     implementation 'com.google.apis:google-api-services-drive:v3-rev20220302-1.32.1'
     implementation 'androidx.wear.tiles:tiles-material:1.1.0'

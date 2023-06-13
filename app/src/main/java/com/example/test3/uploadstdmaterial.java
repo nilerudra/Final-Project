@@ -5,6 +5,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,27 +44,38 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.Permission;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class uploadstdmaterial extends AppCompatActivity {
 
-    GoogleSignInAccount acct;
+    GoogleSignInAccount acct,stud;
     AppCompatButton bt,bt1,bt2;
     private static final int REQUEST_AUTHORIZATION = 1001;
     private static final int PICK_FILE_REQUEST = 1;
-    private Thread signInThread,thread;
+    private Thread signInThread,thread,another;
     String filePath = "default";
     SharedPreferences sharedPreferences1,sharedPreferences,sharedPreferences3,sharedPreferences4,sharedPreferences5;
-    String flag,folderId,sub_name;
+    public static String sub_name,stud_id = "Nope";
+    String flag,folderId;
     int value = 0;
-    String dynamicurl;
-    public static String sub_Id;
+    static String dynamicurl,getFlag;
+    public static String sub_Id,s;
     Dialog d1,d2;
     TextView t1;
     EditText t2,t3;
@@ -77,14 +89,14 @@ public class uploadstdmaterial extends AppCompatActivity {
 
         sharedPreferences4 = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
 
-        String s = sharedPreferences4.getString("myStringKey", "not found");
+        s = sharedPreferences4.getString("myStringKey", "not found");
 
         d2 = new Dialog(this);
         d2.setContentView(R.layout.uploadlink);
         t2 = d2.findViewById(R.id.linkurl);
         t3 = d2.findViewById(R.id.linktitle);
         bt2 = d2.findViewById(R.id.savelink);
-        bt2.setOnClickListener(view -> saveLinks());
+        bt2.setOnClickListener(view -> getUrl());
 
 
 
@@ -137,6 +149,44 @@ public class uploadstdmaterial extends AppCompatActivity {
         }
 
 
+        stud = GoogleSignIn.getLastSignedInAccount(this);
+
+
+        if (s.equals("Student")) {
+            stud_id = stud.getId();
+            bt.setVisibility(View.GONE);
+            bt1.setVisibility(View.GONE);
+        }
+
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Drive driveService = getDriveService();
+                File folderMetadata = new File();
+                folderMetadata.setName("Study Material: " + sub_name);
+                folderMetadata.setParents(Collections.singletonList("root"));
+                folderMetadata.setMimeType("application/vnd.google-apps.folder");
+                File folder = null;
+                try {
+                    folder = driveService.files().get(sharedPreferences3.getString("sub" + sub_name, "")).execute();
+                } catch (IOException e) {
+                    try {
+                        if(folder == null) {
+                            File createdFolder = driveService.files().create(folderMetadata).setFields("id").execute();
+                            folderId = createdFolder.getId();
+                            SharedPreferences.Editor editor = sharedPreferences3.edit();
+                            editor.putString("sub" + sub_name, folderId);
+                            editor.apply();
+                        }
+                    } catch (IOException ee) {
+                        ee.printStackTrace();
+                    }
+                }
+            }
+        });
+        thread.start();
+
+
         viewPager = findViewById(R.id.viewpager);
         tabLayout = findViewById(R.id.tabLayout);
 
@@ -146,11 +196,9 @@ public class uploadstdmaterial extends AppCompatActivity {
 
         sharedPreferences5 = getSharedPreferences("dynamicurl", Context.MODE_PRIVATE);
         dynamicurl = sharedPreferences5.getString("urldyn", "not found");
+        getFlag = sharedPreferences5.getString("flag", "not found");
 
-        if (s.equals("Student")) {
-            bt.setVisibility(View.GONE);
-            bt1.setVisibility(View.GONE);
-        }
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -161,21 +209,52 @@ public class uploadstdmaterial extends AppCompatActivity {
                         case 0:
                             if(!dynamicurl.equals("not found") && value == 0)
                             {
-                                tab = tabLayout.getTabAt(1);
-                                tabLayout.selectTab(tab);
-                                value = 1;
+                                if(getFlag.equals("file"))
+                                {
+                                    bt.setVisibility(View.VISIBLE);
+                                    bt1.setVisibility(View.GONE);
+                                    java.io.File file = new java.io.File(getFilePath(getApplicationContext(),Uri.parse(dynamicurl)));
+                                    Toast.makeText(uploadstdmaterial.this, file.toString(), Toast.LENGTH_SHORT).show();
+                                    signInThread = new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            uploadFile(file);
+                                        }
+                                    });
+                                    signInThread.start();
+                                    SharedPreferences.Editor editor = sharedPreferences5.edit();
+                                    editor.remove("urldyn");
+                                    editor.apply();
+                                    dynamicurl = "not found";
+
+                                }
+                                else {
+                                    bt.setVisibility(View.GONE);
+                                    bt1.setVisibility(View.VISIBLE);
+                                    tab = tabLayout.getTabAt(1);
+                                    tabLayout.selectTab(tab);
+                                    value = 1;
+                                }
                             }
-                            bt.setVisibility(View.VISIBLE);
-                            bt1.setVisibility(View.GONE);
+                            else {
+                                bt.setVisibility(View.VISIBLE);
+                                bt1.setVisibility(View.GONE);
+                            }
                             break;
                         case 1:
                             if(!dynamicurl.equals("not found"))
                             {
-                                t2.setText(dynamicurl);
-                                d2.show();
-                                SharedPreferences.Editor editor = sharedPreferences5.edit();
-                                editor.remove("urldyn");
-                                editor.apply();
+                                if(getFlag.equals("file"))
+                                {
+
+                                }
+                                else {
+                                    t2.setText(dynamicurl);
+                                    d2.show();
+                                    SharedPreferences.Editor editor = sharedPreferences5.edit();
+                                    editor.remove("urldyn");
+                                    editor.apply();
+                                }
                             }
                             bt.setVisibility(View.GONE);
                             bt1.setVisibility(View.VISIBLE);
@@ -199,11 +278,34 @@ public class uploadstdmaterial extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    public static String getFilePath(Context context, Uri uri) {
+        if (getFlag.equals("file")) {
+            try {
+                String path = null;
+                String[] projection = {MediaStore.Images.Media.DATA};
+                Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+                if (cursor != null) {
+                    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    cursor.moveToFirst();
+                    path = cursor.getString(columnIndex);
+                    cursor.close();
+                }
 
-    public void saveLinks()
+                return path;
+            }
+            catch (SecurityException se)
+            {
+                se.printStackTrace();
+            }
+            getFlag = "";
+        }
+        return "";
+    }
+
+    public void getUrl()
     {
-        if(!t2.getText().toString().isEmpty())
-        {
+        if(!t2.getText().toString().isEmpty()) {
+            String url = t2.getText().toString();
             String s = " ";
             if(t3.getText().toString().endsWith(":"))
             {
@@ -211,18 +313,88 @@ public class uploadstdmaterial extends AppCompatActivity {
             }
             else
                 s = t3.getText().toString();
+
+            String title = s;
+            another = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String faviconUrl = null;
+
+                    try {
+                /*Document document = Jsoup.connect(url).get();
+                faviconUrl = document.select("img.thumbnail").attr("src");
+                // Retrieve the favicon URL from the HTML
+                //faviconUrl = document.select("link[rel~=(?i)^(shortcut|icon)$]").attr("href");
+                if (faviconUrl.startsWith("//")) {
+                    faviconUrl = "http:" + faviconUrl;
+                } else if (!faviconUrl.startsWith("http")) {
+                    faviconUrl = url + faviconUrl;
+                }*/
+                        // Assuming you have the website URL stored in a variable called "websiteUrl"
+                        Document doc = Jsoup.connect(url).get();
+                        Element iconElement = doc.select("link[rel~=(?i)^(shortcut|icon|favicon)]").first();
+                        faviconUrl = iconElement.absUrl("href");
+
+
+                        // Assuming you have the website URL stored in a variable called "websiteUrl"
+                        //Document doc = Jsoup.connect(websiteUrl).get();
+                        Elements iconElements = doc.select("link[rel~=icon], link[rel~=shortcut icon], link[rel~=apple-touch-icon]");
+
+                        int maxIconSize = 0;
+
+                        for (Element element : iconElements) {
+                            String href = element.attr("href");
+                            String sizeAttr = element.attr("sizes");
+
+                            // Extract the size from sizes attribute if available
+                            int size = 0;
+                            if (!sizeAttr.isEmpty()) {
+                                String[] sizes = sizeAttr.split("x");
+                                if (sizes.length > 0) {
+                                    try {
+                                        size = Integer.parseInt(sizes[0].trim());
+                                    } catch (NumberFormatException e) {
+                                        // Handle parsing error if needed
+                                    }
+                                }
+                            }
+
+                            // Check if the size is larger than the previous largest icon
+                            if (size > maxIconSize) {
+                                maxIconSize = size;
+                                faviconUrl = href;
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (RuntimeException re) {
+                        re.printStackTrace();
+                    }
+
+                    saveLinks(faviconUrl,title, url);
+                }
+            });
+            another.start();
+            d2.hide();
+            t2.setText("");
+            t3.setText("");
+        }
+        else
+        {
+            showToast("Please provide link/url...");
+        }
+    }
+    public void saveLinks(String faviconurl, String s, String url)
+    {
+
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference reference = database.getReference("Links").child(mngtchclass.subId).push();
 
             reference.child("linktitle").setValue(s);
-            reference.child("link").setValue(t2.getText().toString());
-            t3.setText("");
-            t2.setText("");
-            d2.hide();
+            reference.child("linkthumnail").setValue(faviconurl);
+            reference.child("link").setValue(url);
             dynamicurl = "not found";
-        }
-        else
-            Toast.makeText(this, "Please provide link/url", Toast.LENGTH_SHORT).show();
     }
     public void updlink()
     {
@@ -384,9 +556,26 @@ public class uploadstdmaterial extends AppCompatActivity {
             fileMetaData.setName(file.getName());
             FileContent mediaContent = new FileContent("application/octet-stream", file);
             try {
-                File file1 = googleDriveService.files().create(fileMetaData, mediaContent).setFields("id").execute();
-                showToast("File Uploaded successfully!!!");
-                //s = file1.getId();
+                File file1 = googleDriveService.files().create(fileMetaData, mediaContent).setFields("id, webContentLink, webViewLink").execute();
+                String fileId = file1.getId();
+                Permission publicPermission = new Permission()
+                        .setType("anyone")
+                        .setRole("reader");
+                googleDriveService.permissions().create(fileId, publicPermission).execute();
+                String publicUrl = file1.getWebViewLink();
+
+                String downloadUrl = file1.getWebContentLink();
+
+
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference reference = database.getReference("Drive Links").child(mngtchclass.subId).push();
+
+                reference.child("fileName").setValue(file.getName());
+                reference.child("fileLink").setValue(publicUrl);
+                reference.child("fileDownloadLink").setValue(downloadUrl);
+
+                showToast("File Uploaded successfully!");
             } catch (UserRecoverableAuthIOException e) {
                 showToast("Re-authentication required!");
                 Intent authIntent = e.getIntent();
@@ -396,6 +585,33 @@ public class uploadstdmaterial extends AppCompatActivity {
             } catch (Exception ae) {
                 ae.printStackTrace();
                 showToast("Error uploading file, Please try again...");
+            }
+
+            java.io.File destinationFolder = new java.io.File(getApplicationContext().getFilesDir(), "Study material" + sub_Id);
+            if (!destinationFolder.exists()) {
+                destinationFolder.mkdirs();
+            }
+
+            java.io.File destinationFile = new java.io.File(destinationFolder, originalFile.getName());
+            try {
+                InputStream inputStream = new FileInputStream(originalFile);
+                OutputStream outputStream = new FileOutputStream(destinationFile);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, length);
+                }
+
+                outputStream.flush();
+                outputStream.close();
+                inputStream.close();
+            }
+            catch (FileNotFoundException fileNotFoundException)
+            {
+                Toast.makeText(this, "File not found", Toast.LENGTH_SHORT).show();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

@@ -2,8 +2,10 @@ package com.example.test3;
 
 import static com.google.firebase.inappmessaging.internal.Logging.TAG;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,6 +66,7 @@ public class People extends Fragment {
         imageView = view.findViewById(R.id.profileImageteach);
 
         listView = view.findViewById(R.id.Listview);
+        listView.setDivider(null);
         list = new ArrayList<>();
         textView = view.findViewById(R.id.teacher);
         //adapter = new ArrayAdapter<String>(requireContext() ,R.layout.list_item, list);

@@ -43,6 +43,7 @@ public class ListOfLinks extends Fragment {
 
         textView = rootView.findViewById(R.id.placeholder);
         listView = rootView.findViewById(R.id.listlinks);
+        listView.setDivider(null);
         databaseReference = FirebaseDatabase.getInstance().getReference("Links").child(uploadstdmaterial.sub_Id);
         itemList = new ArrayList<>();
         adapter = new LinkAdapter(getActivity(), itemList);
@@ -66,7 +67,12 @@ public class ListOfLinks extends Fragment {
                         if(childSnapshot.exists() && childSnapshot.child("linktitle").getValue() != null && childSnapshot.child("link").getValue() != null) {
                             String title = childSnapshot.child("linktitle").getValue().toString();
                             String link = childSnapshot.child("link").getValue().toString();
-                            itemList.add(title + ":" + link);
+                            String thumbnail = "Nope";
+                            if(childSnapshot.child("linkthumnail").getValue() != null) {
+                                thumbnail = childSnapshot.child("linkthumnail").getValue().toString();
+                            }
+
+                            itemList.add(title + ":" + link + "aHHfvbsh342&#" + thumbnail);
                         }
                     }
                     adapter.notifyDataSetChanged();
