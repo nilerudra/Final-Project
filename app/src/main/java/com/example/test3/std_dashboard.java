@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class std_dashboard extends Fragment {
-
     TextView t,t2;
     View view;
     EditText edt;

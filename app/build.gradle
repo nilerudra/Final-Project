@@ -43,6 +43,7 @@ android {
         viewBinding true
     }
     namespace 'com.example.test3'
+
 }
 
 dependencies {
@@ -85,7 +86,6 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-drive:17.0.0'
 
-
     implementation 'com.google.apis:google-api-services-drive:v3-rev20220302-1.32.1'
 
     implementation 'androidx.wear.tiles:tiles-material:1.1.0'
@@ -127,4 +127,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
 
     implementation "androidx.work:work-runtime:2.7.0"
+
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+
 }

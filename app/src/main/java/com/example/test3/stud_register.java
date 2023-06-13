@@ -1,11 +1,5 @@
 package com.example.test3;
 
-import static com.google.firebase.inappmessaging.internal.Logging.TAG;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,10 +8,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -35,14 +32,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class stud_register extends AppCompatActivity {
     GoogleSignInOptions gso1;
@@ -78,6 +67,9 @@ public class stud_register extends AppCompatActivity {
             String s1 = acct.getEmail();
             tt4.setText(s1);
         }
+
+
+
         btnout = findViewById(R.id.btnout);
         btnout.setPaintFlags(btnout.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         btnout.setOnClickListener(view -> signOut());
@@ -85,6 +77,7 @@ public class stud_register extends AppCompatActivity {
         btn.setOnClickListener(view -> nextPg());
        /* bt.setOnClickListener(view -> signOut());*/
     }
+
 
     public void nextPg()
     {

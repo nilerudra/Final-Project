@@ -83,8 +83,9 @@
                 android:layout_below="@id/idTILData"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginBottom="10dp"
+                android:padding="13dp"
                 android:background="@drawable/button_back"
                 android:text="Generate QR Code"
                 android:id="@+id/idBtnGenerateQR"
@@ -93,18 +94,19 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/Done"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/idBtnGenerateQR"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/button_back"
-                android:text="Done taking attendance"
+                android:text="Attendance Taken"
                 android:textColor="@color/white"
-                android:textSize="10sp" />
+                android:padding="13dp"
+                android:textSize="20sp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="match_parent"
@@ -112,8 +114,9 @@
                 android:layout_below="@id/Done"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp"
+                android:padding="13dp"
                 android:background="@drawable/button_back"
                 android:text="Generate Attendance"
                 android:id="@+id/attendance"
