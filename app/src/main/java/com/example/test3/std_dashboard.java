@@ -41,9 +41,9 @@ import java.util.HashMap;
 
 public class std_dashboard extends Fragment {
 
-    TextView t,t2;
+    TextView t,t2,t5;
     View view;
-    EditText edt;
+    TextView edt;
     ProgressBar progressBar;
     TextView progress,text1,text2;
     String stud_name;
@@ -67,7 +67,7 @@ public class std_dashboard extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_std_dashboard, container, false);
-        //schlp();
+
         t = view.findViewById(R.id.view_schdlp);
         t.setOnClickListener(view1 -> schlp());
 
@@ -81,18 +81,29 @@ public class std_dashboard extends Fragment {
         text2.setText(mngtchclass.descp);
 
         progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setProgress(0);
 
         edt = view.findViewById(R.id.asswrkstd);
         progress = view.findViewById(R.id.progress);
 
-        try {
+        t5 = view.findViewById(R.id.upldstmtudp);
+        t5.setOnClickListener(view1 -> download());
+
+        /*try {
             setpro();
         } catch (IOException e) {
+            Toast.makeText(getActivity(), "Error loading attendance", Toast.LENGTH_SHORT).show();
             throw new RuntimeException(e);
-        }
+        }*/
         return view;
     }
 
+
+    public void download()
+    {
+        /*startActivity(new Intent(getActivity(),DownloadStdResources.class));*/
+        startActivity(new Intent(getActivity(),uploadstdmaterial.class));
+    }
     public void setpro() throws IOException {
 
         stud_name  = "";
@@ -190,7 +201,6 @@ public class std_dashboard extends Fragment {
                 total = present/total;
                 int a = total;
 
-
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -214,6 +224,33 @@ public class std_dashboard extends Fragment {
             // Handle any errors that occur while downloading the file
             exception.printStackTrace();
         });
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            setpro();
+        } catch (IOException e) {
+            Toast.makeText(getActivity(), "Error loading attendance", Toast.LENGTH_SHORT).show();
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        progressBar.setProgress(0);
+        progress.setText("0%");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        progressBar.setProgress(0);
+        progress.setText("0%");
     }
 
     public void progress()

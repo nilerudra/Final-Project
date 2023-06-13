@@ -30,9 +30,9 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
-    String myString;
+    String myString,dynamicurl;
     public static String subId,sub_name,descp,hours,teacher_id;
-    SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences,sharedPreferences1,sharedPreferences5;
 
     public mngtchclass() throws IOException {
     }
@@ -51,13 +51,22 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
         String s = sharedPreferences.getString("myStringKey", "not found");
         myString = sharedPreferences.getString("myStringKey", "not found");
 
+        sharedPreferences1 = getSharedPreferences("sub_name", Context.MODE_PRIVATE);
+
+
         Intent intent = getIntent();
         subId = intent.getStringExtra("sub_id");
         sub_name = intent.getStringExtra("name");
         descp = intent.getStringExtra("dsc");
         hours = intent.getStringExtra("lec");
         teacher_id = intent.getStringExtra("tid");
-        Toast.makeText(mngtchclass.this,"" + subId,Toast.LENGTH_SHORT).show();
+
+        SharedPreferences.Editor editor = sharedPreferences1.edit();
+        editor.putString("sub", sub_name);
+        editor.apply();
+
+        editor.putString("subid", subId);
+        editor.apply();
 
         bottomNavigationView
                 = findViewById(R.id.bottomNavigationView);
@@ -102,6 +111,13 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
                 .into(imageView);
 
         imageView.setOnClickListener(view -> show_profile());
+
+        sharedPreferences5 = getSharedPreferences("dynamicurl", Context.MODE_PRIVATE);
+        dynamicurl = sharedPreferences5.getString("urldyn", "not found");
+        if(!dynamicurl.equals("not found"))
+        {
+            startActivity(new Intent(this,uploadstdmaterial.class));
+        }
     }
 
     private void show_profile() {

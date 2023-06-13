@@ -1,13 +1,18 @@
 package com.example.test3;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -23,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.api.client.util.Objects;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,11 +53,15 @@ public class teachui extends AppCompatActivity {
         Toolbar t;
         ImageView imageView;
         GoogleSignInOptions gso;
+        int flag = 0;
         GoogleSignInClient gsc;
         Dialog d;
         EditText e,des,no;
         FirebaseDatabase database;
         DatabaseReference ref;
+        GoogleSignInAccount acct;
+        String flag1 = "0";
+        SharedPreferences sharedPreferences,sharedPreferences4,sharedPreferences1;
         //RelativeLayout.LayoutParamsparams;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +69,40 @@ public class teachui extends AppCompatActivity {
                 setContentView(R.layout.activity_teachui);
                 t = findViewById(R.id.toolbar);
                 setSupportActionBar(t);
-//getSupportActionBar().setTitle(null);
+                acct = GoogleSignIn.getLastSignedInAccount(this);
+
+                sharedPreferences4 = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+
+                String s = sharedPreferences4.getString("myStringKey", "not found");
+
+                sharedPreferences = getSharedPreferences("dynamicurl", Context.MODE_PRIVATE);
+                String dynamicurl = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+                Uri sharedFileUri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+
+
+                if (s.equals("Teacher")) {
+                        if (dynamicurl != null) {
+                                flag = 1;
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("urldyn", dynamicurl);
+                                editor.apply();
+                                editor.putString("flag", "url");
+                                editor.apply();
+                                Toast.makeText(this, "Please select related subject", Toast.LENGTH_SHORT).show();
+                        } else if (sharedFileUri != null) {
+                                        flag = 1;
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString("urldyn", sharedFileUri.toString());
+                                        editor.apply();
+                                        editor.putString("flag", "file");
+                                        editor.apply();
+                                        Toast.makeText(this, "Please select related subject", Toast.LENGTH_SHORT).show();
+                        }
+                }
+                else {
+                        Toast.makeText(this, "You can't share the link", Toast.LENGTH_SHORT).show();
+                        finish();
+                }
 
                 d = new Dialog(this);
                 d.setContentView(R.layout.addclass);
@@ -84,6 +127,37 @@ public class teachui extends AppCompatActivity {
                         .error(R.drawable.baseline_person_24)
                         .circleCrop()
                         .into(imageView);
+
+
+                sharedPreferences1 = getSharedPreferences("photouriteach", Context.MODE_PRIVATE);
+                flag1 = sharedPreferences1.getString("key2" + signInAccount.getId(),"0");
+                if(flag1.equals("0")) {
+
+                        SharedPreferences.Editor editor = sharedPreferences1.edit();
+                        editor.putString("key2" + signInAccount.getId(), "1");
+                        editor.apply();
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference reference = database.getReference("photouris");
+                        //String key = reference.getKey();
+                        Toast.makeText(this, "arrived here", Toast.LENGTH_SHORT).show();
+                        String key = reference.push().getKey();
+                        if(photoUrl != null) {
+                                reference.child(key).child("uri").setValue(photoUrl.toString());
+                                reference.child(key).child("id").setValue(signInAccount.getId());
+                        }
+                        else
+                        {
+                                Resources resources = getResources();
+                                int drawableId = R.drawable.profile_def; // Replace with the actual drawable resource ID
+                                Uri drawableUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                                        resources.getResourcePackageName(drawableId) + '/' +
+                                        resources.getResourceTypeName(drawableId) + '/' +
+                                        resources.getResourceEntryName(drawableId));
+
+                                reference.child(key).child("uri").setValue(drawableUri.toString());
+                                reference.child(key).child("id").setValue(signInAccount.getId());
+                        }
+                }
 
                 ap = findViewById(R.id.bt1);
                 l = findViewById(R.id.cc);
@@ -135,8 +209,7 @@ public class teachui extends AppCompatActivity {
                                         newClass.setEstimated_lec(childSnapshot.child("estimated_lec").getValue(String.class));
 
                                         //Toast.makeText(teachui.this, newClass.getEstimated_lec(), Toast.LENGTH_SHORT).show();
-
-                                        if(newClass.teacher_id.equals(getIntent().getStringExtra("id"))){
+                                        if(newClass.teacher_id.equals(getIntent().getStringExtra("id")) || newClass.teacher_id.equals(acct.getId())){
                                                 addClass(newClass.getName(), newClass.getDescription(), newClass.subject_id, newClass.estimated_lec);
                                         }
                                 }
@@ -150,7 +223,16 @@ public class teachui extends AppCompatActivity {
         }
 
         public void addClassToDatabase(){
-                String teacher_id = getIntent().getStringExtra("id");
+                String teacher_id;
+                if(flag == 0)
+                {
+                        teacher_id = getIntent().getStringExtra("id");
+                }
+                else
+                {
+                        teacher_id = acct.getId();
+                }
+
                 String name = e.getText().toString();
                 String description = des.getText().toString();
                 String subject_id = teacher_id + "_" + name;
@@ -187,7 +269,13 @@ public class teachui extends AppCompatActivity {
         public void classadd() {
                 //for creating a excel file to store attendance of students
                 generateExcelFile(e.getText().toString());
-                addClass(e.getText().toString(), des.getText().toString(), getIntent().getStringExtra("id")+"_"+e.getText().toString(), no.getText().toString().trim());
+                if(flag == 0) {
+                        addClass(e.getText().toString(), des.getText().toString(), getIntent().getStringExtra("id") + "_" + e.getText().toString(), no.getText().toString().trim());
+                }
+                else
+                {
+                        addClass(e.getText().toString(), des.getText().toString(),  acct.getId() + "_" + e.getText().toString(), no.getText().toString().trim());
+                }
                 addClassToDatabase();
         }
 

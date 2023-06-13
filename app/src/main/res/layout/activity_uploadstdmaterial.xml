@@ -6,10 +6,47 @@
     android:layout_height="match_parent"
     tools:context=".uploadstdmaterial">
 
-    <Button
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tabLayout"
+        android:id="@+id/viewpager"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Upload PDF file"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="#50416E"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="#50416E"
+        app:tabTextColor="#9388A6" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/btns"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="30dp"
+        android:text="Upload File"
         android:id="@+id/upload"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/btns"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="30dp"
+        android:text="Provide link"
+        android:id="@+id/upldlink"/>
+
 
 </RelativeLayout>

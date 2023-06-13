@@ -123,6 +123,7 @@ public class page2 extends AppCompatActivity {
                         Intent in = new Intent(page2.this, teacherlogin.class);
                         in.putExtra("id", acct.getId());
                         startActivity(in);
+                        finish();
                     }
                 }
 
@@ -149,6 +150,7 @@ public class page2 extends AppCompatActivity {
                         Intent in = new Intent(page2.this, stud_register.class);
                         in.putExtra("id", acct.getId());
                         startActivity(in);
+                        finish();
                     }
                 }
 

@@ -6,30 +6,71 @@
     tools:context=".People">
 
     <!-- TODO: Update blank fragment layout -->
-
-    <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/tmbg"
-    android:layout_marginEnd="10dp"
-    android:layout_marginStart="10dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
-    android:contentDescription="@string/app_name">
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/profileImageteach"
+            android:layout_marginTop="5dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:layout_below="@id/labletech"
+            android:layout_marginStart="18dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/profile_def"
+            />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Teacher"
+        android:textSize="15dp"
+        android:id="@+id/labletech"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="20dp"
+        android:paddingStart="15dp"
+         />
+
+        <TextView
+            android:id="@+id/teacher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/profileImageteach"
+            android:layout_below="@+id/labletech"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingTop="4dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="20dp"
+            android:textColor="@color/black"
+            android:textSize="22dp" />
+
+        <TextView
+            android:id="@+id/lablemates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/teacher"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="5dp"
+            android:paddingStart="15dp"
+            android:text="Classmates"
+            android:textSize="15dp" />
+
         <ListView
             android:id="@+id/Listview"
+            android:layout_below="@+id/lablemates"
             android:layout_width="match_parent"
-            android:layout_height="594dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:padding="10dp" />
-    </LinearLayout>
-
-</ScrollView>
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:paddingBottom="5dp"/>
+    </RelativeLayout>
 
 </FrameLayout>

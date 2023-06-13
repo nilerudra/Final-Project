@@ -42,8 +42,8 @@
     <string name="Tasks">Tasks</string>
     <string name="People">People</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="join_class">Join Class</string>
+    <string name="hello_blank_fragment">Attention: Privacy and Uploading Files\n\nDear User,\n\nWe want to assure you that your privacy is our priority. Our upload Learning Resources feature enables you to conveniently upload course-related learning resources to cloud.\n\nWe do not access any of your personal information, and our sole focus is on securely sharing learning resources for course with students.\n\nTo facilitate this service, we kindly request your permission to manage your storage. Granting us access ensures that learning resources are securely shared from your device and easily accessible to students.\n\nTo grant the necessary permissions, please follow these steps:\n\n1. Open the "App info" or "Application settings" on your device.\n2. Navigate to "App permissions."\n3. Select "Files and media."\n4. Enable the option "Allow management of all files." Please read the warning carefully before proceeding.\n5. Click "Allow" to grant the required access.\n\nRest assured that we adhere to strict security measures and comply with privacy regulations to protect your data.\n\nIf you have any concerns, please contact us. Your trust is important to us, and we are committed to safeguarding your privacy.\n\nThank you for your cooperation.\n\nSincerely,\nEduNexus</string>
+    <string name="join_class">Done</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

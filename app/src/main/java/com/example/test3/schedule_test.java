@@ -82,7 +82,7 @@ public class schedule_test extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("Scheduling").child(mngtchclass.subId).push();
+        DatabaseReference reference = database.getReference("Scheduling_Test").child(mngtchclass.subId).push();
 
         String value = "value not get";
         String time = "nope";
@@ -162,7 +162,7 @@ public class schedule_test extends AppCompatActivity {
     }
 
     public void loadFromDB(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Scheduling").child(mngtchclass.subId);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Scheduling_Test").child(mngtchclass.subId);
 
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
