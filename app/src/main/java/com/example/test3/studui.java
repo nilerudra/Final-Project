@@ -1,9 +1,6 @@
 package com.example.test3;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.Toolbar;
+import static android.content.ContentValues.TAG;
 
 import android.app.Dialog;
 import android.content.ContentResolver;
@@ -20,6 +17,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.Toolbar;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -31,10 +33,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+
 
 public class studui extends AppCompatActivity {
 
@@ -54,6 +60,8 @@ public class studui extends AppCompatActivity {
     ArrayList<String> ls;
     String flag = "0";
 
+
+    String token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +76,18 @@ public class studui extends AppCompatActivity {
 
         GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
         Uri photoUrl = signInAccount.getPhotoUrl();
+
+        // Get the FCM token
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Retrieve the FCM token
+                        token = task.getResult();
+                        String stud_id = getIntent().getStringExtra("id");
+                        isTokenStoredForStudent(stud_id);
+                    }
+                });
+
 
         imageView = findViewById(R.id.imgpro);
         Glide.with(this)
@@ -138,7 +158,7 @@ public class studui extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     assert acct != null;
-                   // Toast.makeText(studui.this, acct.getId() + " - "+ childSnapshot.child("student_id").getValue().toString(), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(studui.this, acct.getId() + " - "+ childSnapshot.child("student_id").getValue().toString(), Toast.LENGTH_SHORT).show();
                     if(Objects.equals(acct.getId(), Objects.requireNonNull(childSnapshot.child("student_id").getValue()).toString())){
                         sub.add(childSnapshot.child("subject_id").getValue().toString());
                         //Toast.makeText(studui.this, "hiii"+childSnapshot.child("subject_id").getValue().toString(), Toast.LENGTH_SHORT).show();
@@ -157,7 +177,7 @@ public class studui extends AppCompatActivity {
                                 String repetition = pushIdSnapshot.child("Repetition").getValue(String.class);
                                 String description = pushIdSnapshot.child("description").getValue(String.class);
 
-                                Toast.makeText(studui.this, time, Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(studui.this, time, Toast.LENGTH_SHORT).show();
                             }
                         }
                         @Override
@@ -295,5 +315,51 @@ public class studui extends AppCompatActivity {
         i.putExtra("tid",t);
         startActivity(i);
     }
+
+    private void storeTokenInDatabase(Map<String, Object> data) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        reference.child("FCM Token").push().setValue(data);
+        Toast.makeText(this, "Token Stored", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean isTokenStoredForStudent(String studId) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("FCM Token");
+
+        databaseRef.orderByChild("Token").equalTo(token).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Token is already stored for the student
+                    Log.d(TAG, "Token is already stored for the student");
+                    // TODO: Handle the case where the token exists
+                    Toast.makeText(studui.this, "already Exists" + token, Toast.LENGTH_SHORT).show();
+                    // You can return true from here or perform any necessary actions
+                } else {
+                    // Token is not stored for the student
+                    Log.d(TAG, "Token is not stored for the student");
+                    // TODO: Handle the case where the token does not exist
+                    Toast.makeText(studui.this, "Not Exists", Toast.LENGTH_SHORT).show();
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("student_id", studId);
+                    data.put("Token", token);
+                    // Store the token in your backend or database
+                    storeTokenInDatabase(data);
+                    Toast.makeText(studui.this, "DONE", Toast.LENGTH_SHORT).show();
+                    // You can return false from here or perform any necessary actions
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Error occurred while querying the database
+                Log.e(TAG, "Error querying FCM Token: " + databaseError.getMessage());
+            }
+        });
+
+        // Default return value
+        return false;
+    }
+
+
 
 }

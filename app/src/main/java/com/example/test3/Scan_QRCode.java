@@ -1,7 +1,6 @@
 package com.example.test3;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +22,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.type.DateTime;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
@@ -31,12 +29,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.Objects;
-import java.util.Map;
 
 public class Scan_QRCode extends Fragment {
+
+    public Scan_QRCode()
+    {
+
+    }
 
     FirebaseDatabase database;
     DatabaseReference ref;
@@ -77,60 +77,42 @@ public class Scan_QRCode extends Fragment {
         String r = result.getContents();
         String[] ar = r.split("_");
         String s = ar[0];
+        String n = ar[1];
 
 
         try {
             // Parse the start time string
-            Toast.makeText(requireContext(), "" + s, Toast.LENGTH_SHORT).show();
+            System.out.println(s);
+            String startTimeString = s;
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date startTime = inputFormat.parse(s);
+            Date startTime = inputFormat.parse(startTimeString);
 
-            // Create the end time by adding 8 minutes to the start time
+            // Calculate the end time by adding 8 minutes to the start time
             Calendar endTime = Calendar.getInstance();
             endTime.setTime(startTime);
             endTime.add(Calendar.MINUTE, 8);
-
+            System.out.println("" + endTime);
             // Get the current time
             Calendar currentTime = Calendar.getInstance();
 
-            // Extract individual components for comparison
-            /*int currentYear = currentTime.get(Calendar.YEAR);
-            int currentMonth = currentTime.get(Calendar.MONTH);
-            int currentDay = currentTime.get(Calendar.DAY_OF_MONTH);*/
-            int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
-            int currentMinute = currentTime.get(Calendar.MINUTE);
-            //int currentSecond = currentTime.get(Calendar.SECOND);
-
-            //Toast.makeText(requireContext(),currentHour + ":" + currentMinute + ":" + currentSecond, Toast.LENGTH_SHORT).show();
-
-            /*int startYear = startTime.get(Calendar.YEAR);
-            int startMonth = startTime.get(Calendar.MONTH);
-            int startDay = startTime.get(Calendar.DAY_OF_MONTH);
-            int startHour = startTime.get(Calendar.HOUR_OF_DAY);
-            int startMinute = startTime.get(Calendar.MINUTE);
-            int startSecond = startTime.get(Calendar.SECOND);*/
-
-            /*int endYear = endTime.get(Calendar.YEAR);
-            int endMonth = endTime.get(Calendar.MONTH);
-            int endDay = endTime.get(Calendar.DAY_OF_MONTH);*/
-            int endHour = endTime.get(Calendar.HOUR_OF_DAY);
-            int endMinute = endTime.get(Calendar.MINUTE);
-            //int endSecond = endTime.get(Calendar.SECOND);
-
-
-            Toast.makeText(requireContext(), currentMinute + " - " + endMinute, Toast.LENGTH_LONG).show();
-
             // Check if the current time is within the range
-            isBetween = currentMinute <= endMinute;
+            System.out.println("current Time : " + currentTime.getTime());
+            isBetween = currentTime.getTime().after(startTime) && currentTime.getTime().before(endTime.getTime());
+            System.out.println("check : " + isBetween);
+            // Display the result
+            if (isBetween) {
+                Toast.makeText(requireContext(), "The current time is within the range.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(requireContext(), "The current time is not within the range.", Toast.LENGTH_SHORT).show();
+            }
 
         } catch (ParseException e) {
             Toast.makeText(requireContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            System.out.println(e.getMessage());
         }
 
 
-
-
-        if(result.getContents() != null && isBetween)
+        if(result.getContents() != null && isBetween && Objects.equals(n, mngtchclass.sub_name))
         {
             insertId(result.getContents());
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());

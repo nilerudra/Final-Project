@@ -193,4 +193,9 @@ public class mngtchclass extends AppCompatActivity implements BottomNavigationVi
         }
         return false;
     }
+
+    private void profile_details()
+    {
+
+    }
 }

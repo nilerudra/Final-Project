@@ -2,6 +2,8 @@ package com.example.test3;
 
 import static androidx.fragment.app.FragmentManager.TAG;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -14,11 +16,13 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +41,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -58,6 +63,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -84,6 +91,7 @@ public class Attendance extends Fragment {
     Button generateQRBtn;
     Button generate_attendace;
     Button doneAttendance;
+    private Dialog loadingDialog;
 
     public Attendance() {
     }
@@ -99,6 +107,10 @@ public class Attendance extends Fragment {
         generate_attendace = v.findViewById(R.id.attendance);
         doneAttendance = v.findViewById(R.id.Done);
 
+        loadingDialog = new Dialog(requireContext());
+        loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loadingDialog.setContentView(R.layout.dialog_loading);
+        loadingDialog.setCancelable(false);
 
         generate_attendace.setEnabled(false);
         doneAttendance.setEnabled(false);
@@ -170,6 +182,7 @@ public class Attendance extends Fragment {
 
         //showToast("updating file");
         if(isAdded()) {
+
             int i = 0;
             // require a empty public constructor
             File file = new File(requireContext().getExternalFilesDir(null), mngtchclass.sub_name + ".xlsx");
@@ -177,6 +190,7 @@ public class Attendance extends Fragment {
             if (file.exists()) {
                 //showToast("file exist");
                 FileInputStream inputStream = null;
+                loadingDialog.show();
                 try {
                     inputStream = new FileInputStream(file);
                 } catch (FileNotFoundException e) {
@@ -191,12 +205,7 @@ public class Attendance extends Fragment {
                 }
                 assert workbook != null;
                 Sheet sheet = workbook.getSheet("My Sheet");
-        /*Row firstRow = sheet.createRow(0);
-        Cell enrCell = firstRow.createCell(0);
-        enrCell.setCellValue("Enrollment No.");
 
-        Cell nameCell = firstRow.createCell(1);
-        nameCell.setCellValue("Name");*/
                 int rowCount = stud_enr.size();
                 Row row;
 
@@ -238,7 +247,8 @@ public class Attendance extends Fragment {
                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        showToast("File uploaded successfully");
+                        showToast("File uploaded successfully.....");
+                        loadingDialog.dismiss();
                         // File upload successful
                         // Retrieve the download URL of the uploaded file
                         reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -266,28 +276,82 @@ public class Attendance extends Fragment {
                 });
 
             } else {
-                Workbook workbook = new HSSFWorkbook();
-                // Create a new sheet
-                Sheet sheet = workbook.createSheet("My Sheet");
+                GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(requireContext());
+                assert acct != null;
+                StorageReference r = FirebaseStorage.getInstance().getReference("attendance_files/").child(acct.getId() + "/" + mngtchclass.sub_name + ".xlsx");
 
-                // Create the header row with column names
-                Row headerRow = sheet.createRow(0);
-                Cell enrNoCell = headerRow.createCell(0);
-                enrNoCell.setCellValue("Enrollment No.");
+                r.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        // File exists
+                        // Perform your desired actions here
+                        if(!isAdded()){
+                            return;
+                        }
 
-                Cell nameCell = headerRow.createCell(1);
-                nameCell.setCellValue("Name");
+                        File f = new File(requireContext().getExternalFilesDir(null), mngtchclass.sub_name + ".xlsx");
+                        try {
 
-                File f = new File(requireContext().getExternalFilesDir(null), mngtchclass.sub_name + ".xlsx");
-                FileOutputStream outputStream = null;
-                try {
-                    outputStream = new FileOutputStream(file);
-                    workbook.write(outputStream);
-                    outputStream.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                writeInFile();
+                            // Open output stream to the local file
+                            FileOutputStream outputStream = new FileOutputStream(f);
+                            outputStream.write(bytes);
+                            outputStream.close();
+
+                            // Close the streams
+                            //inputStream.close();
+                            outputStream.close();
+
+                            writeInFile();
+                            // File has been copied successfully
+                            // Perform your desired actions here
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            // Handle the exception appropriately
+                        }
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        if(!isAdded()){
+                            return;
+                        }
+
+                        if (exception instanceof StorageException && ((StorageException) exception).getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                            // File does not exist
+                            // Perform your desired actions here
+
+                            Workbook workbook = new HSSFWorkbook();
+                            // Create a new sheet
+                            Sheet sheet = workbook.createSheet("My Sheet");
+
+                            // Create the header row with column names
+                            Row headerRow = sheet.createRow(0);
+                            Cell enrNoCell = headerRow.createCell(0);
+                            enrNoCell.setCellValue("Enrollment No.");
+
+                            Cell nameCell = headerRow.createCell(1);
+                            nameCell.setCellValue("Name");
+
+                            File f = new File(requireContext().getExternalFilesDir(null), mngtchclass.sub_name + ".xlsx");
+                            FileOutputStream outputStream = null;
+                            try {
+                                outputStream = new FileOutputStream(file);
+                                workbook.write(outputStream);
+                                outputStream.close();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            writeInFile();
+
+                        } else {
+                            // Error occurred while checking file existence
+                            // Handle the error appropriately
+                            showToast("Error occurred while checking file existence");
+                        }
+                    }
+                });
             }
         }
         else{
@@ -363,6 +427,7 @@ public class Attendance extends Fragment {
         }
         else
         {
+            loadingDialog.show();
             WindowManager manager = (WindowManager) requireActivity().getSystemService(Context.WINDOW_SERVICE);
             Display display = manager.getDefaultDisplay();
             Point point = new Point();
@@ -404,6 +469,7 @@ public class Attendance extends Fragment {
             doneAttendance.setBackground(getResources().getDrawable(R.drawable.button_back));
             generateQRBtn.setEnabled(false);
             generateQRBtn.setBackground(getResources().getDrawable(R.drawable.button_red_back));
+            loadingDialog.dismiss();
         }
     }
 
@@ -414,7 +480,6 @@ public class Attendance extends Fragment {
         studentLs = new ArrayList<>();
         studName = new ArrayList<>();
         studEnr = new ArrayList<>();
-
         //showToast("Function started for generating attendance");
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Attendance");
@@ -480,6 +545,8 @@ public class Attendance extends Fragment {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        loadingDialog.show();
+
         Sheet sheet = workbook.getSheet("My Sheet");
 
         int rowCount = sheet.getLastRowNum() - sheet.getFirstRowNum() + 1;
@@ -571,6 +638,7 @@ public class Attendance extends Fragment {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 showToast("File uploaded successfully");
+                loadingDialog.dismiss();
                 // File upload successful
                 // Retrieve the download URL of the uploaded file
                 reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -593,6 +661,7 @@ public class Attendance extends Fragment {
             public void onFailure(@NonNull Exception e) {
                 // File upload failed
                 // Handle the error
+                loadingDialog.dismiss();
             }
         });
     }
