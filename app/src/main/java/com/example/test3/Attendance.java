@@ -431,7 +431,7 @@ public class Attendance extends Fragment {
             WindowManager manager = (WindowManager) requireActivity().getSystemService(Context.WINDOW_SERVICE);
             Display display = manager.getDefaultDisplay();
             Point point = new Point();
-            display.getSize(point);
+              display.getSize(point);
             int width = point.x;
             int height = point.y;
             int dimen = Math.min(width, height);

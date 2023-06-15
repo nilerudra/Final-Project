@@ -165,13 +165,7 @@ Then rebuild and see if it works for you
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme" />
 
-        <receiver
-            android:name=".BroadcastReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+
 
         <service
             android:name=".NotificationService"

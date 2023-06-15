@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -15,6 +16,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class Profile_page extends AppCompatActivity {
 
@@ -48,6 +55,25 @@ public class Profile_page extends AppCompatActivity {
         ((TextView) findViewById(R.id.TVusername)).setText(signInAccount.getEmail());
         ((EditText) findViewById(R.id.edtName)).setText(signInAccount.getGivenName());
         ((EditText) findViewById(R.id.edt_email)).setText(signInAccount.getEmail());
+
+        DatabaseReference usersData = FirebaseDatabase.getInstance().getReference().child("Users");
+        Query query = usersData.orderByChild("email").equalTo(signInAccount.getEmail());
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot usersnap : snapshot.getChildren())
+                {
+                    ((EditText) findViewById(R.id.edt_phone)).setText(usersnap.child("phone").getValue(String.class));
+                    ((EditText) findViewById(R.id.edt_enr)).setText(usersnap.child("enr_no").getValue(String.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
