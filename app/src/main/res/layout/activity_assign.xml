@@ -34,7 +34,7 @@
     </ScrollView>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/edit1"
+        android:id="@+id/createActivity"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

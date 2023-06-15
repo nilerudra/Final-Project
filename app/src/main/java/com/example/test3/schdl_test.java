@@ -72,7 +72,6 @@ public class schdl_test extends AppCompatActivity {
         setResult(6, intent);
         finish();
 
-        Toast.makeText(this, "saved in DB", Toast.LENGTH_SHORT).show();
     }
 
     public void dtupd() {

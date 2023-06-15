@@ -58,9 +58,11 @@ public class Profile_page extends AppCompatActivity {
             SharedPreferences.Editor editor = prefs.edit();
             editor.remove("myStringKey");
             editor.apply();*/
-
-            startActivity(new Intent(Profile_page.this,page2.class));
+            Intent intent = new Intent(this,page2.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
             finish();
+
         });
     }
 }

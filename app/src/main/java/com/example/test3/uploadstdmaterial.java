@@ -608,7 +608,7 @@ public class uploadstdmaterial extends AppCompatActivity {
             }
             catch (FileNotFoundException fileNotFoundException)
             {
-                Toast.makeText(this, "File not found", Toast.LENGTH_SHORT).show();
+                showToast("File not found");
             }
             catch (IOException e) {
                 e.printStackTrace();

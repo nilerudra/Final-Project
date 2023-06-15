@@ -12,22 +12,17 @@ Then rebuild and see if it works for you
     -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
-    <!-- Replace "your_package_name" with your actual package name -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" /> <!-- Replace "your_package_name" with your actual package name -->
     <permission
         android:name="your_package_name.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="your_package_name.permission.C2D_MESSAGE" />
-
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -49,6 +44,9 @@ Then rebuild and see if it works for you
         android:roundIcon="@drawable/img"
         android:supportsRtl="true"
         android:theme="@style/Theme.Test3">
+        <activity
+            android:name=".Shedule_Task"
+            android:exported="false" />
         <activity
             android:name=".Study_Resources"
             android:exported="false" />
@@ -75,9 +73,7 @@ Then rebuild and see if it works for you
             android:exported="false" />
         <activity
             android:name=".uploadstdmaterial"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".page2"
             android:exported="false" />
@@ -109,30 +105,38 @@ Then rebuild and see if it works for you
         -->
         <activity
             android:name=".teachui"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="http" />
                 <data android:scheme="https" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/pdf" />
-                <data android:mimeType="application/octet-stream"/>
+                <data android:mimeType="application/octet-stream" />
                 <data android:mimeType="application/msword" />
                 <data android:mimeType="*/*" />
                 <data android:mimeType="image/jpeg" />
@@ -148,14 +152,16 @@ Then rebuild and see if it works for you
             android:theme="@style/Theme.Test3.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <service android:name=".PushNotification"
-                    android:exported="false">
+        <service
+            android:name=".PushNotification"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
@@ -184,6 +190,7 @@ Then rebuild and see if it works for you
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.test3.fileprovider"

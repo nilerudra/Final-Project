@@ -41,7 +41,7 @@ import java.util.HashMap;
 
 public class std_dashboard extends Fragment {
 
-    TextView t,t2,t5;
+    TextView t,t2,t5,t6,t7;
     View view;
     TextView edt;
     ProgressBar progressBar;
@@ -71,6 +71,12 @@ public class std_dashboard extends Fragment {
         t = view.findViewById(R.id.view_schdlp);
         t.setOnClickListener(view1 -> schlp());
 
+        t6 = view.findViewById(R.id.asswrkstd);
+        t6.setVisibility(View.GONE);
+
+        t7 = view.findViewById(R.id.crtt);
+        t7.setOnClickListener(view1 -> gotoAssact());
+
         t2 = view.findViewById(R.id.schdtskp);
         t2.setOnClickListener(view1 -> progress());
 
@@ -99,6 +105,10 @@ public class std_dashboard extends Fragment {
     }
 
 
+    public void gotoAssact()
+    {
+        startActivity(new Intent(getActivity(),assign_activity.class));
+    }
     public void download()
     {
         /*startActivity(new Intent(getActivity(),DownloadStdResources.class));*/

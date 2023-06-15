@@ -94,7 +94,7 @@ public class assign_activity extends AppCompatActivity {
 
         }
 
-        ap = findViewById(R.id.edit1);
+        ap = findViewById(R.id.createActivity);
         ap.setOnClickListener(view -> nxtpg());
         sharedPreferences = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
         String s = sharedPreferences.getString("myStringKey", "not found");
@@ -112,7 +112,7 @@ public class assign_activity extends AppCompatActivity {
     public void nxtpg()
     {
 
-        Intent intent = new Intent(assign_activity.this,schdl_test.class);
+        Intent intent = new Intent(assign_activity.this,Shedule_Task.class);
         intent.putExtra("1","Enter test description\\name");
         startActivityForResult(intent,2);
     }
@@ -121,7 +121,7 @@ public class assign_activity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("Scheduling").child(mngtchclass.subId).push();
+        DatabaseReference reference = database.getReference("ActivitySchedule").child(mngtchclass.subId).push();
 
         String value = "value not get";
         String time = "nope";
@@ -133,12 +133,12 @@ public class assign_activity extends AppCompatActivity {
             value = data.getStringExtra("1");
             date = data.getStringExtra("2");
             time = data.getStringExtra("3");
-            occurence = "Marks " + data.getStringExtra("4");
+            occurence = data.getStringExtra("4");
 
-            reference.child("description").setValue(value);
+            reference.child("name").setValue(value);
             reference.child("Date").setValue(date);
             reference.child("Time").setValue(time);
-            reference.child("Repetition").setValue(occurence);
+            reference.child("description").setValue(occurence);
 
             /*if(occurence.equals("Every day")) {
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -180,20 +180,20 @@ public class assign_activity extends AppCompatActivity {
     }
 
 
-    public void addClass(String name,String date, String description, String sub_id){
+    public void addClass(String name,String date, String time, String description){
         TextView ed = new TextView(assign_activity.this);
-        ed.setText(String.format("%s\n%s\n%s\n%s",name,date,description,sub_id));
+        ed.setText(String.format("%s\n%s\n%s\n%s",name,description,date,time));
         ed.setBackgroundResource(R.drawable.fortui);
         ed.setTextSize(15);
         ed.setTextColor(Color.WHITE);
         ed.setTextAppearance(this, R.style.AppTheme);
-        ed.setPadding(40, 25, 40, 100);
+        ed.setPadding(40, 25, 40, 40);
         ed.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ed.getLayoutParams();
         int leftMargin = 20;
         int topMargin = 20;
         int rightMargin = 20;
-        int bottomMargin = 30;
+        int bottomMargin = 20;
         layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
         ed.setLayoutParams(layoutParams);
         //ed.setOnClickListener(view ->mngPage(name, sub_id));
@@ -201,20 +201,19 @@ public class assign_activity extends AppCompatActivity {
     }
 
     public void loadFromDB(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Scheduling").child(mngtchclass.subId);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ActivitySchedule").child(mngtchclass.subId);
 
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 l1.removeAllViews();
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    String des = childSnapshot.child("description").getValue().toString();
+                    String des = childSnapshot.child("name").getValue().toString();
                     String date = childSnapshot.child("Date").getValue().toString();
                     String time = childSnapshot.child("Time").getValue().toString();
-                    String repetition = childSnapshot.child("Repetition").getValue().toString();
+                    String repetition = childSnapshot.child("description").getValue().toString();
 
                     addClass(des,date,time,repetition);
-                    // Do something with the sub ID
                 }
             }
 
