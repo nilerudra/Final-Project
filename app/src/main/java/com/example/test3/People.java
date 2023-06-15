@@ -122,15 +122,22 @@ public class People extends Fragment {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                                     if(childSnapshot.child("id").getValue(String.class).equals(teacher_id)) {
-                                        String uri = childSnapshot.child("uri").getValue(String.class);
+                                        try
+                                        {
+                                            String uri = childSnapshot.child("uri").getValue(String.class);
 
-                                        Uri photoUrl = Uri.parse(uri);
-                                        Glide.with(getContext())
-                                                .load(photoUrl)
-                                                .placeholder(R.drawable.baseline_person_24)
-                                                .error(R.drawable.baseline_person_24)
-                                                .circleCrop()
-                                                .into(imageView);
+                                            Uri photoUrl = Uri.parse(uri);
+                                            Glide.with(getContext())
+                                                    .load(photoUrl)
+                                                    .placeholder(R.drawable.baseline_person_24)
+                                                    .error(R.drawable.baseline_person_24)
+                                                    .circleCrop()
+                                                    .into(imageView);
+                                        }
+                                        catch (NullPointerException ne)
+                                        {
+                                            ne.printStackTrace();
+                                        }
                                     }
                                 }
                             }

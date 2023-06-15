@@ -22,22 +22,49 @@
         android:layout_width="match_parent"
         android:layout_height="500dp">
 
-        <TextView
-            android:id="@+id/cls"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="30dp"
+            android:layout_height="match_parent"
+            android:id="@+id/cls"
+            android:layout_margin="30dp"
             android:background="@drawable/shadow_class"
             android:elevation="7dp"
+            android:paddingBottom="15dp"
+            android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/clsname"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingStart="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="60dp"
+            android:paddingEnd="20dp"
             android:text="Class 1"
             android:textColor="#000000"
             android:textSize="38sp"
             android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:text="Class id"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/classid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:text="class id"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/schdlp"
@@ -114,7 +141,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-            android:elevation="5dp"
+        android:elevation="5dp"
         android:layout_below="@id/upldstmt"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="30dp"

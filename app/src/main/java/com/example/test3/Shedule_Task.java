@@ -11,8 +11,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,23 +18,22 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-public class schdl_test extends AppCompatActivity {
+public class Shedule_Task extends AppCompatActivity {
 
     TextView t1,t2;
-    Dialog d1;
     String s = "Custom";
     EditText edt,edt1;
     TextView dtpick;
     AppCompatButton ap;
     @SuppressLint("MissingInflatedId")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_schdl_test);
+        setContentView(R.layout.activity_shedule_task);
 
-        edt = findViewById(R.id.testdisc);
-        edt1 = findViewById(R.id.marks);
+        edt = findViewById(R.id.actdisp);
+        edt1 = findViewById(R.id.actname);
 
         t2 = findViewById(R.id.tstdate);
 
@@ -65,10 +62,10 @@ public class schdl_test extends AppCompatActivity {
         String s3 = dt[1];
 
         Intent intent = new Intent();
-        intent.putExtra("1",edt.getText().toString());
+        intent.putExtra("1",edt1.getText().toString());
         intent.putExtra("2",s2);
         intent.putExtra("3",s3);
-        intent.putExtra("4",edt1.getText().toString());
+        intent.putExtra("4",edt.getText().toString());
         setResult(6, intent);
         finish();
 
@@ -79,7 +76,7 @@ public class schdl_test extends AppCompatActivity {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        // Show the DatePickerDialog to allow the user to select a date
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
                 (DatePickerDialog.OnDateSetListener) (view, year1, monthOfYear, dayOfMonth1) -> {
@@ -88,7 +85,6 @@ public class schdl_test extends AppCompatActivity {
                     calendar.set(Calendar.MONTH, monthOfYear);
                     calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth1);
 
-                    // Show the TimePickerDialog to allow the user to select a time
                     TimePickerDialog timePickerDialog = new TimePickerDialog(
                             this,
                             (TimePickerDialog.OnTimeSetListener) (view1, hourOfDay, minute) -> {

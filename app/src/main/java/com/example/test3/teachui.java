@@ -139,7 +139,7 @@ public class teachui extends AppCompatActivity {
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
                         DatabaseReference reference = database.getReference("photouris");
                         //String key = reference.getKey();
-                        Toast.makeText(this, "arrived here", Toast.LENGTH_SHORT).show();
+
                         String key = reference.push().getKey();
                         if(photoUrl != null) {
                                 reference.child(key).child("uri").setValue(photoUrl.toString());
