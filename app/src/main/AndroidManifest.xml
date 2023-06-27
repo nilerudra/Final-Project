@@ -178,6 +178,12 @@ Then rebuild and see if it works for you
             android:foregroundServiceType="mediaPlayback"
             android:stopWithTask="false" />
 
+        <receiver
+            android:name=".NotificationReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

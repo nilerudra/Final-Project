@@ -2,9 +2,12 @@ package com.example.test3;
 
 import static okhttp3.Request.Builder;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -174,7 +177,8 @@ public class lecprac extends AppCompatActivity {
         }
     }
 
-    List<String> token = new ArrayList<>();
+    ArrayList<String> token = new ArrayList<>();
+    long time;
 
     String body;
     public void savechngs() {
@@ -183,8 +187,9 @@ public class lecprac extends AppCompatActivity {
         String s2 = dt[0];
         String s3 = dt[1];
 
-        body = "Lecture of " + mngtchclass.sub_name + "is scheduled at" + s1;
+        body = "Lecture of " + mngtchclass.sub_name + " is scheduled on " + s2 + " at " + s3;
 
+        time = convertDateTimeToMilliseconds(s2 + " " + s3);
         Intent intent = new Intent();
         intent.putExtra("1", edt.getText().toString());
         intent.putExtra("2", s2);
@@ -239,59 +244,19 @@ public class lecprac extends AppCompatActivity {
     }
 
     private void sendNotificationToStudent(String title, String message) {
-        try {
-            OkHttpClient client = new OkHttpClient();
-            System.out.println("1");
-            // Prepare the notification payload
-            JSONObject notification = new JSONObject();
-            notification.put("title", title);
-            notification.put("body", message);
-            System.out.println("2");
-            // Create the request body
-            JSONObject requestBody = new JSONObject();
-            requestBody.put("registration_ids", new JSONArray(token));
-            requestBody.put("notification", notification);
-            System.out.println("3");
-            // Build the request
-            RequestBody body = RequestBody.create(MediaType.parse("application/json"), requestBody.toString());
-            Builder builder = new Builder();
-            builder.url("https://fcm.googleapis.com/fcm/send");
-            builder.post(body);
-            builder.addHeader("Content-Type", "application/json");
-            builder.addHeader("Authorization", "Bearer " + "AAAAKMoghUs:APA91bEqxwAytYjcOUWweVuzo0wV1q3pEYgB_m4r_Ldtj3bs0WVnHiP_ERqwlIebfHwCRzZ1mLgjTmAD_vJhdmDYTe7SIWMxtduwjKn_Qfr0NOxN8G_29QCMDBiL4jfu23PyhYz16ROP");
-            Request request = builder
-                    .build();
-            System.out.println("4");
-
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    System.out.println("hii");
-                    e.printStackTrace();
-                    // Handle failure case
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) {
-                    System.out.println("5");
-                    if (response.isSuccessful()) {
-                        // Notification sent successfully
-                        System.out.println("Notification sent to student");
-                    } else {
-                        // Error occurred while sending notification
-                        System.out.println("Failed to send notification to student");
-                    }
-                    response.close();
-                }
-            });
-
-            System.out.println("6");
-        } catch (Exception e) {
-            e.printStackTrace();
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        intent.putExtra("title", title);
+        intent.putExtra("message", message);
+        intent.putStringArrayListExtra("tokens", token); // Pass the ArrayList of tokens
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        System.out.println(time);
+        if (alarmManager != null) {
+            long triggerTime = time - 5 * 60 * 1000; // Trigger after 5 minutes
+            System.out.println(triggerTime);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
         }
     }
-
-
 
     private Runnable sendNotification = new Runnable() {
         @Override
@@ -300,7 +265,7 @@ public class lecprac extends AppCompatActivity {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    sendNotificationToStudent("EduNexus", "Message from EduNexus");
+                    sendNotificationToStudent("EduNexus", body);
                 }
             }, 1000); // delay for 1000 milliseconds
         }
@@ -308,5 +273,22 @@ public class lecprac extends AppCompatActivity {
 
     private void sendingNotification() {
         new Thread(sendNotification).start();
+    }
+
+    private long convertDateTimeToMilliseconds(String dateTimeString) {
+        String pattern = "MMM/dd/yyyy hh:mm a";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
+
+        try {
+            Date date = sdf.parse(dateTimeString);
+            System.out.println(dateTimeString);
+            System.out.println("done");
+            return date.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle any parsing exceptions
+        }
+
+        return -1; // Return a default value indicating an error
     }
 }
